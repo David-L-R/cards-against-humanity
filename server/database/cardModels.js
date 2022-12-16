@@ -1,39 +1,28 @@
 import mongoose from "mongoose";
 
-// just first idea how the data for each Card could looke like
-const blackCardSchema = mongoose.Schema(
+const newCardSchema = mongoose.Schema(
   {
-    type: {
+    cardSetName: {
       type: String,
-      required: [true, "add a card type"], // black or white
+      required: [true, "add Set name"],
     },
-    text: {
-      type: String,
-      required: [true, "add content to the card"],
+    white: {
+      type: Array,
+      required: [true, "add white cards"],
     },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-const whiteCardSchema = mongoose.Schema(
-  {
-    type: {
-      type: String,
-      required: [true, "add a card type"], // black or white
+    black: {
+      type: Array,
+      required: [true, "add black cards"],
     },
-    text: {
-      type: String,
-      required: [true, "add content to the card"],
+    official: {
+      type: Boolean,
+      required: [true, "add Boolean to official"],
     },
   },
   {
     timestamps: true,
   }
 );
+const CardDeck = mongoose.model("CardDeck", newCardSchema);
 
-const blackCard = mongoose.model("blackCard", blackCardSchema);
-const whiteCard = mongoose.model("whiteCard", whiteCardSchema);
-
-export { blackCard, whiteCard };
+export { CardDeck };
