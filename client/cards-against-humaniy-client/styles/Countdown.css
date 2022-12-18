@@ -1,0 +1,7 @@
+.timer-wrapper {
+  display: flex;
+  justify-content: center;
+  font-size: 34px;
+  color: white;
+  padding: 20px;
+}
