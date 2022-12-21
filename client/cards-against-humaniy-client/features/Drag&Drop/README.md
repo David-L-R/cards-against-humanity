@@ -12,6 +12,15 @@
 </DragAndDropContainer>
 ```
 
+## **_Importand!_** actuall we used the follow structure for data
+
+```js
+{
+  zone:{label: uniqueString, cards:[Object, Object...]},
+  zone:{label: uniqueString, cards:[Object, Object...]}
+}
+```
+
 ## This container creates based on your data a `<ul>...</ul>` with drag and droppable items as your desired Component
 
 # Visuals
