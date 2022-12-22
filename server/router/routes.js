@@ -9,4 +9,9 @@ router.get("/", (req, res) => {
 
 router.get("/allCards", allCards);
 
+router.post("/sethost", (req, res) => {
+  console.log(req.body);
+  res.status(200).json(req.body);
+});
+
 export default router;

@@ -10,6 +10,10 @@ connectDB();
 const server = express();
 const port = process.env.PORT || 5555;
 server.use(cors());
+
+server.use(express.json());
+server.use(express.urlencoded({ extended: false }));
+
 server.use("/", router);
 
 server.listen(port, async (req, res) => {

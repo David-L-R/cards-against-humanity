@@ -9,15 +9,10 @@ const GameCreation = () => {
     if (players >= 3 && players <= 10 && rounds >= 3 && rounds <= 30) {
       let maxPlayers = parseInt(players);
       let maxRounds = parseInt(rounds);
-      console.log(`maxplayers ${maxPlayers}`);
-      console.log(`maxrounds ${maxRounds}`);
+
       const data = { maxPlayers, maxRounds };
       try {
         const response = await fetch("http://localhost:5555/sethost", {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
           method: "POST",
           body: JSON.stringify(data),
         });
