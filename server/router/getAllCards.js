@@ -1,7 +1,7 @@
 import { existsSync } from "fs";
 import { readFile } from "fs/promises";
 
-async function allCards(req, res) {
+const allCards = async (req, res) => {
   const cardFile = existsSync("./data/allCards.json");
 
   if (!cardFile)
@@ -13,6 +13,6 @@ async function allCards(req, res) {
     console.error("Could not read file: ", error);
     res.status(500).send("Server error, Could not read file");
   }
-}
+};
 
 export default allCards;

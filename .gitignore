@@ -3,10 +3,6 @@
 
 ### Node ###
 
-# Server folder and files
-data/
-
-
 # Logs
 logs
 *.log

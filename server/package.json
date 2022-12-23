@@ -1,5 +1,7 @@
 {
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "start": "nodemon index.js"
+  },
   "type": "module"
 }
