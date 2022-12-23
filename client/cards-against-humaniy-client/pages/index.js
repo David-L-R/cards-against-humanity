@@ -1,12 +1,9 @@
-import React from "react";
-import Features from "./features/index";
+import Socket from "./features/Socket";
 
-function Home() {
+export default function Home() {
   return (
-    <>
-      <Features />
-    </>
+    <div>
+      <Socket />
+    </div>
   );
 }
-
-export default Home;
