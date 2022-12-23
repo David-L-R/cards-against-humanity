@@ -10,6 +10,12 @@ dotenv.config();
 connectDB();
 
 const app = express();
+app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
 
 app.use(cors());
 const server = http.createServer(app);
@@ -29,8 +35,8 @@ io.on("connection", (socket) => {
 
 app.use("/", router);
 
-const port = process.env.PORT || 5555;
+const PORT = process.env.PORT || 5555;
 
-server.listen(port, async (req, res) => {
-  console.log(`Server running under ${port}`);
+server.listen(PORT, async (req, res) => {
+  console.log(`Server running under ${PORT}`);
 });
