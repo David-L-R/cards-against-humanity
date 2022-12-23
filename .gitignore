@@ -2,6 +2,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=node
 
 ### Node ###
+
 # Logs
 logs
 *.log
@@ -118,6 +119,7 @@ dist
 
 # DynamoDB Local files
 .dynamodb/
+
 
 # TernJS port file
 .tern-port
