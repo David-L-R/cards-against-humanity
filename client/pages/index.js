@@ -1,4 +1,4 @@
-import Socket from "./features/Socket";
+import Socket from "../features/Socket";
 
 export default function Home() {
   return (
