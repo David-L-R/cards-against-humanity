@@ -13,7 +13,7 @@ export function DragItem(props) {
   const style = {
     transform: CSS.Transform.toString(transform),
     listStyle: "none",
-    backgroundColor: "black",
+    backgroundColor: "transparent",
     transition,
   };
 
