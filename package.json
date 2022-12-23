@@ -4,18 +4,35 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev_client": "cd client && next dev",
+    "build_client": "cd client && next build",
+    "start_client": "cd client &&  next start",
+    "lint_client": "cd client &&  next lint",
+    "start_server": "cd server && nodemon index.js",
+    "start": "concurrently \"npm run start_server\" \"npm run dev_client\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@dnd-kit/core": "^6.0.6",
+    "@dnd-kit/modifiers": "^6.0.1",
+    "@dnd-kit/sortable": "^7.0.1",
     "boring-avatars": "^1.7.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "mongoose": "^6.8.0",
+    "next": "13.0.6",
     "nodemon": "^2.0.20",
+    "react": "18.2.0",
+    "react-countdown-circle-timer": "^3.1.0",
+    "react-dom": "18.2.0",
     "react-icons": "^4.7.1",
-    "socket.io": "^4.5.4"
+    "react-spring": "^9.6.1",
+    "socket.io": "^4.5.4",
+    "socket.io-client": "^4.5.4"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
   }
 }
