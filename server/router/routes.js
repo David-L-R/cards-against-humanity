@@ -13,6 +13,6 @@ router.get("/getallcards", getAllCards);
 
 router.post("/creategame", createGame);
 
-router.post("/updategame", updateGame);
+router.put("/updategame", updateGame);
 
 export default router;
