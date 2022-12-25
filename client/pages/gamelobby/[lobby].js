@@ -1,4 +1,3 @@
-import { PromiseProvider } from "mongoose";
 import { useRouter } from "next/router";
 import React from "react";
 import GameLobby from "./GameLobby";

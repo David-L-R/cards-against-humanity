@@ -7,6 +7,9 @@ import cors from "cors";
 import http from "http";
 import GameCollection from "./database/models/game.js";
 import consoleSuccess from "./utils/consoleSuccess.js";
+import { formatCardData } from "./utils/fomatCardData.js";
+import cardDecksData from "./data/allCards.json" assert { type: "json" };
+import { checkRooms } from "./utils/checkIfRoomExcists.js";
 
 dotenv.config();
 connectDB();
@@ -27,36 +30,48 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
+
 io.on("connection", (socket) => {
   console.log(`user connected: ${socket.id}`);
 
   socket.on("createNewGame", async (data) => {
     const { hostName } = data;
+    const randomRoomCode = await checkRooms();
+    console.log(randomRoomCode);
+
     const gameData = {
       ...data,
+      roomId: randomRoomCode,
+      round: 0,
       players: [{ playerName: hostName, playerId: socket.id }],
     };
 
     //Create game object
-    const newGame = await GameCollection.create(gameData);
+    const newGame = await GameCollection.create({
+      ...gameData,
+      cardDecks: cardDecksData,
+    });
+
     if (!newGame) return console.error("creating game Object failed");
     consoleSuccess("Game created: ", newGame);
 
     // return room ID to client
-    const roomId = newGame._id.toString();
+    const roomId = newGame.roomId;
     socket.emit("roomCreated", { roomId, hostName });
     socket.join(roomId);
   });
 
   socket.on("findRoom", async ({ roomId, newPlayerName }) => {
     const player = { playerName: newPlayerName, playerId: socket.id };
-    // serve game in MongoDb
-    const game = await GameCollection.findOne({ _id: roomId });
+
+    // searche game in MongoDb
+    const game = await GameCollection.findOne({ roomId: roomId });
     if (!game)
       return socket.emit("findRoom", {
         noRoom: true,
         message: "Can't find game",
       });
+
     // update player list in DB
     game.players.push(player);
     const updatetGame = await game.save();
@@ -83,7 +98,7 @@ io.on("connection", (socket) => {
     if (!roomId)
       return socket.emit("updateRoom", { message: "Cant find game to join!" });
 
-    const currentGame = await GameCollection.findOne({ _id: roomId });
+    const currentGame = await GameCollection.findOne({ roomId: roomId });
     if (!currentGame)
       return socket.emit("updateRoom", { message: "Cant find game to join!" });
 
