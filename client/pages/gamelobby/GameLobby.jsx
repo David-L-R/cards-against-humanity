@@ -9,6 +9,7 @@ const GameLobby = () => {
 
   //lister to update page from server
   socket.on("updateRoom", ({ playerList, message }) => {
+    console.log("UPDATE!!");
     if (message) return console.warn(message);
     setPlayers((pre) => (pre = playerList));
   });
@@ -27,7 +28,8 @@ const GameLobby = () => {
         {players &&
           players.map((player) => (
             <li key={player.playerName}>
-              Player Name :{player.playerName}, Player ID : {player.playerId}
+              <p>Player Name : {player.playerName}</p>
+              <p>Player ID : {player.playerId}</p>
             </li>
           ))}
       </ul>

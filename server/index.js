@@ -104,6 +104,24 @@ io.on("connection", (socket) => {
 
     socket.emit("updateRoom", { playerList: currentGame.players });
   });
+
+  socket.on("disconnect", async (reason) => {
+    //delte player by disconnect
+    const currentGame = await GameCollection.findOne({
+      "players.playerId": socket.id,
+    });
+
+    if (currentGame) {
+      //delete player from players list
+      currentGame.players = currentGame.players.filter(
+        (player) => player.playerId !== socket.id
+      );
+      io.to(currentGame.roomId).emit("updateRoom", {
+        playerList: currentGame.players,
+      });
+      currentGame.save();
+    }
+  });
 });
 
 app.use("/", router);
