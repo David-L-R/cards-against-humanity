@@ -3,7 +3,7 @@ import consoleSuccess from "../utils/consoleSuccess.js";
 const deleteOutatedData = async (GameCollection) => {
   // Delete documents that are older than 48hours
   const currentTime = Date.now();
-  const deleteThreshold = currentTime - 1; //172800000; // 48 hours in milliseconds
+  const deleteThreshold = currentTime - 172800000; //172800000; // 48 hours in milliseconds
   const collection = await GameCollection.find();
 
   collection.forEach((dataSet) => {

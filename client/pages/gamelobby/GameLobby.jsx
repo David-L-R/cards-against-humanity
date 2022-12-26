@@ -7,7 +7,7 @@ const GameLobby = () => {
   const roomId = router.query.roomId;
   const [players, setPlayers] = useState([]);
 
-  //lister to update page from server
+  //listener to update page from server after DB entry changed
   socket.on("updateRoom", ({ playerList, message }) => {
     console.log("UPDATE!!");
     if (message) return console.warn(message);
@@ -15,14 +15,13 @@ const GameLobby = () => {
   });
 
   useEffect(() => {
-    //self update page after redirecting
+    //self update page after got redirected, use room ID from query
     socket.emit("selfUpdate", { roomId });
   }, [roomId]);
 
   return (
     <>
       <h1>GameLobby, waiting for players</h1>
-      <h1>TODO!!! Delete user be disconnecting!!</h1>
       <h2>Lobby code: {roomId}</h2>
       <ul>
         {players &&

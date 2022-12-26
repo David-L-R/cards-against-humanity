@@ -36,6 +36,7 @@ const gameModel = mongoose.Schema(
 
 const GameCollection = mongoose.model("GameCollection", gameModel);
 
+// delete MongoDB data if they are older then 24h
 deleteOutatedData(GameCollection);
 
 export default GameCollection;

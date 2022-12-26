@@ -10,7 +10,7 @@ const Home = () => {
   const [hostOrJoin, setHostOrJoin] = useState(null);
   const router = useRouter();
 
-  //if room is successfully created, redirect to lobby with key in query as host
+  //If new room was createt, redirect to Lobby with room data
   socket.on("roomCreated", ({ roomId, hostName }) => {
     router.push({
       pathname: `/gamelobby/${hostName}`,
@@ -18,6 +18,7 @@ const Home = () => {
     });
   });
 
+  //redirecting to lobby with data after server found the game in DB
   socket.on("findRoom", (data) => {
     const { noRoom, roomId, playerName, message } = data;
     if (noRoom) return alert(message);
@@ -27,6 +28,7 @@ const Home = () => {
     });
   });
 
+  //Hosting a new game
   const HostGame = () => {
     const handleSubmit = (e) => {
       e.preventDefault();
@@ -41,7 +43,7 @@ const Home = () => {
           "player amount between 2 and 10 and Player name is needed"
         );
 
-      // send to server wie socket.io
+      // send to server with socket.io
       socket.emit("createNewGame", { amountOfPlayers, hostName });
     };
     return (
@@ -60,13 +62,19 @@ const Home = () => {
     );
   };
 
+  //Join a game
   const JoinGame = () => {
     const handleSubmit = (e) => {
       e.preventDefault();
+
+      // get values from form
       const roomId = roomKey.current.value;
       const newPlayerName = playerName.current.value;
+
+      // request to server to find the game by the given id from form
       socket.emit("findRoom", { roomId, newPlayerName });
     };
+
     return (
       <form onSubmit={(e) => handleSubmit(e)}>
         <input ref={playerName} type="text" placeholder="Enter Name" required />
