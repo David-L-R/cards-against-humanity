@@ -116,6 +116,8 @@ io.on("connection", (socket) => {
       currentGame.players = currentGame.players.filter(
         (player) => player.playerId !== socket.id
       );
+
+      //update channel
       io.to(currentGame.roomId).emit("updateRoom", {
         playerList: currentGame.players,
       });
