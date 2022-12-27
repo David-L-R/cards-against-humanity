@@ -11,10 +11,18 @@ const Home = () => {
   const router = useRouter();
 
   //If new room was createt, redirect to Lobby with room data
-  socket.on("roomCreated", ({ roomId, hostName }) => {
+  // socket.on("roomCreated", ({ roomId, hostName }) => {
+  //   router.push({
+  //     pathname: `/gamelobby/${hostName}`,
+  //     query: { roomId },
+  //   });
+  // });
+
+  socket.on("LobbyCreated", ({ lobbyId, hostName }) => {
+    console.log("lobby created");
     router.push({
-      pathname: `/gamelobby/${hostName}`,
-      query: { roomId },
+      pathname: `/lobby/${lobbyId}`,
+      query: { name: hostName },
     });
   });
 
@@ -33,8 +41,6 @@ const Home = () => {
     const handleSubmit = (e) => {
       e.preventDefault();
       const hostName = playerName.current.value;
-      // socket.emit("createNewGame", { hostName });
-      console.log("creating new lobby for " + hostName);
       socket.emit("createNewLobby", { hostName });
     };
     return (

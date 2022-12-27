@@ -18,13 +18,7 @@ export const createNewLobby = async ({ socket, data }) => {
       ...lobby,
     });
 
-    consoleSuccess("Game created: ", newGame);
-
-    const lobbyId = newLobby._id;
-
-    console.log("lobby id", lobbyId);
-
-    console.log("lobby", newLobby);
+    const lobbyId = newLobby._id.toString();
 
     socket.emit("LobbyCreated", { lobbyId, hostName });
     socket.join(lobbyId);

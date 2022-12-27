@@ -1,10 +1,12 @@
+import { route } from "express/lib/router";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { socket } from "../Home";
 
-const GameLobby = () => {
+const Lobby = () => {
   const router = useRouter();
-  const roomId = router.query.roomId;
+  const { lobby, name } = router.query;
+
   const [players, setPlayers] = useState([]);
 
   //listener to update page from server after DB entry changed
@@ -15,14 +17,14 @@ const GameLobby = () => {
   });
 
   useEffect(() => {
-    //self update page after got redirected, use room ID from query
-    socket.emit("selfUpdate", { roomId });
-  }, [roomId]);
+    //self update page after got redirected, use room lobby from query
+    socket.emit("selfUpdate", { lobby });
+  }, [lobby]);
 
   return (
     <>
-      <h1>GameLobby, waiting for players</h1>
-      <h2>Lobby code: {roomId}</h2>
+      <h1>Lobby, waiting for players</h1>
+      <h2>Lobby code: {lobby}</h2>
       <ul>
         {players &&
           players.map((player) => (
@@ -36,4 +38,4 @@ const GameLobby = () => {
   );
 };
 
-export default GameLobby;
+export default Lobby;
