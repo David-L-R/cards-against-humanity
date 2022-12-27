@@ -1,9 +1,9 @@
-import Socket from "../features/Socket";
+import Home from "./Home";
 
-export default function Home() {
+export default function index() {
   return (
-    <div>
-      <Socket />
-    </div>
+    <main>
+      <Home />
+    </main>
   );
 }
