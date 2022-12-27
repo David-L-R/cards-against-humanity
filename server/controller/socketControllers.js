@@ -1,15 +1,45 @@
+import LobbyCollection from "../database/models/lobby.js";
 import GameCollection from "../database/models/game.js";
-import { checkRooms } from "../utils/checkIfRoomExcists.js";
 import consoleSuccess from "../utils/consoleSuccess.js";
 import cardDecksData from "../data/allCards.json" assert { type: "json" };
 
+export const createNewLobby = async ({ socket, data }) => {
+  const { hostName } = data;
+  const lobby = {
+    games: [],
+    waiting: [],
+    players: [{ name: hostName, playerId: socket.id }],
+  };
+
+  console.log(lobby);
+
+  try {
+    const newLobby = await LobbyCollection.create({
+      ...lobby,
+    });
+
+    consoleSuccess("Game created: ", newGame);
+
+    const lobbyId = newLobby._id;
+
+    console.log("lobby id", lobbyId);
+
+    console.log("lobby", newLobby);
+
+    socket.emit("LobbyCreated", { lobbyId, hostName });
+    socket.join(lobbyId);
+  } catch (err) {
+    socket.emit("error", { err });
+  }
+};
+
 export const createNewGame = async ({ socket, data }) => {
   const { hostName } = data;
-  const randomRoomCode = await checkRooms();
+  // const randomRoomCode = await checkRooms();
   const gameData = {
     ...data,
-    roomId: randomRoomCode,
-    round: 0,
+    // roomId: randomRoomCode,
+    // round: 0,
     players: [{ playerName: hostName, playerId: socket.id }],
   };
 

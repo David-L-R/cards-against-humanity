@@ -32,32 +32,15 @@ const Home = () => {
   const HostGame = () => {
     const handleSubmit = (e) => {
       e.preventDefault();
-
-      // get values from form
-      const amountOfPlayers = amountPLayer.current.value;
       const hostName = playerName.current.value;
-
-      // check players and name conditions
-      if (amountOfPlayers < 3 || amountOfPlayers > 10 || !hostName)
-        return alert(
-          "player amount between 2 and 10 and Player name is needed"
-        );
-
-      // send to server with socket.io
-      socket.emit("createNewGame", { amountOfPlayers, hostName });
+      // socket.emit("createNewGame", { hostName });
+      console.log("creating new lobby for " + hostName);
+      socket.emit("createNewLobby", { hostName });
     };
     return (
       <form onSubmit={(e) => handleSubmit(e)}>
-        <input ref={playerName} type="text" placeholder="Enter Name" required />
-        <input
-          ref={amountPLayer}
-          type="number"
-          min="3"
-          max="10"
-          placeholder="Enter amount of players"
-          required
-        />
-        <button type="submit">Host Game</button>
+        <input ref={playerName} type='text' placeholder='Enter Name' required />
+        <button type='submit'>Host Game</button>
       </form>
     );
   };
@@ -77,14 +60,14 @@ const Home = () => {
 
     return (
       <form onSubmit={(e) => handleSubmit(e)}>
-        <input ref={playerName} type="text" placeholder="Enter Name" required />
+        <input ref={playerName} type='text' placeholder='Enter Name' required />
         <input
           ref={roomKey}
-          type="text"
-          placeholder="Enter room code"
+          type='text'
+          placeholder='Enter room code'
           required
         />
-        <button type="submit">Join Game</button>
+        <button type='submit'>Join Game</button>
       </form>
     );
   };
