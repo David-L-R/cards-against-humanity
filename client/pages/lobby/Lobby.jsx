@@ -5,28 +5,24 @@ import { socket } from "../Home";
 
 const Lobby = () => {
   const router = useRouter();
-  const { lobby, name } = router.query;
-
+  const { lobbyId, name } = router.query;
   const [players, setPlayers] = useState([]);
 
   //listener to update page from server after DB entry changed
   socket.on("updateRoom", ({ playerList, err }) => {
-    // console.log("UPDATE!!");
-    // console.log(playerList);
-    console.log("playerList", playerList);
     if (err) return console.warn(err);
     setPlayers((pre) => (pre = playerList));
   });
 
   useEffect(() => {
     //self update page after got redirected, use room lobby from query
-    socket.emit("selfUpdate", { lobby });
-  }, []);
+    socket.emit("selfUpdate", { lobbyId });
+  }, [lobbyId]);
 
   return (
     <>
       <h1>Lobby, waiting for players</h1>
-      <h2>Lobby code: {lobby}</h2>
+      <h2>Lobby code: {lobbyId}</h2>
       <ul>
         {players &&
           players.map((player) => (

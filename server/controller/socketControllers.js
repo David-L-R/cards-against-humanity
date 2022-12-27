@@ -89,23 +89,23 @@ export const updateClient = async ({ lobbyId, socket }) => {
     return socket.emit("updateRoom", { message: "Cant find game to join!" });
 
   const currentLobby = await LobbyCollection.findOne({ _id: lobbyId });
-  console.log(currentLobby);
   if (!currentLobby)
     return socket.emit("updateRoom", {
       err: "cant update Client",
       message: "Cant find game to join!",
     });
-
+  console.log(currentLobby);
   socket.emit("updateRoom", { playerList: currentLobby.players });
 };
 
 export const deletePlayerFromDb = async ({ reason, io, socket }) => {
   //delte player by disconnect
-  const currentLobby = await LobbyCollection.findOne({
-    "players.id": socket.id,
-  });
 
-  if (currentLobby) {
+  try {
+    const currentLobby = await LobbyCollection.findOne({
+      "players.id": socket.id,
+    });
+
     //delete player from players list
     currentLobby.players = currentLobby.players.filter(
       (player) => player.id !== socket.id
@@ -115,9 +115,10 @@ export const deletePlayerFromDb = async ({ reason, io, socket }) => {
     currentLobby.save();
     return {
       playerList: currentLobby.players,
-      message: reason,
-      lobbyId: currentLobby._id.toString(),
+      lobbyId: currentLobby._id,
+      err: false,
     };
+  } catch (error) {
+    return { err: "Cant find player to remove" };
   }
-  return { playerList: 0 };
 };

@@ -54,12 +54,12 @@ io.on("connection", (socket) => {
   );
 
   socket.on("disconnect", async (reason) => {
-    const { playerList, lobbyId } = await deletePlayerFromDb({
+    const { playerList, lobbyId, err } = await deletePlayerFromDb({
       reason,
       io,
       socket,
     });
     if (playerList && lobbyId)
-      io.to(lobbyId).emit("updateRoom", { playerList });
+      io.to(lobbyId.toString()).emit("updateRoom", { playerList });
   });
 });

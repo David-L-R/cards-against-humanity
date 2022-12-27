@@ -10,16 +10,8 @@ const Home = () => {
   const [hostOrJoin, setHostOrJoin] = useState(null);
   const router = useRouter();
 
-  //If new room was createt, redirect to Lobby with room data
-  // socket.on("roomCreated", ({ roomId, hostName }) => {
-  //   router.push({
-  //     pathname: `/gamelobby/${hostName}`,
-  //     query: { roomId },
-  //   });
-  // });
-
+  //If new lobby was createt, redirect to Lobby with room data
   socket.on("LobbyCreated", ({ lobbyId, hostName }) => {
-    console.log("lobby created");
     router.push({
       pathname: `/lobby/${lobbyId}`,
       query: { name: hostName },
