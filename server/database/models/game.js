@@ -1,42 +1,38 @@
 import mongoose from "mongoose";
-import deleteOutatedData from "../../utils/deleteOutatedData.js";
 
-//TODO: create a real game object
 const gameModel = mongoose.Schema(
   {
-    roomId: {
-      type: String,
-      required: [true, "Please add room ID"],
-    },
-    amountOfPlayers: {
-      type: Number,
-      required: [true, "Please add a name"],
-    },
-    hostName: {
-      type: String,
-      required: [true, "Please add a Room ID"],
-    },
-    round: {
-      type: Number,
-      required: [true, "Please add start round number"],
-    },
-    players: {
-      type: Array,
-      required: [true, "Please add a player tom the players array"],
-    },
-    cardDecks: {
-      type: Array,
-      required: [true, "Please add a player tom the players array"],
+    Game: {
+      id: String,
+      finished: Boolean,
+      players: [
+        {
+          id: String, // this.Lobby.player[n].id
+          name: String,
+          active: Boolean,
+          points: Number,
+          hand: Array, //Cards
+        },
+      ],
+      deck: {
+        black_cards: Array,
+        white_cards: Array,
+      },
+      turns: [
+        {
+          czar: String, // this.Game.players[n].id
+          black_card: Object, //this.Game.deck.black_cards.splice(n, 1)
+          white_cards: [{ player: String, cards: Array }], //this.Game.players(n).id; this.Game.players(n).hand
+          winner: String, // this.Game.players[n].id
+          stage: Array, // holding strings, "deal", "choose_black", .....
+          timer: Number, // from host
+          active: Boolean,
+        },
+      ],
     },
   },
   {
     timestamps: true,
   }
 );
-
-const GameCollection = mongoose.model("GameCollection", gameModel);
-
-// delete MongoDB data if they are older then 24h
-deleteOutatedData(GameCollection);
-
-export default GameCollection;
+export default mongoose.model("GameCollection", gameModel);

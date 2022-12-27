@@ -1,14 +1,10 @@
 import { useRouter } from "next/router";
 import React from "react";
-import GameLobby from "./GameLobby";
+import Lobby from "./Lobby";
 
 const lobby = (props) => {
   const router = useRouter();
-  return (
-    <main>
-      <GameLobby {...props} {...router} />
-    </main>
-  );
+  return <Lobby {...props} {...router} />;
 };
 
 export default lobby;

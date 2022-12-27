@@ -7,6 +7,7 @@ import cors from "cors";
 import http from "http";
 import {
   createNewGame,
+  createNewLobby,
   deletePlayerFromDb,
   findRoomToJoin,
   updateClient,
@@ -41,6 +42,8 @@ server.listen(PORT, async (req, res) => {
 //Socket.io
 io.on("connection", (socket) => {
   console.log(`user connected: ${socket.id}`);
+
+  socket.on("createNewLobby", (data) => createNewLobby({ socket, data }));
 
   socket.on("createNewGame", (data) => createNewGame({ socket, data }));
 
