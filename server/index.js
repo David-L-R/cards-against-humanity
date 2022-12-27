@@ -47,18 +47,19 @@ io.on("connection", (socket) => {
 
   socket.on("createNewGame", (data) => createNewGame({ socket, data }));
 
-  socket.on("selfUpdate", ({ roomId }) => updateClient({ roomId, socket }));
+  socket.on("selfUpdate", ({ lobbyId }) => updateClient({ lobbyId, socket }));
 
-  socket.on("findRoom", ({ roomId, newPlayerName }) =>
-    findRoomToJoin({ roomId, newPlayerName, socket })
+  socket.on("findRoom", ({ lobbyId, newPlayerName }) =>
+    findRoomToJoin({ lobbyId, newPlayerName, socket })
   );
 
   socket.on("disconnect", async (reason) => {
-    const { playerList, roomId } = await deletePlayerFromDb({
+    const { playerList, lobbyId } = await deletePlayerFromDb({
       reason,
       io,
       socket,
     });
-    if (playerList && roomId) io.to(roomId).emit("updateRoom", { playerList });
+    if (playerList && lobbyId)
+      io.to(lobbyId).emit("updateRoom", { playerList });
   });
 });

@@ -8,10 +8,8 @@ export const createNewLobby = async ({ socket, data }) => {
   const lobby = {
     games: [],
     waiting: [],
-    players: [{ name: hostName, playerId: socket.id }],
+    players: [{ name: hostName, id: socket.id }],
   };
-
-  console.log(lobby);
 
   try {
     const newLobby = await LobbyCollection.create({
@@ -52,68 +50,74 @@ export const createNewGame = async ({ socket, data }) => {
   socket.join(roomId);
 };
 
-export const findRoomToJoin = async ({ roomId, newPlayerName, socket }) => {
-  const player = { playerName: newPlayerName, playerId: socket.id };
+export const findRoomToJoin = async ({ lobbyId, newPlayerName, socket }) => {
+  const player = { name: newPlayerName, id: socket.id };
 
   // searche game in MongoDb
-  const game = await GameCollection.findOne({ roomId: roomId });
-  if (!game)
+  const lobby = await LobbyCollection.findOne({ _id: lobbyId });
+  console.log("lobby", lobby);
+  if (!lobby)
     return socket.emit("findRoom", {
       noRoom: true,
-      message: "Can't find game",
+      err: "Can't find game",
     });
 
   // update player list in DB
-  game.players.push(player);
-  const updatetGame = await game.save();
-  if (!updatetGame)
+  lobby.players.push(player);
+  const updatedLobby = await lobby.save();
+  if (!updatedLobby)
     return socket.emit("findRoom", {
       noRoom: true,
       message: "Can't join game",
     });
 
-  //join player into room and send roomId back
-  socket.join(roomId);
+  //join player into room and send lobbyId back
+  socket.join(lobbyId);
   socket.emit("findRoom", {
     noRoom: false,
-    roomId,
+    lobbyId,
     playerName: newPlayerName,
     message: "Joining romm",
   });
 
   //updateing room
-  socket.to(roomId).emit("updateRoom", { playerList: updatetGame.players });
+  socket.to(lobbyId).emit("updateRoom", { playerList: updatedLobby.players });
 };
 
-export const updateClient = async ({ roomId, socket }) => {
-  if (!roomId)
+export const updateClient = async ({ lobbyId, socket }) => {
+  if (!lobbyId)
     return socket.emit("updateRoom", { message: "Cant find game to join!" });
 
-  const currentGame = await GameCollection.findOne({ roomId: roomId });
-  if (!currentGame)
-    return socket.emit("updateRoom", { message: "Cant find game to join!" });
+  const currentLobby = await LobbyCollection.findOne({ _id: lobbyId });
+  console.log(currentLobby);
+  if (!currentLobby)
+    return socket.emit("updateRoom", {
+      err: "cant update Client",
+      message: "Cant find game to join!",
+    });
 
-  socket.emit("updateRoom", { playerList: currentGame.players });
+  socket.emit("updateRoom", { playerList: currentLobby.players });
 };
 
 export const deletePlayerFromDb = async ({ reason, io, socket }) => {
   //delte player by disconnect
-  const currentGame = await GameCollection.findOne({
-    "players.playerId": socket.id,
+  const currentLobby = await LobbyCollection.findOne({
+    "players.id": socket.id,
   });
 
-  if (currentGame) {
+  if (currentLobby) {
     //delete player from players list
-    currentGame.players = currentGame.players.filter(
-      (player) => player.playerId !== socket.id
+    currentLobby.players = currentLobby.players.filter(
+      (player) => player.id !== socket.id
     );
 
     //update channel
-    currentGame.save();
+    currentLobby.save();
     return {
-      playerList: currentGame.players,
+      playerList: currentLobby.players,
       message: reason,
-      roomId: currentGame.roomId,
+      lobbyId: currentLobby._id.toString(),
     };
   }
+  return { playerList: 0 };
 };

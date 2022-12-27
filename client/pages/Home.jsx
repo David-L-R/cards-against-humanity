@@ -28,11 +28,11 @@ const Home = () => {
 
   //redirecting to lobby with data after server found the game in DB
   socket.on("findRoom", (data) => {
-    const { noRoom, roomId, playerName, message } = data;
+    const { noRoom, lobbyId, playerName, message } = data;
     if (noRoom) return alert(message);
     router.push({
-      pathname: `/gamelobby/${playerName}`,
-      query: { roomId },
+      pathname: `/lobby/${lobbyId}`,
+      query: { name: playerName },
     });
   });
 
@@ -45,8 +45,8 @@ const Home = () => {
     };
     return (
       <form onSubmit={(e) => handleSubmit(e)}>
-        <input ref={playerName} type='text' placeholder='Enter Name' required />
-        <button type='submit'>Host Game</button>
+        <input ref={playerName} type="text" placeholder="Enter Name" required />
+        <button type="submit">Host Game</button>
       </form>
     );
   };
@@ -57,23 +57,23 @@ const Home = () => {
       e.preventDefault();
 
       // get values from form
-      const roomId = roomKey.current.value;
+      const lobbyId = roomKey.current.value;
       const newPlayerName = playerName.current.value;
 
       // request to server to find the game by the given id from form
-      socket.emit("findRoom", { roomId, newPlayerName });
+      socket.emit("findRoom", { lobbyId, newPlayerName });
     };
 
     return (
       <form onSubmit={(e) => handleSubmit(e)}>
-        <input ref={playerName} type='text' placeholder='Enter Name' required />
+        <input ref={playerName} type="text" placeholder="Enter Name" required />
         <input
           ref={roomKey}
-          type='text'
-          placeholder='Enter room code'
+          type="text"
+          placeholder="Enter room code"
           required
         />
-        <button type='submit'>Join Game</button>
+        <button type="submit">Join Game</button>
       </form>
     );
   };
