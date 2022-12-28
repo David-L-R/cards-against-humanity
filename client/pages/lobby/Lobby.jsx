@@ -2,11 +2,31 @@ import { route } from "express/lib/router";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { socket } from "../Home";
+import { BiCopy } from "react-icons/Bi";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { useDrag } from "react-use-gesture";
+import { useSpring, animated } from "react-spring";
 
 const Lobby = () => {
   const router = useRouter();
   const { lobbyId, name } = router.query;
   const [players, setPlayers] = useState([]);
+  const [copied, setCopied] = useState(false);
+
+  //Logic for dragging a card
+  const [props, api] = useSpring(() => ({
+    x: 0,
+    y: 0,
+    scale: 1,
+  }));
+
+  const bind = useDrag(({ active, movement: [x, y] }) => {
+    api.start({
+      x: active ? x : 0,
+      y: active ? y : 0,
+      scale: active ? 1.2 : 1,
+    });
+  });
 
   //listener to update page from server after DB entry changed
   socket.on("updateRoom", ({ playerList, err }) => {
@@ -21,7 +41,57 @@ const Lobby = () => {
 
   return (
     <>
-      <h1>Lobby, waiting for players</h1>
+      <div className="waitingLobbyContainer">
+        <div className="waitingLobbyCard">
+          <div className="waitingLobbyTextWrapper">
+            <h1>
+              Waiting for players
+              <div className="loadingContainer">
+                <div className="loader">
+                  <div class="circle" id="a"></div>
+                  <div class="circle" id="b"></div>
+                  <div class="circle" id="c"></div>
+                </div>
+              </div>
+            </h1>
+          </div>
+          <div className="lobbyIdContainer">
+            <h3>Lobby code: </h3>
+            <div className="lobbyIdCopyField">
+              {copied ? <p className="tempCopyText">Copied!</p> : null}
+              <CopyToClipboard text={lobbyId} onCopy={() => setCopied(true)}>
+                <p>
+                  {lobbyId}
+                  <BiCopy className="icon" />
+                </p>
+              </CopyToClipboard>
+            </div>
+          </div>
+
+          <div className="waitingLobbyButtonWrapper">
+            <button className="lobbyButton">
+              <span>Ready</span>
+            </button>
+          </div>
+          <div className="dragContainer">
+            <ul>
+              {players &&
+                players.map((player) => (
+                  <animated.li key={player.name} {...bind()} style={props}>
+                    <h2>{player.name}</h2>
+                  </animated.li>
+                ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Lobby;
+/*
+<h1>Lobby, waiting for players</h1>
       <h2>Lobby code: {lobbyId}</h2>
       <ul>
         {players &&
@@ -32,8 +102,5 @@ const Lobby = () => {
             </li>
           ))}
       </ul>
-    </>
-  );
-};
 
-export default Lobby;
+*/

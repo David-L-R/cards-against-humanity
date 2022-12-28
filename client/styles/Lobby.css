@@ -1,0 +1,202 @@
+.waitingLobbyContainer {
+  position: relative;
+  display: flex;
+  margin: auto;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+.waitingLobbyCard {
+  margin: auto;
+  height: 400px;
+  width: 250px;
+  border: 2px solid white;
+  box-shadow: 0 0px 18px 0px rgba(255, 255, 255, 0.2);
+  border-radius: 15px;
+  padding: 0;
+  z-index: 1;
+}
+.waitingLobbyTextWrapper {
+  position: relative;
+  width: 210px;
+  height: 100px;
+  padding-bottom: 35px;
+  padding-left: 25px;
+}
+.waitingLobbyButtonWrapper {
+  display: flex;
+  margin-top: 50px;
+
+  justify-content: center;
+}
+.loadingContainer {
+  padding-top: 25px;
+  position: absolute;
+  top: 28%;
+  right: 27%;
+  display: flex;
+  max-width: max-content;
+  flex-direction: column;
+}
+.icon {
+  font-size: 16px;
+  padding-left: 15px;
+  cursor: pointer;
+}
+.icon:hover {
+  color: #a0d68a;
+}
+.loader {
+  width: auto;
+  height: auto;
+  margin: auto;
+  display: flex;
+}
+.circle {
+  width: 7px;
+  height: 7px;
+  background: white;
+  border-radius: 50%;
+  margin: 0 2px;
+  animation: jump 1s linear infinite;
+}
+.lobbyIdContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.lobbyIdCopyField {
+  border: 2px solid white;
+  border-radius: 10px;
+  width: 210px;
+  position: relative;
+}
+.lobbyIdContainer p {
+  font-size: 12px;
+  padding-left: 7px;
+}
+
+.tempCopyText {
+  position: absolute;
+  color: #a0d68a;
+  top: -10px;
+  font-weight: 600;
+  width: auto;
+  padding: 10px;
+  margin: auto;
+  animation: hideAnimation 0s ease-in 3s;
+  animation-fill-mode: forwards;
+}
+.lobbyPlayersContainer {
+  position: absolute;
+  width: 100%;
+  height: 100vh;
+}
+
+.draggedWhiteCard:hover {
+  cursor: grab;
+}
+.dragContainer ul {
+  list-style: none;
+}
+
+.dragContainer ul li {
+  width: 110px;
+  height: 170px;
+  border-radius: 10px;
+  background: white;
+  color: black;
+  border: 1px solid black;
+}
+.dragContainer ul li h2 {
+  padding-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.dragContainer ul li:nth-child(1) {
+  position: absolute;
+  bottom: 10%;
+  left: 5%;
+  transform: rotate(-20deg);
+}
+.dragContainer ul li:nth-child(2) {
+  position: absolute;
+  bottom: 10%;
+  left: 15%;
+  transform: rotate(20deg);
+}
+.dragContainer ul li:nth-child(3) {
+  position: absolute;
+  bottom: 10%;
+  left: 25%;
+  transform: rotate(-10deg);
+}
+.dragContainer ul li:nth-child(4) {
+  position: absolute;
+  bottom: 8%;
+  left: 35%;
+  transform: rotate(20deg);
+}
+.dragContainer ul li:nth-child(5) {
+  position: absolute;
+  bottom: 8%;
+  left: 45%;
+  transform: rotate(10deg);
+}
+.dragContainer ul li:nth-child(6) {
+  position: absolute;
+  bottom: 8%;
+  left: 56%;
+  transform: rotate(-10deg);
+}
+.dragContainer ul li:nth-child(7) {
+  position: absolute;
+  bottom: 8%;
+  left: 64%;
+  transform: rotate(10deg);
+}
+.dragContainer ul li:nth-child(8) {
+  position: absolute;
+  bottom: 8%;
+  left: 75%;
+  transform: rotate(-13deg);
+}
+.dragContainer ul li:nth-child(9) {
+  position: absolute;
+  bottom: 10%;
+  left: 86%;
+  transform: rotate(13deg);
+}
+.dragContainer ul li:nth-child(10) {
+  position: absolute;
+  bottom: 10%;
+  left: 90%;
+  transform: rotate(-13deg);
+}
+@keyframes hideAnimation {
+  to {
+    visibility: hidden;
+    width: 0;
+    height: 0;
+  }
+}
+
+@keyframes jump {
+  0% {
+    margin-top: 0;
+  }
+  35% {
+    margin-top: -7px;
+  }
+  70% {
+    margin-top: 0px;
+  }
+}
+
+#b {
+  animation-delay: 0.2s;
+}
+#c {
+  animation-delay: 0.4s;
+}
