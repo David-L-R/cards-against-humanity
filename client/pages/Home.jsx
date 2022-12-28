@@ -69,27 +69,32 @@ const Home = () => {
     };
 
     return (
-      <form onSubmit={(e) => handleSubmit(e)} className="lobbyForm">
-        <input
-          ref={playerName}
-          type="text"
-          placeholder="Name"
-          required
-          className="lobbyInputField"
-        />
-        <input
-          ref={roomKey}
-          type="text"
-          placeholder="Enter room code"
-          required
-          className="lobbyInputField"
-        />
-        <div className="lobbyButtonWrapper">
-          <button type="submit" className="lobbyButton">
-            <span>Join Game</span>
-          </button>
-        </div>
-      </form>
+      <div className="lobbyJoinFormContainer">
+        <h2>Join a Game.</h2>
+        <form onSubmit={(e) => handleSubmit(e)} className="lobbyJoinForm">
+          <p>Enter Your Name:</p>
+          <input
+            ref={playerName}
+            type="text"
+            placeholder="Name"
+            required
+            className="lobbyJoinInputField"
+          />
+          <p>Enter Room Code:</p>
+          <input
+            ref={roomKey}
+            type="text"
+            placeholder="code"
+            required
+            className="lobbyJoinInputField"
+          />
+          <div className="lobbyButtonWrapper">
+            <button type="submit" className="lobbyButton">
+              <span>Join Game</span>
+            </button>
+          </div>
+        </form>
+      </div>
     );
   };
 
@@ -97,7 +102,7 @@ const Home = () => {
   const [isJoinActive, setIsJoinActive] = useState(false);
   const handleHostClick = (event) => {
     setIsHostActive(true);
-    if (setIsJoinActive) setIsJoinActive(false);
+    if (setIsJoinActive) setTimeout(() => setIsJoinActive(false), 150);
   };
   const handleJoinClick = (event) => {
     setIsJoinActive(true);
@@ -117,15 +122,17 @@ const Home = () => {
           <div
             id={isJoinActive ? "lobbyHidden" : "lobbyVisible"}
             className={isHostActive ? "lobbyCard lobbyCardRotate" : "lobbyCard"}
-            onClick={handleHostClick}
+            onClick={() => {
+              setHostOrJoin("host");
+              handleHostClick();
+            }}
           >
             <div className="lobbyFront">
               <h2>Host a New Game.</h2>
             </div>
             <div className="lobbyBack">
-              <h2>
-                I'm the Host but my Homies calls me <HostGame />
-              </h2>
+              <h2>I'm the Host but my Homies calls me</h2>
+              {hostOrJoin === "host" ? <HostGame /> : null}
             </div>
           </div>
         </div>
@@ -141,7 +148,10 @@ const Home = () => {
             className={
               isJoinActive ? "lobbyCard lobbyJoinCardRotate" : "lobbyCard"
             }
-            onClick={handleJoinClick}
+            onClick={(e) => {
+              setHostOrJoin("join");
+              handleJoinClick();
+            }}
           >
             <div
               className={
@@ -151,7 +161,7 @@ const Home = () => {
               <h2>Join a Game.</h2>
             </div>
             <div className="lobbyBack">
-              <JoinGame />
+              {hostOrJoin === "join" ? <JoinGame /> : null}
             </div>
           </div>
         </div>

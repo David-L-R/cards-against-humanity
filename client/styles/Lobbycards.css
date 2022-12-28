@@ -11,14 +11,14 @@
 }
 .lobbyCardRotate {
   position: relative;
-  transform: rotateY(180deg) scale(1.1) translateX(-230px);
+  transform: rotateY(180deg) scale(1.1) translateX(-205px);
   border-radius: 15px;
   box-shadow: 2px 3px 10px 2px rgba(255, 255, 255, 0.7);
   z-index: 2;
 }
 .lobbyJoinCardRotate {
   position: relative;
-  transform: rotateY(180deg) scale(1.1) translateX(230px);
+  transform: rotateY(180deg) scale(1.1) translateX(185px);
   border-radius: 15px;
   box-shadow: 2px 3px 10px 2px rgba(255, 255, 255, 0.7);
   z-index: 2;
@@ -69,6 +69,8 @@
   background: black;
   z-index: -1;
   transform: rotateY(180deg);
+  display: grid;
+  grid-template-rows: 1fr 1fr 1fr;
 }
 
 .lobbyBack h2 {
@@ -88,9 +90,19 @@
   width: 170px;
   color: white;
 }
+.lobbyJoinInputField {
+  border: none;
+  display: flex;
+  border-bottom: 3px solid white;
+  background: rgb(0, 0, 0);
+  width: 170px;
+  color: white;
+  padding-top: 5px;
+}
 
 .lobbyForm {
   border-top: 15px solid transparent;
+  padding-left: 25px;
 }
 .lobbyButtonWrapper {
   position: fixed;
@@ -128,7 +140,6 @@
   width: 0;
   height: 100%;
   background: white;
-
   transition: all 0.35s;
 }
 .lobbyButton:hover {
@@ -142,6 +153,16 @@
   animation: switchCards;
   animation-duration: 250ms;
   animation-fill-mode: forwards;
+}
+.lobbyJoinFormContainer {
+  width: 100%;
+  height: 70%;
+  margin: 0;
+}
+.lobbyJoinForm {
+  padding-top: 15px;
+  padding-left: 25px;
+  letter-spacing: 2px;
 }
 
 @keyframes switchCards {
