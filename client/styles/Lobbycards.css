@@ -1,0 +1,161 @@
+.lobbyCardsContainer {
+  position: relative;
+  height: 100vh;
+  margin: auto;
+  width: 500px;
+  display: grid;
+  gap: 10vw;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  justify-content: center;
+}
+.lobbyCardRotate {
+  position: relative;
+  transform: rotateY(180deg) scale(1.1) translateX(-230px);
+  border-radius: 15px;
+  box-shadow: 2px 3px 10px 2px rgba(255, 255, 255, 0.7);
+  z-index: 2;
+}
+.lobbyJoinCardRotate {
+  position: relative;
+  transform: rotateY(180deg) scale(1.1) translateX(230px);
+  border-radius: 15px;
+  box-shadow: 2px 3px 10px 2px rgba(255, 255, 255, 0.7);
+  z-index: 2;
+}
+#lobbyHidden {
+  position: relative;
+  transform: scale(0.8) translateX(100px);
+  z-index: 0;
+}
+#lobbyHostHidden {
+  position: relative;
+  transform: scale(0.8) translateX(-100px);
+  z-index: 0;
+}
+
+.lobbyCard {
+  height: 400px;
+  width: 250px;
+  position: relative;
+  transition: all 0.5s linear;
+  transform-style: preserve-3d;
+}
+.lobbyFront,
+.lobbyBack {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  border-radius: 15px;
+  position: absolute;
+  border: 2px solid white;
+  box-shadow: 0 0px 18px 0px rgba(255, 255, 255, 0.2);
+}
+
+.lobbyFront {
+  background: black;
+  backface-visibility: hidden;
+}
+.lobbyjoinhidden {
+  z-index: 0;
+}
+.lobbyFront h2 {
+  font-size: 30px;
+  width: 200px;
+  padding-left: 30px;
+}
+
+.lobbyBack {
+  background: black;
+  z-index: -1;
+  transform: rotateY(180deg);
+}
+
+.lobbyBack h2 {
+  width: 175px;
+  padding-left: 25px;
+}
+
+.lobbyContainer {
+  perspective: 1500px;
+}
+.lobbyInputField {
+  border: none;
+  display: flex;
+  border-bottom: 3px solid white;
+  background: rgb(0, 0, 0);
+  font-size: 28px;
+  width: 170px;
+  color: white;
+}
+
+.lobbyForm {
+  border-top: 15px solid transparent;
+}
+.lobbyButtonWrapper {
+  position: fixed;
+  top: 80%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.lobbyButton {
+  padding: 0;
+  margin: 0;
+  display: block;
+  width: 200px;
+  height: 45px;
+  line-height: 40px;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  color: white;
+  cursor: pointer;
+  background: black;
+  letter-spacing: 2px;
+  text-align: center;
+  position: relative;
+  transition: all 0.35s;
+}
+.lobbyButton span {
+  position: relative;
+  z-index: 2;
+}
+.lobbyButton:after {
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: white;
+
+  transition: all 0.35s;
+}
+.lobbyButton:hover {
+  color: black;
+}
+.lobbyButton:hover:after {
+  width: 100%;
+}
+
+.lobbyContainer-active {
+  animation: switchCards;
+  animation-duration: 250ms;
+  animation-fill-mode: forwards;
+}
+
+@keyframes switchCards {
+  0% {
+    perspective: 1500px;
+    z-index: 0;
+  }
+
+  75% {
+    perspective: 1500px;
+    z-index: 0;
+  }
+  100% {
+    perspective: none;
+    z-index: 1;
+  }
+}

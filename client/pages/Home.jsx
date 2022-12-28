@@ -1,3 +1,4 @@
+import { is } from "@react-spring/shared";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
@@ -36,9 +37,20 @@ const Home = () => {
       socket.emit("createNewLobby", { hostName });
     };
     return (
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <input ref={playerName} type="text" placeholder="Enter Name" required />
-        <button type="submit">Host Game</button>
+      <form onSubmit={(e) => handleSubmit(e)} className="lobbyForm">
+        <input
+          ref={playerName}
+          type="text"
+          placeholder="Enter Name"
+          required
+          className="lobbyInputField"
+        />
+
+        <div className="lobbyButtonWrapper">
+          <button type="submit" className="lobbyButton">
+            <span>Host Game</span>
+          </button>
+        </div>
       </form>
     );
   };
@@ -57,23 +69,101 @@ const Home = () => {
     };
 
     return (
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <input ref={playerName} type="text" placeholder="Enter Name" required />
+      <form onSubmit={(e) => handleSubmit(e)} className="lobbyForm">
+        <input
+          ref={playerName}
+          type="text"
+          placeholder="Name"
+          required
+          className="lobbyInputField"
+        />
         <input
           ref={roomKey}
           type="text"
           placeholder="Enter room code"
           required
+          className="lobbyInputField"
         />
-        <button type="submit">Join Game</button>
+        <div className="lobbyButtonWrapper">
+          <button type="submit" className="lobbyButton">
+            <span>Join Game</span>
+          </button>
+        </div>
       </form>
     );
   };
 
+  const [isHostActive, setIsHostActive] = useState(false);
+  const [isJoinActive, setIsJoinActive] = useState(false);
+  const handleHostClick = (event) => {
+    setIsHostActive(true);
+    if (setIsJoinActive) setIsJoinActive(false);
+  };
+  const handleJoinClick = (event) => {
+    setIsJoinActive(true);
+    if (setIsHostActive) setTimeout(() => setIsHostActive(false), 150);
+  };
   return (
     <>
-      <h1>Landing Page</h1>
-      <div>
+      <div className="lobbyCardsContainer">
+        <div
+          className={
+            // i added a new class on the very parent elemt on each card, to change z-index and
+            isHostActive // the perspective
+              ? "lobbyContainer lobbyContainer-active"
+              : " lobbyContainer "
+          }
+        >
+          <div
+            id={isJoinActive ? "lobbyHidden" : "lobbyVisible"}
+            className={isHostActive ? "lobbyCard lobbyCardRotate" : "lobbyCard"}
+            onClick={handleHostClick}
+          >
+            <div className="lobbyFront">
+              <h2>Host a New Game.</h2>
+            </div>
+            <div className="lobbyBack">
+              <h2>
+                I'm the Host but my Homies calls me <HostGame />
+              </h2>
+            </div>
+          </div>
+        </div>
+        <div
+          className={
+            isJoinActive
+              ? "lobbyContainer  lobbyContainer-active " // also here
+              : " lobbyContainer"
+          }
+        >
+          <div
+            id={isHostActive ? "lobbyHostHidden" : "lobbyHostVisible"}
+            className={
+              isJoinActive ? "lobbyCard lobbyJoinCardRotate" : "lobbyCard"
+            }
+            onClick={handleJoinClick}
+          >
+            <div
+              className={
+                isHostActive ? "lobbyFront lobbyjoinhidden" : "lobbyFront"
+              }
+            >
+              <h2>Join a Game.</h2>
+            </div>
+            <div className="lobbyBack">
+              <JoinGame />
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Home;
+
+/*
+<div>
         <button onClick={() => setHostOrJoin("host")}>Host new Game</button>
         <button onClick={() => setHostOrJoin("join")}>Join Game</button>
       </div>
@@ -84,8 +174,4 @@ const Home = () => {
           <JoinGame />
         ) : null}
       </div>
-    </>
-  );
-};
-
-export default Home;
+*/

@@ -53,6 +53,7 @@
 .cardHeader {
   position: relative;
   padding: 30px 30px 40px;
+  cursor: default;
 }
 .cardHeader:after {
   content: "";
