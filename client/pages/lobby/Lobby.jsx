@@ -77,9 +77,9 @@ const Lobby = () => {
             <ul>
               {players &&
                 players.map((player) => (
-                  <animated.li key={player.name} {...bind()} style={props}>
+                  <li key={player.name} {...bind()} style={props}>
                     <h2>{player.name}</h2>
-                  </animated.li>
+                  </li>
                 ))}
             </ul>
           </div>
