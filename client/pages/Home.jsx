@@ -39,6 +39,7 @@ const Home = () => {
     return (
       <form onSubmit={(e) => handleSubmit(e)} className="lobbyForm">
         <input
+          maxLength={15}
           ref={playerName}
           type="text"
           placeholder="Enter Name"
@@ -74,6 +75,7 @@ const Home = () => {
         <form onSubmit={(e) => handleSubmit(e)} className="lobbyJoinForm">
           <p>Enter Your Name:</p>
           <input
+            maxLength={15}
             ref={playerName}
             type="text"
             placeholder="Name"
@@ -171,17 +173,3 @@ const Home = () => {
 };
 
 export default Home;
-
-/*
-<div>
-        <button onClick={() => setHostOrJoin("host")}>Host new Game</button>
-        <button onClick={() => setHostOrJoin("join")}>Join Game</button>
-      </div>
-      <div>
-        {hostOrJoin === "host" ? (
-          <HostGame />
-        ) : hostOrJoin === "join" ? (
-          <JoinGame />
-        ) : null}
-      </div>
-*/

@@ -104,7 +104,10 @@
 }
 
 .dragContainer ul li h2 {
-  padding-top: 20px;
+  padding-left: 10px;
+  padding-right: 10px;
+
+  word-break: break-all;
   display: flex;
   justify-content: center;
 }

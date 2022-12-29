@@ -39,7 +39,7 @@ const Lobby = () => {
             </h1>
           </div>
           <div className="lobbyIdContainer">
-            <h3>Lobby code: </h3>
+            <h3>Game code: </h3>
             <div className="lobbyIdCopyField">
               {copied ? <p className="tempCopyText">Copied!</p> : null}
               <CopyToClipboard text={lobbyId} onCopy={() => setCopied(true)}>
@@ -50,7 +50,6 @@ const Lobby = () => {
               </CopyToClipboard>
             </div>
           </div>
-
           <div className="waitingLobbyButtonWrapper">
             <button className="lobbyButton">
               <span>Ready</span>
@@ -61,7 +60,7 @@ const Lobby = () => {
               {players &&
                 players.map((player) => (
                   <li key={player.name}>
-                    <h2>{player.name}</h2>
+                    <h2>{player.name.toUpperCase()}</h2>
                   </li>
                 ))}
             </ul>
