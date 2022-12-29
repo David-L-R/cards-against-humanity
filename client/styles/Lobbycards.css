@@ -25,12 +25,12 @@
 }
 #lobbyHidden {
   position: relative;
-  transform: scale(0.8) translateX(100px);
+  transform: scale(0.8) translateX(100px) rotate(-30deg);
   z-index: 0;
 }
 #lobbyHostHidden {
   position: relative;
-  transform: scale(0.8) translateX(-100px);
+  transform: scale(0.8) translateX(-100px) rotate(30deg);
   z-index: 0;
 }
 

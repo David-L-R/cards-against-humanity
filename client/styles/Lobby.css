@@ -73,7 +73,7 @@
 }
 .lobbyIdContainer p {
   font-size: 12px;
-  padding-left: 7px;
+  padding-left: 10px;
 }
 
 .tempCopyText {
@@ -87,17 +87,11 @@
   animation: hideAnimation 0s ease-in 3s;
   animation-fill-mode: forwards;
 }
-.lobbyPlayersContainer {
-  position: absolute;
-  width: 100%;
-  height: 100vh;
-}
 
-.draggedWhiteCard:hover {
-  cursor: grab;
-}
 .dragContainer ul {
   list-style: none;
+  display: flex;
+  justify-content: center;
 }
 
 .dragContainer ul li {
@@ -108,6 +102,7 @@
   color: black;
   border: 1px solid black;
 }
+
 .dragContainer ul li h2 {
   padding-top: 20px;
   display: flex;
@@ -116,48 +111,56 @@
 
 .dragContainer ul li:nth-child(1) {
   position: absolute;
+  animation: moveCard 0.5s linear;
   bottom: 10%;
   left: 5%;
   transform: rotate(-20deg);
 }
 .dragContainer ul li:nth-child(2) {
   position: absolute;
+  animation: moveCard 0.5s linear;
   bottom: 10%;
   left: 15%;
   transform: rotate(20deg);
 }
 .dragContainer ul li:nth-child(3) {
   position: absolute;
+  animation: moveCard 0.5s linear;
   bottom: 10%;
   left: 25%;
   transform: rotate(-10deg);
 }
 .dragContainer ul li:nth-child(4) {
   position: absolute;
+  animation: moveCard 0.4s linear;
   bottom: 8%;
   left: 35%;
   transform: rotate(20deg);
 }
 .dragContainer ul li:nth-child(5) {
   position: absolute;
+  animation: moveCard 0.35s linear;
   bottom: 8%;
   left: 45%;
   transform: rotate(10deg);
 }
 .dragContainer ul li:nth-child(6) {
   position: absolute;
+  animation: moveCard 0.35s linear;
   bottom: 8%;
   left: 56%;
   transform: rotate(-10deg);
 }
 .dragContainer ul li:nth-child(7) {
   position: absolute;
+  animation: moveCard 0.35s linear;
   bottom: 8%;
   left: 64%;
   transform: rotate(10deg);
 }
 .dragContainer ul li:nth-child(8) {
   position: absolute;
+  animation: moveCard 0.35s linear;
   bottom: 8%;
   left: 75%;
   transform: rotate(-13deg);
@@ -199,4 +202,13 @@
 }
 #c {
   animation-delay: 0.4s;
+}
+
+@keyframes moveCard {
+  0% {
+    transform: translateX(1000px) rotate(1turn);
+  }
+  100% {
+    transform: translateX(0px);
+  }
 }

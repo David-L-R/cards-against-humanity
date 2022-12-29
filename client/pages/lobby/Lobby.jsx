@@ -4,29 +4,12 @@ import React, { useEffect, useState } from "react";
 import { socket } from "../Home";
 import { BiCopy } from "react-icons/Bi";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { useDrag } from "react-use-gesture";
-import { useSpring, animated } from "react-spring";
 
 const Lobby = () => {
   const router = useRouter();
   const { lobbyId, name } = router.query;
   const [players, setPlayers] = useState([]);
   const [copied, setCopied] = useState(false);
-
-  //Logic for dragging a card
-  const [props, api] = useSpring(() => ({
-    x: 0,
-    y: 0,
-    scale: 1,
-  }));
-
-  const bind = useDrag(({ active, movement: [x, y] }) => {
-    api.start({
-      x: active ? x : 0,
-      y: active ? y : 0,
-      scale: active ? 1.2 : 1,
-    });
-  });
 
   //listener to update page from server after DB entry changed
   socket.on("updateRoom", ({ playerList, err }) => {
@@ -77,7 +60,7 @@ const Lobby = () => {
             <ul>
               {players &&
                 players.map((player) => (
-                  <li key={player.name} {...bind()} style={props}>
+                  <li key={player.name}>
                     <h2>{player.name}</h2>
                   </li>
                 ))}
@@ -90,6 +73,7 @@ const Lobby = () => {
 };
 
 export default Lobby;
+
 /*
 <h1>Lobby, waiting for players</h1>
       <h2>Lobby code: {lobbyId}</h2>
