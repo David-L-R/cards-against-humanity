@@ -15,6 +15,7 @@ const Home = () => {
   const [hostOrJoin, setHostOrJoin] = useState(null);
   const router = useRouter();
   const cookies = parseCookies();
+  const [showErrMessage, setShowErrMessage] = useState(false);
 
   useEffect(() => {
     setCookie(null, "socketId", socket.id, { path: "/" });
@@ -32,7 +33,10 @@ const Home = () => {
   socket.on("findRoom", (data) => {
     try {
       const { noRoom, lobbyId, playerName, err } = data;
-      if (noRoom) return console.log(err);
+      if (noRoom) {
+        setShowErrMessage(true);
+        return;
+      }
       if (!lobbyId || !playerName) {
         throw new Error("Invalid lobbyId or playerName");
       }
@@ -130,6 +134,7 @@ const Home = () => {
     setIsJoinActive(true);
     if (setIsHostActive) setTimeout(() => setIsHostActive(false), 150);
   };
+
   return (
     <>
       <div className="lobbyCardsContainer">
@@ -182,6 +187,15 @@ const Home = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="errorBox">
+        {showErrMessage ? (
+          <div
+            className="errMessage"
+            onClose={setTimeout(() => setShowErrMessage(false), 5000)}>
+            Invalid Room Code - please try again
+          </div>
+        ) : null}
       </div>
     </>
   );

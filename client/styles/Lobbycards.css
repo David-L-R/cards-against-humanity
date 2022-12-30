@@ -176,6 +176,28 @@
   letter-spacing: 2px;
 }
 
+.errMessage {
+  position: fixed;
+  width: 100%;
+  color: white;
+  background-color: #eb455f;
+  height: 50px;
+  animation: errAnimation 0.7s;
+  top: 0;
+  align-items: center;
+  display: flex;
+  padding-left: 20px;
+  font-size: 18px;
+}
+@keyframes errAnimation {
+  0% {
+    top: -50px;
+  }
+  100% {
+    top: 0px;
+  }
+}
+
 @keyframes switchCards {
   0% {
     perspective: 1500px;
