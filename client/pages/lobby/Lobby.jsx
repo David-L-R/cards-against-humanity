@@ -20,7 +20,6 @@ const Lobby = () => {
 
   //listener to update page from server after DB entry changed
   socket.on("updateRoom", ({ err, playerList, host }) => {
-    console.log("host", host);
     if (err) return console.warn(err);
 
     setPlayers((pre) => (pre = playerList));
