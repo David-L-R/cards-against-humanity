@@ -1,3 +1,4 @@
+/*
 export const generateRoomCode = () => {
   const characters =
     "abcdefghijklmnopqrstuvwzABCDEFGHIJKLMNOPQRSTUVWZ0123456789";
@@ -14,4 +15,18 @@ export const generateRoomCode = () => {
   //change into string
   const roomIdIntoString = roomId.join().replaceAll(",", "");
   return roomIdIntoString;
+};
+*/
+export const generateRoomCode = () => {
+  const characters = "abcdefghijklmnopqrstuvwxyz0123456789";
+  const roomIdLength = 5;
+  let lobbyId = "";
+
+  for (let i = 0; i < roomIdLength; i++) {
+    const randomChar =
+      characters[Math.floor(Math.random() * characters.length)];
+    lobbyId += randomChar;
+  }
+
+  return lobbyId;
 };

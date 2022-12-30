@@ -47,7 +47,9 @@ io.on("connection", (socket) => {
 
   socket.on("createNewGame", (data) => createNewGame({ socket, data }));
 
-  socket.on("selfUpdate", ({ lobbyId }) => updateClient({ lobbyId, socket }));
+  socket.on("selfUpdate", ({ lobbyId, name }) =>
+    updateClient({ lobbyId, socket, name })
+  );
 
   socket.on("findRoom", ({ lobbyId, newPlayerName }) =>
     findRoomToJoin({ lobbyId, newPlayerName, socket })
@@ -61,5 +63,9 @@ io.on("connection", (socket) => {
     });
     if (playerList && lobbyId)
       io.to(lobbyId.toString()).emit("updateRoom", { playerList });
+  });
+
+  socket.on("reconnect", async () => {
+    console.log("Reconnectetd!, Socket id: ", socket.id);
   });
 });

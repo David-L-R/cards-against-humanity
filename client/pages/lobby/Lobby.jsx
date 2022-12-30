@@ -14,13 +14,24 @@ const Lobby = () => {
   //listener to update page from server after DB entry changed
   socket.on("updateRoom", ({ playerList, err }) => {
     if (err) return console.warn(err);
+
     setPlayers((pre) => (pre = playerList));
+
+    console.error(err);
   });
 
   useEffect(() => {
     //self update page after got redirected, use room lobby from query
-    socket.emit("selfUpdate", { lobbyId });
+    socket.emit("selfUpdate", { lobbyId, name });
   }, [lobbyId]);
+
+  //hello David :) WE good at naming conventions😘😘
+  const toggleSomething = () => {
+    setCopied(true);
+    setTimeout(() => {
+      setCopied(false);
+    }, 3000);
+  };
 
   return (
     <>
@@ -42,7 +53,7 @@ const Lobby = () => {
             <h3>Game code: </h3>
             <div className="lobbyIdCopyField">
               {copied ? <p className="tempCopyText">Copied!</p> : null}
-              <CopyToClipboard text={lobbyId} onCopy={() => setCopied(true)}>
+              <CopyToClipboard text={lobbyId} onCopy={toggleSomething}>
                 <p>
                   {lobbyId}
                   <BiCopy className="icon" />

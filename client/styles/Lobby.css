@@ -84,8 +84,8 @@
   width: auto;
   padding: 10px;
   margin: auto;
-  animation: hideAnimation 0s ease-in 3s;
-  animation-fill-mode: forwards;
+  /* animation: hideAnimation 0s ease-in 3s;
+  animation-fill-mode: forwards; */
 }
 
 .dragContainer ul {

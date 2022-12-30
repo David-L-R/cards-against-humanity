@@ -6,7 +6,6 @@ import { io } from "socket.io-client";
 export const socket = io("http://localhost:5555");
 const Home = () => {
   const playerName = useRef("");
-  const amountPLayer = useRef(0);
   const roomKey = useRef("");
   const [hostOrJoin, setHostOrJoin] = useState(null);
   const router = useRouter();
@@ -21,12 +20,20 @@ const Home = () => {
 
   //redirecting to lobby with data after server found the game in DB
   socket.on("findRoom", (data) => {
-    const { noRoom, lobbyId, playerName, message } = data;
-    if (noRoom) return alert(message);
-    router.push({
-      pathname: `/lobby/${lobbyId}`,
-      query: { name: playerName },
-    });
+    try {
+      const { noRoom, lobbyId, playerName, err } = data;
+      if (noRoom) return console.log(err);
+      if (!lobbyId || !playerName) {
+        throw new Error("Invalid lobbyId or playerName");
+      }
+      router.push({
+        pathname: `/lobby/${lobbyId}`,
+        query: { name: playerName },
+      });
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while trying to navigate to the lobby");
+    }
   });
 
   //Hosting a new game
