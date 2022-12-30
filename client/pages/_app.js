@@ -4,7 +4,7 @@ import { CookiesProvider } from "react-cookie";
 function MyApp({ Component, pageProps }) {
   return (
     <CookiesProvider>
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
     </CookiesProvider>
   );
 }

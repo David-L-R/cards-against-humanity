@@ -87,6 +87,15 @@
   /* animation: hideAnimation 0s ease-in 3s;
   animation-fill-mode: forwards; */
 }
+.hostCrown {
+  display: flex;
+  position: absolute;
+  font-size: 38px;
+  color: orange;
+  top: -20px;
+  left: -20px;
+  transform: rotate(-40deg);
+}
 
 .dragContainer ul {
   list-style: none;

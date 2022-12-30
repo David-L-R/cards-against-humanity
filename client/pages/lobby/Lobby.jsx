@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { BiCopy } from "react-icons/Bi";
+import { RiVipCrown2Fill } from "react-icons/Ri";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { io } from "socket.io-client";
 import { parseCookies } from "nookies";
@@ -44,7 +45,6 @@ const Lobby = () => {
 
   return (
     <>
-      {host && <h1>IS HOST!!!!</h1>}
       <div className="waitingLobbyContainer">
         <div className="waitingLobbyCard">
           <div className="waitingLobbyTextWrapper">
@@ -82,6 +82,11 @@ const Lobby = () => {
                 players.map((player) => (
                   <li key={player.name}>
                     <h2>{player.name.toUpperCase()}</h2>
+                    {player.isHost && (
+                      <div className="hostCrown">
+                        <RiVipCrown2Fill />
+                      </div>
+                    )}
                   </li>
                 ))}
             </ul>
