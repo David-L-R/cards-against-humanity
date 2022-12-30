@@ -6,7 +6,6 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import {
-  createNewGame,
   createNewLobby,
   deletePlayerFromDb,
   findRoomToJoin,
@@ -45,27 +44,24 @@ io.on("connection", (socket) => {
 
   socket.on("createNewLobby", (data) => createNewLobby({ socket, data }));
 
-  socket.on("createNewGame", (data) => createNewGame({ socket, data }));
-
-  socket.on("selfUpdate", ({ lobbyId, name }) =>
-    updateClient({ lobbyId, socket, name })
+  socket.on("selfUpdate", ({ lobbyId, name, id }) =>
+    updateClient({ lobbyId, socket, name, id, io })
   );
 
-  socket.on("findRoom", ({ lobbyId, newPlayerName }) =>
-    findRoomToJoin({ lobbyId, newPlayerName, socket })
-  );
+  socket.on("findRoom", ({ lobbyId, newPlayerName, id }) => {
+    findRoomToJoin({ lobbyId, newPlayerName, socket, id, io });
+  });
 
   socket.on("disconnect", async (reason) => {
+    const userId = socket.userId;
+
     const { playerList, lobbyId, err } = await deletePlayerFromDb({
       reason,
       io,
-      socket,
+      userId,
     });
+
     if (playerList && lobbyId)
       io.to(lobbyId.toString()).emit("updateRoom", { playerList });
-  });
-
-  socket.on("reconnect", async () => {
-    console.log("Reconnectetd!, Socket id: ", socket.id);
   });
 });

@@ -1,18 +1,26 @@
-import { route } from "express/lib/router";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import { socket } from "../Home";
 import { BiCopy } from "react-icons/Bi";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { io } from "socket.io-client";
+import { parseCookies } from "nookies";
+
+const socket = io("http://localhost:5555", {
+  reconnection: true, // enable reconnection
+  reconnectionAttempts: 5, // try to reconnect 5 times
+  reconnectionDelay: 3000, // increase the delay between reconnection attempts to 3 seconds
+});
 
 const Lobby = () => {
   const router = useRouter();
   const { lobbyId, name } = router.query;
   const [players, setPlayers] = useState([]);
   const [copied, setCopied] = useState(false);
+  const cookies = parseCookies();
 
   //listener to update page from server after DB entry changed
-  socket.on("updateRoom", ({ playerList, err }) => {
+  socket.on("updateRoom", ({ err, playerList, host }) => {
+    console.log("host", host);
     if (err) return console.warn(err);
 
     setPlayers((pre) => (pre = playerList));
@@ -20,9 +28,13 @@ const Lobby = () => {
     console.error(err);
   });
 
+  socket.on("userDisconnected", () =>
+    socket.emit("currentID", { id: cookies.socketId })
+  );
+
   useEffect(() => {
     //self update page after got redirected, use room lobby from query
-    socket.emit("selfUpdate", { lobbyId, name });
+    socket.emit("selfUpdate", { lobbyId, name, id: cookies.socketId });
   }, [lobbyId]);
 
   //hello David :) WE good at naming conventions😘😘

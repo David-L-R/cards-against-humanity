@@ -1,14 +1,24 @@
 import { is } from "@react-spring/shared";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
+import { parseCookies, setCookie, destroyCookie } from "nookies";
 import { io } from "socket.io-client";
 
-export const socket = io("http://localhost:5555");
+const socket = io("http://localhost:5555", {
+  reconnection: true, // enable reconnection
+  reconnectionAttempts: 5, // try to reconnect 5 times
+  reconnectionDelay: 3000, // increase the delay between reconnection attempts to 3 seconds
+});
 const Home = () => {
   const playerName = useRef("");
   const roomKey = useRef("");
   const [hostOrJoin, setHostOrJoin] = useState(null);
   const router = useRouter();
+  const cookies = parseCookies();
+
+  useEffect(() => {
+    setCookie(null, "socketId", socket.id, { path: "/" });
+  }, [socket.id]);
 
   //If new lobby was createt, redirect to Lobby with room data
   socket.on("LobbyCreated", ({ lobbyId, hostName }) => {
@@ -41,7 +51,9 @@ const Home = () => {
     const handleSubmit = (e) => {
       e.preventDefault();
       const hostName = playerName.current.value;
-      socket.emit("createNewLobby", { hostName });
+      const id = cookies.socketId;
+      if (!id) return console.warn("NO ID");
+      socket.emit("createNewLobby", { hostName, id });
     };
     return (
       <form onSubmit={(e) => handleSubmit(e)} className="lobbyForm">
@@ -71,9 +83,10 @@ const Home = () => {
       // get values from form
       const lobbyId = roomKey.current.value;
       const newPlayerName = playerName.current.value;
+      const id = cookies.socketId;
 
       // request to server to find the game by the given id from form
-      socket.emit("findRoom", { lobbyId, newPlayerName });
+      socket.emit("findRoom", { lobbyId, newPlayerName, id });
     };
 
     return (
@@ -126,16 +139,14 @@ const Home = () => {
             isHostActive // the perspective
               ? "lobbyContainer lobbyContainer-active"
               : " lobbyContainer "
-          }
-        >
+          }>
           <div
             id={isJoinActive ? "lobbyHidden" : "lobbyVisible"}
             className={isHostActive ? "lobbyCard lobbyCardRotate" : "lobbyCard"}
             onClick={() => {
               setHostOrJoin("host");
               handleHostClick();
-            }}
-          >
+            }}>
             <div className="lobbyFront">
               <h2>Host a New Game.</h2>
             </div>
@@ -150,8 +161,7 @@ const Home = () => {
             isJoinActive
               ? "lobbyContainer  lobbyContainer-active " // also here
               : " lobbyContainer"
-          }
-        >
+          }>
           <div
             id={isHostActive ? "lobbyHostHidden" : "lobbyHostVisible"}
             className={
@@ -160,13 +170,11 @@ const Home = () => {
             onClick={(e) => {
               setHostOrJoin("join");
               handleJoinClick();
-            }}
-          >
+            }}>
             <div
               className={
                 isHostActive ? "lobbyFront lobbyjoinhidden" : "lobbyFront"
-              }
-            >
+              }>
               <h2>Join a Game.</h2>
             </div>
             <div className="lobbyBack">
