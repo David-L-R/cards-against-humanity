@@ -31,7 +31,7 @@ const Home = () => {
   });
 
   //redirecting to lobby with data after server found the game in DB
-  socket.on("findRoom", (data) => {
+  socket.on("foundRoom", (data) => {
     try {
       const { noRoom, lobbyId, playerName, err } = data;
       if (noRoom) {

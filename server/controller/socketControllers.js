@@ -45,7 +45,7 @@ export const findRoomToJoin = async ({
 
     //join player into room and send lobbyId back
     socket.join(lobbyId);
-    socket.emit("findRoom", {
+    socket.emit("foundRoom", {
       noRoom: false,
       lobbyId,
       playerName: newPlayerName,
@@ -54,7 +54,7 @@ export const findRoomToJoin = async ({
     //updateing room
     io.to(lobbyId).emit("updateRoom", { playerList: lobby.players });
   } catch (error) {
-    return socket.emit("findRoom", {
+    return socket.emit("foundRoom", {
       noRoom: true,
       err: "Can't find game",
     });

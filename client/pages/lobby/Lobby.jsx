@@ -29,10 +29,6 @@ const Lobby = () => {
     setPlayers((pre) => (pre = playerList));
   });
 
-  socket.on("userDisconnected", () =>
-    socket.emit("currentID", { id: cookies.socketId })
-  );
-
   useEffect(() => {
     //self update page after got redirected, use key from query as lobby id
     socket.emit("selfUpdate", { lobbyId, name, id: cookies.socketId });
