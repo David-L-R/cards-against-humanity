@@ -16,6 +16,7 @@ const Home = () => {
   const router = useRouter();
   const cookies = parseCookies();
   const [showErrMessage, setShowErrMessage] = useState(false);
+  const [firstName, setFirstName] = useState("");
 
   useEffect(() => {
     setCookie(null, "socketId", socket.id, { path: "/" });
@@ -99,12 +100,15 @@ const Home = () => {
         <form onSubmit={(e) => handleSubmit(e)} className="lobbyJoinForm">
           <p>Enter Your Name:</p>
           <input
+            autoFocus
             maxLength={15}
             ref={playerName}
             type="text"
             placeholder="Name"
             required
             className="lobbyJoinInputField"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
           />
           <p>Enter Room Code:</p>
           <input

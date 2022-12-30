@@ -17,14 +17,16 @@ const Lobby = () => {
   const [players, setPlayers] = useState([]);
   const [copied, setCopied] = useState(false);
   const cookies = parseCookies();
+  const [host, setHost] = useState(false);
 
   //listener to update page from server after DB entry changed
-  socket.on("updateRoom", ({ err, playerList, host }) => {
+  socket.on("updateRoom", ({ err, playerList, isHost }) => {
+    //check if the host
+    if (cookies.socketId === isHost?.id) setHost(true);
+
     if (err) return console.warn(err);
 
     setPlayers((pre) => (pre = playerList));
-
-    console.error(err);
   });
 
   socket.on("userDisconnected", () =>
@@ -32,7 +34,7 @@ const Lobby = () => {
   );
 
   useEffect(() => {
-    //self update page after got redirected, use room lobby from query
+    //self update page after got redirected, use key from query as lobby id
     socket.emit("selfUpdate", { lobbyId, name, id: cookies.socketId });
   }, [lobbyId]);
 
@@ -46,6 +48,7 @@ const Lobby = () => {
 
   return (
     <>
+      {host && <h1>IS HOST!!!!</h1>}
       <div className="waitingLobbyContainer">
         <div className="waitingLobbyCard">
           <div className="waitingLobbyTextWrapper">
@@ -94,18 +97,3 @@ const Lobby = () => {
 };
 
 export default Lobby;
-
-/*
-<h1>Lobby, waiting for players</h1>
-      <h2>Lobby code: {lobbyId}</h2>
-      <ul>
-        {players &&
-          players.map((player) => (
-            <li key={player.name}>
-              <p>Player Name : {player.name}</p>
-              <p>Player ID : {player.id}</p>
-            </li>
-          ))}
-      </ul>
-
-*/
