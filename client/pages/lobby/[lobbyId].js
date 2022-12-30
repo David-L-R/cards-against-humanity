@@ -4,7 +4,11 @@ import Lobby from "./Lobby";
 
 const lobby = (props) => {
   const router = useRouter();
-  return <Lobby {...props} {...router} />;
+  return (
+    <>
+      <Lobby {...props} {...router} />
+    </>
+  );
 };
 
 export default lobby;

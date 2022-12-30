@@ -52,9 +52,9 @@ const Lobby = () => {
               Waiting for players
               <div className="loadingContainer">
                 <div className="loader">
-                  <div class="circle" id="a"></div>
-                  <div class="circle" id="b"></div>
-                  <div class="circle" id="c"></div>
+                  <div className="circle" id="a"></div>
+                  <div className="circle" id="b"></div>
+                  <div className="circle" id="c"></div>
                 </div>
               </div>
             </h1>
