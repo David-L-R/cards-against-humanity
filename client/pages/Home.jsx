@@ -1,3 +1,4 @@
+import { is } from "@react-spring/shared";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
@@ -5,10 +6,10 @@ import { io } from "socket.io-client";
 export const socket = io("http://localhost:5555");
 const Home = () => {
   const playerName = useRef("");
-  const amountPLayer = useRef(0);
   const roomKey = useRef("");
   const [hostOrJoin, setHostOrJoin] = useState(null);
   const router = useRouter();
+  const [showErrMessage, setShowErrMessage] = useState(false);
 
   //If new lobby was createt, redirect to Lobby with room data
   socket.on("LobbyCreated", ({ lobbyId, hostName }) => {
@@ -20,12 +21,23 @@ const Home = () => {
 
   //redirecting to lobby with data after server found the game in DB
   socket.on("findRoom", (data) => {
-    const { noRoom, lobbyId, playerName, message } = data;
-    if (noRoom) return alert(message);
-    router.push({
-      pathname: `/lobby/${lobbyId}`,
-      query: { name: playerName },
-    });
+    try {
+      const { noRoom, lobbyId, playerName, err } = data;
+      if (noRoom) {
+        setShowErrMessage(true);
+        return;
+      }
+      if (!lobbyId || !playerName) {
+        throw new Error("Invalid lobbyId or playerName");
+      }
+      router.push({
+        pathname: `/lobby/${lobbyId}`,
+        query: { name: playerName },
+      });
+    } catch (error) {
+      console.error(error);
+      alert("An error occurred while trying to navigate to the lobby");
+    }
   });
 
   //Hosting a new game
@@ -36,9 +48,21 @@ const Home = () => {
       socket.emit("createNewLobby", { hostName });
     };
     return (
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <input ref={playerName} type="text" placeholder="Enter Name" required />
-        <button type="submit">Host Game</button>
+      <form onSubmit={(e) => handleSubmit(e)} className="lobbyForm">
+        <input
+          maxLength={15}
+          ref={playerName}
+          type="text"
+          placeholder="Enter Name"
+          required
+          className="lobbyInputField"
+        />
+
+        <div className="lobbyButtonWrapper">
+          <button type="submit" className="lobbyButton">
+            <span>Host Game</span>
+          </button>
+        </div>
       </form>
     );
   };
@@ -57,31 +81,113 @@ const Home = () => {
     };
 
     return (
-      <form onSubmit={(e) => handleSubmit(e)}>
-        <input ref={playerName} type="text" placeholder="Enter Name" required />
-        <input
-          ref={roomKey}
-          type="text"
-          placeholder="Enter room code"
-          required
-        />
-        <button type="submit">Join Game</button>
-      </form>
+      <div className="lobbyJoinFormContainer">
+        <h2>Join a Game.</h2>
+        <form onSubmit={(e) => handleSubmit(e)} className="lobbyJoinForm">
+          <p>Enter Your Name:</p>
+          <input
+            maxLength={15}
+            ref={playerName}
+            type="text"
+            placeholder="Name"
+            required
+            className="lobbyJoinInputField"
+          />
+          <p>Enter Room Code:</p>
+          <input
+            ref={roomKey}
+            type="text"
+            placeholder="code"
+            required
+            className="lobbyJoinInputField"
+          />
+          <div className="lobbyButtonWrapper">
+            <button type="submit" className="lobbyButton">
+              <span>Join Game</span>
+            </button>
+          </div>
+        </form>
+      </div>
     );
+  };
+
+  const [isHostActive, setIsHostActive] = useState(false);
+  const [isJoinActive, setIsJoinActive] = useState(false);
+  const handleHostClick = (event) => {
+    setIsHostActive(true);
+    if (setIsJoinActive) setTimeout(() => setIsJoinActive(false), 150);
+  };
+  const handleJoinClick = (event) => {
+    setIsJoinActive(true);
+    if (setIsHostActive) setTimeout(() => setIsHostActive(false), 150);
   };
 
   return (
     <>
-      <h1>Landing Page</h1>
-      <div>
-        <button onClick={() => setHostOrJoin("host")}>Host new Game</button>
-        <button onClick={() => setHostOrJoin("join")}>Join Game</button>
+      <div className="lobbyCardsContainer">
+        <div
+          className={
+            // i added a new class on the very parent elemt on each card, to change z-index and
+            isHostActive // the perspective
+              ? "lobbyContainer lobbyContainer-active"
+              : " lobbyContainer "
+          }
+        >
+          <div
+            id={isJoinActive ? "lobbyHidden" : "lobbyVisible"}
+            className={isHostActive ? "lobbyCard lobbyCardRotate" : "lobbyCard"}
+            onClick={() => {
+              setHostOrJoin("host");
+              handleHostClick();
+            }}
+          >
+            <div className="lobbyFront">
+              <h2>Host a New Game.</h2>
+            </div>
+            <div className="lobbyBack">
+              <h2>I'm the Host but my Homies calls me</h2>
+              {hostOrJoin === "host" ? <HostGame /> : null}
+            </div>
+          </div>
+        </div>
+        <div
+          className={
+            isJoinActive
+              ? "lobbyContainer  lobbyContainer-active " // also here
+              : " lobbyContainer"
+          }
+        >
+          <div
+            id={isHostActive ? "lobbyHostHidden" : "lobbyHostVisible"}
+            className={
+              isJoinActive ? "lobbyCard lobbyJoinCardRotate" : "lobbyCard"
+            }
+            onClick={(e) => {
+              setHostOrJoin("join");
+              handleJoinClick();
+            }}
+          >
+            <div
+              className={
+                isHostActive ? "lobbyFront lobbyjoinhidden" : "lobbyFront"
+              }
+            >
+              <h2>Join a Game.</h2>
+            </div>
+            <div className="lobbyBack">
+              {hostOrJoin === "join" ? <JoinGame /> : null}
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-        {hostOrJoin === "host" ? (
-          <HostGame />
-        ) : hostOrJoin === "join" ? (
-          <JoinGame />
+      <div className="errorBox">
+        {showErrMessage ? (
+          <div
+            className="errMessage"
+            onClose={setTimeout(() => setShowErrMessage(false), 5000)}
+          >
+            Invalid Room Code - please try again
+          </div>
         ) : null}
       </div>
     </>

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import deleteOutatedData from "../../utils/deleteOutatedData.js";
 
 const lobbyModel = mongoose.Schema(
   {
@@ -12,4 +13,8 @@ const lobbyModel = mongoose.Schema(
   }
 );
 
-export default mongoose.model("LobbyCollection", lobbyModel);
+const LobbyCollection = mongoose.model("LobbyCollection", lobbyModel);
+
+deleteOutatedData(LobbyCollection);
+
+export default LobbyCollection;

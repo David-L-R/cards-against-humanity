@@ -52,39 +52,40 @@ export const createNewGame = async ({ socket, data }) => {
 
 export const findRoomToJoin = async ({ lobbyId, newPlayerName, socket }) => {
   const player = { name: newPlayerName, id: socket.id };
-
   // searche game in MongoDb
-  const lobby = await LobbyCollection.findOne({ _id: lobbyId });
-  console.log("lobby", lobby);
-  if (!lobby)
+
+  try {
+    const lobby = await LobbyCollection.findById(lobbyId);
+
+    // update player list in DB
+    lobby.players.push(player);
+    const updatedLobby = await lobby.save();
+    if (!updatedLobby)
+      return socket.emit("findRoom", {
+        noRoom: true,
+        message: "Can't join game",
+      });
+
+    //join player into room and send lobbyId back
+    socket.join(lobbyId);
+    socket.emit("findRoom", {
+      noRoom: false,
+      lobbyId,
+      playerName: newPlayerName,
+      message: "Joining romm",
+    });
+
+    //updateing room
+    socket.to(lobbyId).emit("updateRoom", { playerList: updatedLobby.players });
+  } catch (error) {
     return socket.emit("findRoom", {
       noRoom: true,
       err: "Can't find game",
     });
-
-  // update player list in DB
-  lobby.players.push(player);
-  const updatedLobby = await lobby.save();
-  if (!updatedLobby)
-    return socket.emit("findRoom", {
-      noRoom: true,
-      message: "Can't join game",
-    });
-
-  //join player into room and send lobbyId back
-  socket.join(lobbyId);
-  socket.emit("findRoom", {
-    noRoom: false,
-    lobbyId,
-    playerName: newPlayerName,
-    message: "Joining romm",
-  });
-
-  //updateing room
-  socket.to(lobbyId).emit("updateRoom", { playerList: updatedLobby.players });
+  }
 };
 
-export const updateClient = async ({ lobbyId, socket }) => {
+export const updateClient = async ({ lobbyId, socket, name }) => {
   if (!lobbyId)
     return socket.emit("updateRoom", { message: "Cant find game to join!" });
 
@@ -94,7 +95,14 @@ export const updateClient = async ({ lobbyId, socket }) => {
       err: "cant update Client",
       message: "Cant find game to join!",
     });
-  console.log(currentLobby);
+
+  const foundPLayer = currentLobby.players.find(
+    (player) => player.id === socket.id
+  );
+
+  if (!foundPLayer) currentLobby.players.push({ id: socket.id, name: name });
+  currentLobby.save();
+
   socket.emit("updateRoom", { playerList: currentLobby.players });
 };
 
