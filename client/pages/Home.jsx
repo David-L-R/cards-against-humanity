@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { parseCookies, setCookie, destroyCookie } from "nookies";
 import { io } from "socket.io-client";
+import useLocalStorage from "./useLocalStorage.js";
 
 const socket = io("http://localhost:5555", {
   reconnection: true, // enable reconnection
@@ -82,6 +83,7 @@ const Home = () => {
 
   //Join a game
   const JoinGame = () => {
+    let [value, setValue] = useLocalStorage("name", "");
     const handleSubmit = (e) => {
       e.preventDefault();
 
@@ -94,21 +96,24 @@ const Home = () => {
       socket.emit("findRoom", { lobbyId, newPlayerName, id });
     };
 
+    useEffect(() => {
+      roomKey.current.focus();
+    }, []);
+
     return (
       <div className="lobbyJoinFormContainer">
         <h2>Join a Game.</h2>
         <form onSubmit={(e) => handleSubmit(e)} className="lobbyJoinForm">
           <p>Enter Your Name:</p>
           <input
-            autoFocus
             maxLength={15}
             ref={playerName}
             type="text"
             placeholder="Name"
             required
             className="lobbyJoinInputField"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
+            value={value}
+            onChange={(event) => setValue(event.target.value)}
           />
           <p>Enter Room Code:</p>
           <input
