@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import Lobby from "./Lobby";
 
-const lobby = (props) => {
+const index = (props) => {
   const router = useRouter();
   return (
     <>
@@ -11,4 +11,4 @@ const lobby = (props) => {
   );
 };
 
-export default lobby;
+export default index;

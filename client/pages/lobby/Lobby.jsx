@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { BiCopy } from "react-icons/Bi";
 import { RiVipCrown2Fill } from "react-icons/Ri";
 import { CopyToClipboard } from "react-copy-to-clipboard";
@@ -19,6 +19,8 @@ const Lobby = () => {
   const [copied, setCopied] = useState(false);
   const cookies = parseCookies();
   const [host, setHost] = useState(false);
+  const amountOfRounds = useRef(null);
+  const handSize = useRef(null);
 
   //listener to update page from server after DB entry changed
   socket.on("updateRoom", ({ err, playerList, isHost }) => {
@@ -28,6 +30,23 @@ const Lobby = () => {
     if (err) return console.warn(err);
 
     setPlayers((pre) => (pre = playerList));
+  });
+
+  socket.on("newgame", ({ newGameData }) => {
+    const stage = newGameData.Game.turns[0].stage[0];
+    const gameId = newGameData.Game.gameIdentifier;
+
+    if (stage === "start") {
+      let gamePath = {
+        pathname: `/lobby/game`,
+        query: {
+          name,
+          lobby: lobbyId,
+          game: gameId,
+        },
+      };
+      router.push(gamePath);
+    }
   });
 
   useEffect(() => {
@@ -41,6 +60,12 @@ const Lobby = () => {
     setTimeout(() => {
       setCopied(false);
     }, 3000);
+  };
+
+  const handleGameCreation = () => {
+    const setRounds = amountOfRounds.current.value;
+    const maxHandSize = handSize.current.value;
+    socket.emit("createGameObject", { setRounds, maxHandSize, lobbyId });
   };
 
   return (
@@ -60,7 +85,7 @@ const Lobby = () => {
             </h1>
           </div>
           <div className="lobbyIdContainer">
-            <h3>Game code: </h3>
+            <h3>Lobby code: </h3>
             <div className="lobbyIdCopyField">
               {copied ? <p className="tempCopyText">Copied!</p> : null}
               <CopyToClipboard text={lobbyId} onCopy={toggleSomething}>
@@ -73,9 +98,21 @@ const Lobby = () => {
           </div>
           <div className="waitingLobbyButtonWrapper">
             {host && (
-              <button className="lobbyButton">
-                <span>Ready</span>
-              </button>
+              <>
+                <input
+                  ref={amountOfRounds}
+                  type="number"
+                  placeholder="Amount of rounds (default 10)"
+                />
+                <input
+                  ref={handSize}
+                  type="number"
+                  placeholder="Hand size (default 10)"
+                />
+                <button onClick={handleGameCreation} className="lobbyButton">
+                  <span>Ready</span>
+                </button>
+              </>
             )}
           </div>
           <div className="dragContainer">

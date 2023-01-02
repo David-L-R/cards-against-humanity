@@ -26,8 +26,8 @@ const Home = () => {
   //If new lobby was createt, redirect to Lobby with room data
   socket.on("LobbyCreated", ({ lobbyId, hostName }) => {
     router.push({
-      pathname: `/lobby/${lobbyId}`,
-      query: { name: hostName },
+      pathname: `/lobby/`,
+      query: { name: hostName, lobbyId: lobbyId },
     });
   });
 
@@ -157,16 +157,14 @@ const Home = () => {
             isHostActive // the perspective
               ? "lobbyContainer lobbyContainer-active"
               : " lobbyContainer "
-          }
-        >
+          }>
           <div
             id={isJoinActive ? "lobbyHidden" : "lobbyVisible"}
             className={isHostActive ? "lobbyCard lobbyCardRotate" : "lobbyCard"}
             onClick={() => {
               setHostOrJoin("host");
               handleHostClick();
-            }}
-          >
+            }}>
             <div className="lobbyFront">
               <h2>Host a New Game.</h2>
             </div>
@@ -181,8 +179,7 @@ const Home = () => {
             isJoinActive
               ? "lobbyContainer  lobbyContainer-active " // also here
               : " lobbyContainer"
-          }
-        >
+          }>
           <div
             id={isHostActive ? "lobbyHostHidden" : "lobbyHostVisible"}
             className={
@@ -191,13 +188,11 @@ const Home = () => {
             onClick={(e) => {
               setHostOrJoin("join");
               handleJoinClick();
-            }}
-          >
+            }}>
             <div
               className={
                 isHostActive ? "lobbyFront lobbyjoinhidden" : "lobbyFront"
-              }
-            >
+              }>
               <h2>Join a Game.</h2>
             </div>
             <div className="lobbyBack">
@@ -210,8 +205,7 @@ const Home = () => {
         {showErrMessage ? (
           <div
             className="errMessage"
-            onClose={setTimeout(() => setShowErrMessage(false), 5000)}
-          >
+            onClose={setTimeout(() => setShowErrMessage(false), 5000)}>
             Invalid Room Code - please try again
           </div>
         ) : null}

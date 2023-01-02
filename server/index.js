@@ -5,12 +5,15 @@ import { Server } from "socket.io";
 import express from "express";
 import cors from "cors";
 import http from "http";
+import GameCollection from "./database/models/game.js";
 import {
   createNewLobby,
   deletePlayerFromDb,
   findRoomToJoin,
   updateClient,
 } from "./controller/socketControllers.js";
+import LobbyCollection from "./database/models/lobby.js";
+import allCards from "./data/allCards.json" assert { type: "json" };
 
 dotenv.config();
 connectDB();
@@ -62,5 +65,65 @@ io.on("connection", (socket) => {
 
     if (playerList && lobbyId)
       io.to(lobbyId.toString()).emit("updateRoom", { playerList, isHost });
+  });
+
+  socket.on("createGameObject", async ({ setRounds, maxHandSize, lobbyId }) => {
+    let amountOfRounds = parseInt(setRounds);
+    let handSize = parseInt(maxHandSize);
+
+    //set default if client dos not setup anything
+    if (!setRounds) amountOfRounds = 10;
+    if (!maxHandSize) handSize = 10;
+
+    //if alreday games where played, increase to game indentifiyer
+    let existingGames = GameCollection.find({ id: lobbyId });
+
+    let lastGame = 0;
+
+    if (existingGames.length > 0)
+      lastGame = existingGames[existingGames.length - 1].gameIdentifier + 1;
+
+    let lobbyPLayers = await LobbyCollection.findOne({ _id: lobbyId });
+    if (!lobbyPLayers)
+      return socket.to(lobbyId).emit("newgame", { err: "cant find lobby" });
+
+    // add each player all necessary keys
+    lobbyPLayers = lobbyPLayers.players.map((player) => {
+      player.active = true;
+      player.points = 0;
+      player.hand = [];
+      player.bet = false;
+      return player;
+    });
+
+    const [black] = allCards.map((set) => set.black);
+    const [white] = allCards.map((set) => set.white);
+
+    const gamedata = {
+      id: lobbyId,
+      gameIdentifier: lastGame,
+      handSize: handSize,
+      concluded: false,
+      players: [...lobbyPLayers],
+      deck: {
+        black_cards: [...black],
+        white_cards: [...white],
+      },
+      turns: [
+        {
+          turn: 0,
+          czar: null,
+          stage: ["start"],
+          white_cards: [],
+          black_cards: [],
+          winner: {},
+        },
+      ],
+      timerTrigger: false,
+    };
+
+    const newGameData = await GameCollection.create({ Game: gamedata });
+
+    io.to(lobbyId).emit("newgame", { newGameData });
   });
 });
