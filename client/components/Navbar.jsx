@@ -5,16 +5,23 @@ import { HiOutlineUser } from "react-icons/hi";
 function Navbar() {
   return (
     <nav className="navContainer">
-      <Link href="/" className="navLink">
-        Sign Up
-      </Link>
-      <Link href="/" className="navLink">
-        Login
-      </Link>
-
-      <Link href="/" className="navIcon">
-        <HiOutlineUser />
-      </Link>
+      <ul>
+        <li>
+          <Link href="/" className="navLink">
+            Sign Up
+          </Link>
+        </li>
+        <li>
+          <Link href="/" className="navLink">
+            Login
+          </Link>
+        </li>
+        <li>
+          <Link href="/" className="navIcon">
+            <HiOutlineUser />
+          </Link>
+        </li>
+      </ul>
     </nav>
   );
 }
