@@ -72,9 +72,11 @@ const Lobby = () => {
             </div>
           </div>
           <div className="waitingLobbyButtonWrapper">
-            <button className="lobbyButton">
-              <span>Ready</span>
-            </button>
+            {host && (
+              <button className="lobbyButton">
+                <span>Ready</span>
+              </button>
+            )}
           </div>
           <div className="dragContainer">
             <ul>
