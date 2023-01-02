@@ -1,21 +1,20 @@
 import React from "react";
 import Link from "next/link";
-import { CgProfile } from "react-icons/cg";
+import { HiOutlineUser } from "react-icons/hi";
 
 function Navbar() {
   return (
     <nav className="navContainer">
-      <ul className="navUl">
-        <Link className="navLink" href="/">
-          <CgProfile />
-        </Link>
-        <Link className="navLink" href="/">
-          <li>Sign up</li>
-        </Link>
-        <Link className="navLink" href="/">
-          <li>Sign in</li>
-        </Link>
-      </ul>
+      <Link href="/" className="navLink">
+        Sign Up
+      </Link>
+      <Link href="/" className="navLink">
+        Login
+      </Link>
+
+      <Link href="/" className="navIcon">
+        <HiOutlineUser />
+      </Link>
     </nav>
   );
 }
