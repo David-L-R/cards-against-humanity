@@ -5,6 +5,7 @@ import { RiVipCrown2Fill } from "react-icons/Ri";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { io } from "socket.io-client";
 import { parseCookies } from "nookies";
+import { motion as m } from "framer-motion";
 
 const socket = io("http://localhost:5555", {
   reconnection: true, // enable reconnection
@@ -47,37 +48,48 @@ const Lobby = () => {
     <>
       <div className="waitingLobbyContainer">
         <div className="waitingLobbyCard">
-          <div className="waitingLobbyTextWrapper">
-            <h1>
-              Waiting for players
-              <div className="loadingContainer">
-                <div className="loader">
-                  <div className="circle" id="a"></div>
-                  <div className="circle" id="b"></div>
-                  <div className="circle" id="c"></div>
+          <m.div
+            className="framerContainer"
+            initial={{ y: -500, rotate: -30 }}
+            animate={{ y: 0, rotate: 0 }}
+            exit={{
+              x: -1300,
+              rotate: -120,
+              transition: { duration: 0.75 },
+            }}
+          >
+            <div className="waitingLobbyTextWrapper">
+              <h1>
+                Waiting for players
+                <div className="loadingContainer">
+                  <div className="loader">
+                    <div className="circle" id="a"></div>
+                    <div className="circle" id="b"></div>
+                    <div className="circle" id="c"></div>
+                  </div>
                 </div>
-              </div>
-            </h1>
-          </div>
-          <div className="lobbyIdContainer">
-            <h3>Game code: </h3>
-            <div className="lobbyIdCopyField">
-              {copied ? <p className="tempCopyText">Copied!</p> : null}
-              <CopyToClipboard text={lobbyId} onCopy={toggleSomething}>
-                <p>
-                  {lobbyId}
-                  <BiCopy className="icon" />
-                </p>
-              </CopyToClipboard>
+              </h1>
             </div>
-          </div>
-          <div className="waitingLobbyButtonWrapper">
-            {host && (
-              <button className="lobbyButton">
-                <span>Ready</span>
-              </button>
-            )}
-          </div>
+            <div className="lobbyIdContainer">
+              <h3>Game code: </h3>
+              <div className="lobbyIdCopyField">
+                {copied ? <p className="tempCopyText">Copied!</p> : null}
+                <CopyToClipboard text={lobbyId} onCopy={toggleSomething}>
+                  <p>
+                    {lobbyId}
+                    <BiCopy className="icon" />
+                  </p>
+                </CopyToClipboard>
+              </div>
+            </div>
+            <div className="waitingLobbyButtonWrapper">
+              {host && (
+                <button className="lobbyButton">
+                  <span>Ready</span>
+                </button>
+              )}
+            </div>
+          </m.div>
           <div className="dragContainer">
             <ul>
               {players &&

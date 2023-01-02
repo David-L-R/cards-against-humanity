@@ -45,6 +45,11 @@
   width: 75%;
   color: white;
   font-size: 36px;
+  margin: 0;
+}
+.cardFace--front h3 {
+  color: white;
+  letter-spacing: 2px;
 }
 
 .cardFace--back {

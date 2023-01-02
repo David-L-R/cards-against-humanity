@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { parseCookies, setCookie, destroyCookie } from "nookies";
 import { io } from "socket.io-client";
 import useLocalStorage from "./useLocalStorage.js";
+import { motion as m } from "framer-motion";
 
 const socket = io("http://localhost:5555", {
   reconnection: true, // enable reconnection
@@ -151,61 +152,86 @@ const Home = () => {
   return (
     <>
       <div className="lobbyCardsContainer">
-        <div
-          className={
-            // i added a new class on the very parent elemt on each card, to change z-index and
-            isHostActive // the perspective
-              ? "lobbyContainer lobbyContainer-active"
-              : " lobbyContainer "
-          }
+        <m.div
+          className="hostMotion"
+          initial={{ y: -500, rotate: 30 }}
+          animate={{ y: 0, rotate: 0 }}
+          exit={{
+            x: -1300,
+            rotate: -120,
+            transition: { duration: 0.75 },
+          }}
         >
           <div
-            id={isJoinActive ? "lobbyHidden" : "lobbyVisible"}
-            className={isHostActive ? "lobbyCard lobbyCardRotate" : "lobbyCard"}
-            onClick={() => {
-              setHostOrJoin("host");
-              handleHostClick();
-            }}
-          >
-            <div className="lobbyFront">
-              <h2>Host a New Game.</h2>
-            </div>
-            <div className="lobbyBack">
-              <h2>I'm the Host but my Homies calls me</h2>
-              {hostOrJoin === "host" ? <HostGame /> : null}
-            </div>
-          </div>
-        </div>
-        <div
-          className={
-            isJoinActive
-              ? "lobbyContainer  lobbyContainer-active " // also here
-              : " lobbyContainer"
-          }
-        >
-          <div
-            id={isHostActive ? "lobbyHostHidden" : "lobbyHostVisible"}
             className={
-              isJoinActive ? "lobbyCard lobbyJoinCardRotate" : "lobbyCard"
+              // i added a new class on the very parent elemt on each card, to change z-index and
+              isHostActive // the perspective
+                ? "lobbyContainer lobbyContainer-active"
+                : " lobbyContainer "
             }
-            onClick={(e) => {
-              setHostOrJoin("join");
-              handleJoinClick();
-            }}
           >
             <div
+              id={isJoinActive ? "lobbyHidden" : "lobbyVisible"}
               className={
-                isHostActive ? "lobbyFront lobbyjoinhidden" : "lobbyFront"
+                isHostActive ? "lobbyCard lobbyCardRotate" : "lobbyCard"
               }
+              onClick={() => {
+                setHostOrJoin("host");
+                handleHostClick();
+              }}
             >
-              <h2>Join a Game.</h2>
-            </div>
-            <div className="lobbyBack">
-              {hostOrJoin === "join" ? <JoinGame /> : null}
+              <div className="lobbyFront">
+                <h2>Host a New Game.</h2>
+              </div>
+              <div className="lobbyBack">
+                <h2>I'm the Host but my Homies calls me</h2>
+                {hostOrJoin === "host" ? <HostGame /> : null}
+              </div>
             </div>
           </div>
-        </div>
+        </m.div>
+        <m.div
+          className="joinMotion"
+          initial={{ y: 500, rotate: -30 }}
+          animate={{ y: 0, rotate: 0 }}
+          exit={{
+            y: 1000,
+            rotate: 120,
+            transition: { duration: 0.75 },
+          }}
+        >
+          <div
+            className={
+              isJoinActive
+                ? "lobbyContainer  lobbyContainer-active " // also here
+                : " lobbyContainer"
+            }
+          >
+            <div
+              id={isHostActive ? "lobbyHostHidden" : "lobbyHostVisible"}
+              className={
+                isJoinActive ? "lobbyCard lobbyJoinCardRotate" : "lobbyCard"
+              }
+              onClick={(e) => {
+                setHostOrJoin("join");
+                handleJoinClick();
+              }}
+            >
+              <div
+                className={
+                  isHostActive ? "lobbyFront lobbyjoinhidden" : "lobbyFront"
+                }
+              >
+                <h2>Join a Game.</h2>
+              </div>
+              <div className="lobbyBack">
+                {hostOrJoin === "join" ? <JoinGame /> : null}
+              </div>
+            </div>
+          </div>
+        </m.div>
       </div>
+
       <div className="errorBox">
         {showErrMessage ? (
           <div

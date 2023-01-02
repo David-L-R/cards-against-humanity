@@ -1,0 +1,25 @@
+.playPulseContainer {
+  animation: Pulse 4s ease-out Infinite;
+  padding-top: 200px;
+}
+.pageTransition {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+@keyframes Pulse {
+  0% {
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+  }
+  50% {
+    opacity: 0.5;
+    font-size: 16px;
+  }
+  100% {
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+  }
+}
