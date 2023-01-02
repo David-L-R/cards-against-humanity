@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { parseCookies, setCookie, destroyCookie } from "nookies";
 import { io } from "socket.io-client";
-import useLocalStorage from "./useLocalStorage.js";
+import useLocalStorage from "../components/useLocalStorage.js";
 import { motion as m } from "framer-motion";
 
 const socket = io("http://localhost:5555", {
