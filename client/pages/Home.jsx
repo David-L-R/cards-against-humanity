@@ -54,6 +54,7 @@ const Home = () => {
 
   //Hosting a new game
   const HostGame = () => {
+    let [value, setValue] = useLocalStorage("name", "");
     const handleSubmit = (e) => {
       e.preventDefault();
       const hostName = playerName.current.value;
@@ -61,6 +62,7 @@ const Home = () => {
       if (!id) return console.warn("NO ID");
       socket.emit("createNewLobby", { hostName, id });
     };
+
     return (
       <form onSubmit={(e) => handleSubmit(e)} className="lobbyForm">
         <input
@@ -70,6 +72,8 @@ const Home = () => {
           placeholder="Enter Name"
           required
           className="lobbyInputField"
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
         />
 
         <div className="lobbyButtonWrapper">
