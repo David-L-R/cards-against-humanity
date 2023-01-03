@@ -1,31 +1,67 @@
 .navContainer {
-  z-index: 20;
   position: fixed;
-  top: 0;
-  right: 0;
+  top: 2%;
+  right: 2%;
+  z-index: 20;
+}
+.dropdownIcon {
   align-items: center;
-  margin-top: 15px;
-  justify-content: center;
   display: flex;
 }
+.greetingText {
+  padding-right: 15px;
+}
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+.dropdown-content {
+  display: none;
+  position: absolute;
 
-.navLink {
-  text-decoration: none;
-  color: white;
-  font-size: 20px;
-  font-weight: bold;
-  padding: 15px;
+  right: 0;
+  background-color: black;
+  border: 1px solid white;
+  min-width: 120px;
+  height: 200px;
+  border-radius: 15px;
+  justify-content: center;
+  padding: 0;
+  z-index: 1;
 }
 .navIcon {
-  font-size: 30px;
-  text-decoration: none;
-  color: white;
-  width: 40px;
-  height: 40px;
-  border: 3px solid white;
   border-radius: 50%;
+  width: 45px;
+  height: 45px;
+}
+.dropdown-content button {
+  cursor: pointer;
+  font-weight: 800;
+  letter-spacing: 2px;
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border-radius: 13px 13px 0 0;
+  color: white;
+}
+.dropdown-content button:hover {
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.459);
+  border: 1px solid rgba(255, 255, 255, 0.459);
+  color: black;
+}
+
+.dropdown-content p {
   display: flex;
-  align-items: center;
   justify-content: center;
-  margin-right: 20px;
+}
+.navIconSVG {
+  border-radius: 50%;
+  width: 75px;
+  height: 75px;
+}
+.dropdown-content button :nth-child(1) {
 }

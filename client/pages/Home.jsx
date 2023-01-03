@@ -5,6 +5,7 @@ import { parseCookies, setCookie, destroyCookie } from "nookies";
 import { io } from "socket.io-client";
 import useLocalStorage from "../components/useLocalStorage.js";
 import { motion as m } from "framer-motion";
+import { signIn, signOut, getProviders, useSession } from "next-auth/react";
 
 const socket = io("http://localhost:5555", {
   reconnection: true, // enable reconnection
@@ -50,12 +51,14 @@ const Home = () => {
     } catch (error) {
       console.error(error);
       alert("An error occurred while trying to navigate to the lobby");
+      console.log(error);
     }
   });
 
   //Hosting a new game
   const HostGame = () => {
     let [value, setValue] = useLocalStorage("name", "");
+
     const handleSubmit = (e) => {
       e.preventDefault();
       const hostName = playerName.current.value;
@@ -89,6 +92,7 @@ const Home = () => {
   //Join a game
   const JoinGame = () => {
     let [value, setValue] = useLocalStorage("name", "");
+
     const handleSubmit = (e) => {
       e.preventDefault();
 
@@ -224,6 +228,7 @@ const Home = () => {
               >
                 <h2>Join a Game.</h2>
               </div>
+
               <div className="lobbyBack">
                 {hostOrJoin === "join" ? <JoinGame /> : null}
               </div>
