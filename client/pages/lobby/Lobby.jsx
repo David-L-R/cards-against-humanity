@@ -3,14 +3,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { BiCopy } from "react-icons/Bi";
 import { RiVipCrown2Fill } from "react-icons/Ri";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { io } from "socket.io-client";
 import { parseCookies } from "nookies";
-
-const socket = io("http://localhost:5555", {
-  reconnection: true, // enable reconnection
-  reconnectionAttempts: 5, // try to reconnect 5 times
-  reconnectionDelay: 3000, // increase the delay between reconnection attempts to 3 seconds
-});
+import { socket } from "../Home";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
+import { showToastAndRedirect } from "../../utils/showToastAndRedirect";
 
 const Lobby = () => {
   const router = useRouter();
@@ -18,40 +15,50 @@ const Lobby = () => {
   const [players, setPlayers] = useState([]);
   const [copied, setCopied] = useState(false);
   const cookies = parseCookies();
-  const [host, setHost] = useState(false);
+  const [isHost, setHost] = useState(false);
+  const [inactive, setInactive] = useState(false);
   const amountOfRounds = useRef(null);
   const handSize = useRef(null);
 
   //listener to update page from server after DB entry changed
-  socket.on("updateRoom", ({ err, playerList, isHost }) => {
+  socket.on("updateRoom", ({ currentLobby, err }) => {
+    const player = currentLobby.players.find(
+      (player) => player.id === cookies.socketId
+    );
+    if (!player) return showToastAndRedirect(toast, router);
+    const { players } = currentLobby;
+    const { id, name, isHost, inactive } = player;
     //check if the host
-    if (cookies.socketId === isHost?.id) setHost(true);
+    isHost ? setHost(true) : setHost(false);
+    inactive ? setInactive(true) : setInactive(false);
 
     if (err) return console.warn(err);
 
-    setPlayers((pre) => (pre = playerList));
+    setPlayers((pre) => (pre = players));
   });
 
   socket.on("newgame", ({ newGameData }) => {
     const stage = newGameData.Game.turns[0].stage[0];
     const gameId = newGameData.Game.gameIdentifier;
-
-    if (stage === "start") {
-      let gamePath = {
-        pathname: `/lobby/game`,
-        query: {
-          name,
-          lobby: lobbyId,
-          game: gameId,
-        },
-      };
-      router.push(gamePath);
+    if (lobbyId) {
+      if (stage === "start") {
+        let gamePath = {
+          pathname: `/lobby/game`,
+          query: {
+            name,
+            lobbyId: lobbyId,
+            game: gameId,
+          },
+        };
+        router.push(gamePath);
+      }
     }
   });
 
   useEffect(() => {
     //self update page after got redirected, use key from query as lobby id
-    socket.emit("selfUpdate", { lobbyId, name, id: cookies.socketId });
+    if (lobbyId)
+      socket.emit("updateLobby", { lobbyId, name, id: cookies.socketId });
   }, [lobbyId]);
 
   //hello David :) WE good at naming conventions😘😘
@@ -97,7 +104,7 @@ const Lobby = () => {
             </div>
           </div>
           <div className="waitingLobbyButtonWrapper">
-            {host && (
+            {isHost && (
               <>
                 <input
                   ref={amountOfRounds}
@@ -119,8 +126,11 @@ const Lobby = () => {
             <ul>
               {players &&
                 players.map((player) => (
-                  <li key={player.name}>
+                  <li
+                    key={player.name}
+                    className={player.inactive ? "inactive" : null}>
                     <h2>{player.name.toUpperCase()}</h2>
+                    {player.inactive && <p>lost connection</p>}
                     {player.isHost && (
                       <div className="hostCrown">
                         <RiVipCrown2Fill />
@@ -131,9 +141,12 @@ const Lobby = () => {
             </ul>
           </div>
         </div>
+        <ToastContainer autoClose={3000} />
       </div>
     </>
   );
 };
 
 export default Lobby;
+
+// onClose={() => router.push("/")}

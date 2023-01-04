@@ -17,6 +17,7 @@ const gameModel = mongoose.Schema(
           active: Boolean, // whenever timer runs out and player hasn't made their move, this will turn true, until cancelled
           points: Number, //default zero, every round won adds a point.
           hand: Array, //just white Cards
+          isHost: Boolean,
         },
       ],
       deck: {

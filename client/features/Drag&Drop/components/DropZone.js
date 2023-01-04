@@ -7,10 +7,17 @@ export function DropZone(props) {
   const { cards, id, element } = props;
   const { setNodeRef } = useDroppable({
     id: id,
+    data: {
+      accepts: ["*"],
+    },
   });
 
   return (
-    <article ref={setNodeRef} className="drop-container">
+    <article
+      ref={setNodeRef}
+      className={
+        id !== "table" ? "drop-container dragContainer" : "drop-container"
+      }>
       <SortableContext id={id} items={cards.map((card) => card.text)}>
         <h1>{id}</h1>
         <ul>

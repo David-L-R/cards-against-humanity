@@ -16,8 +16,8 @@ export const handleDragEnd = ({ active, over }, setActiveId, setRaw) => {
   }
 
   if (active.id !== over.id) {
-    const activeContainer = active.data.current?.sortable.containerId;
-    const overContainer = over.data.current?.sortable.containerId;
+    const activeContainer = active.data.current?.sortable?.containerId;
+    const overContainer = over.data.current?.sortable?.containerId;
 
     if (
       !activeContainer ||
@@ -29,6 +29,8 @@ export const handleDragEnd = ({ active, over }, setActiveId, setRaw) => {
     const activeIndex = active.data.current.sortable.index;
     const overIndex = over?.data?.current?.sortable.index;
 
+    console.log("active", active);
+    console.log("over", over);
     setRaw((old) => {
       old[activeContainer].cards = arrayMove(
         old[activeContainer].cards,
@@ -45,9 +47,11 @@ export const handleDragEnd = ({ active, over }, setActiveId, setRaw) => {
 export const handleDragOver = ({ active, over }, setRaw) => {
   if (active.id !== over?.id) {
     const activeContainer = active?.data.current?.sortable?.containerId;
-    const overContainer = over?.data?.current?.sortable.containerId;
+    const overContainer = over?.data?.current?.sortable?.containerId;
     const activeIndex = active?.data.current?.sortable?.index;
     const overIndex = over?.data?.current?.sortable?.index;
+
+    console.log("over", over?.data?.current?.sortable);
 
     if (!overContainer || !activeContainer || activeContainer === overContainer)
       return;

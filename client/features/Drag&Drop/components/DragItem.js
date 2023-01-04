@@ -13,13 +13,12 @@ export function DragItem(props) {
   const style = {
     transform: CSS.Transform.toString(transform),
     listStyle: "none",
-    backgroundColor: "transparent",
     transition,
   };
 
   return (
     <li ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      {element ? <CustomComponent {...props} /> : `Default Item ${id}`}
+      {element ? <CustomComponent {...props} /> : <h2> {id}</h2>}
     </li>
   );
 }

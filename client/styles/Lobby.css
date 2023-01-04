@@ -189,6 +189,11 @@
   left: 90%;
   transform: rotate(-13deg);
 }
+
+.inactive {
+  opacity: 0.3;
+}
+
 @keyframes hideAnimation {
   to {
     visibility: hidden;

@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import {
+  rectIntersection,
+  closestCenter,
+  pointerWithin,
   closestCorners,
   DndContext,
   DragOverlay,
@@ -33,7 +36,7 @@ function DragAndDropContainer(props) {
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCorners}
+      collisionDetection={closestCenter}
       onDragStart={(e) => handleDragStart(e, setActiveId)}
       onDragCancel={() => handleDragCancel(setActiveId)}
       onDragOver={(e) => handleDragOver(e, setData)}

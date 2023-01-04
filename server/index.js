@@ -5,15 +5,18 @@ import { Server } from "socket.io";
 import express from "express";
 import cors from "cors";
 import http from "http";
-import GameCollection from "./database/models/game.js";
 import {
   createNewLobby,
-  deletePlayerFromDb,
+  setPlayerInactive,
   findRoomToJoin,
   updateClient,
 } from "./controller/socketControllers.js";
-import LobbyCollection from "./database/models/lobby.js";
-import allCards from "./data/allCards.json" assert { type: "json" };
+import {
+  changeGame,
+  createGame,
+  sendCurrentGame,
+} from "./controller/gameController.js";
+import GameCollection from "./database/models/game.js";
 
 dotenv.config();
 connectDB();
@@ -32,7 +35,7 @@ const PORT = process.env.PORT || 5555;
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    // origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
 });
@@ -47,7 +50,7 @@ io.on("connection", (socket) => {
 
   socket.on("createNewLobby", (data) => createNewLobby({ socket, data }));
 
-  socket.on("selfUpdate", ({ lobbyId, name, id }) =>
+  socket.on("updateLobby", ({ lobbyId, name, id }) =>
     updateClient({ lobbyId, socket, name, id, io })
   );
 
@@ -58,72 +61,25 @@ io.on("connection", (socket) => {
   socket.on("disconnect", async (reason) => {
     const userId = socket.userId;
 
-    const { playerList, lobbyId, err, isHost } = await deletePlayerFromDb({
+    setPlayerInactive({
       reason,
       userId,
+      io,
     });
-
-    if (playerList && lobbyId)
-      io.to(lobbyId.toString()).emit("updateRoom", { playerList, isHost });
   });
 
-  socket.on("createGameObject", async ({ setRounds, maxHandSize, lobbyId }) => {
-    let amountOfRounds = parseInt(setRounds);
-    let handSize = parseInt(maxHandSize);
-
-    //set default if client dos not setup anything
-    if (!setRounds) amountOfRounds = 10;
-    if (!maxHandSize) handSize = 10;
-
-    //if alreday games where played, increase to game indentifiyer
-    let existingGames = GameCollection.find({ id: lobbyId });
-
-    let lastGame = 0;
-
-    if (existingGames.length > 0)
-      lastGame = existingGames[existingGames.length - 1].gameIdentifier + 1;
-
-    let lobbyPLayers = await LobbyCollection.findOne({ _id: lobbyId });
-    if (!lobbyPLayers)
-      return socket.to(lobbyId).emit("newgame", { err: "cant find lobby" });
-
-    // add each player all necessary keys
-    lobbyPLayers = lobbyPLayers.players.map((player) => {
-      player.active = true;
-      player.points = 0;
-      player.hand = [];
-      player.bet = false;
-      return player;
-    });
-
-    const [black] = allCards.map((set) => set.black);
-    const [white] = allCards.map((set) => set.white);
-
-    const gamedata = {
-      id: lobbyId,
-      gameIdentifier: lastGame,
-      handSize: handSize,
-      concluded: false,
-      players: [...lobbyPLayers],
-      deck: {
-        black_cards: [...black],
-        white_cards: [...white],
-      },
-      turns: [
-        {
-          turn: 0,
-          czar: null,
-          stage: ["start"],
-          white_cards: [],
-          black_cards: [],
-          winner: {},
-        },
-      ],
-      timerTrigger: false,
-    };
-
-    const newGameData = await GameCollection.create({ Game: gamedata });
-
-    io.to(lobbyId).emit("newgame", { newGameData });
+  socket.on("createGameObject", ({ setRounds, maxHandSize, lobbyId }) => {
+    createGame({ setRounds, maxHandSize, lobbyId, io });
   });
+
+  socket.on("getUpdatedGame", ({ lobbyId, name, id }) =>
+    sendCurrentGame({ lobbyId, name, id, io, socket })
+  );
+
+  socket.on(
+    "changeGame",
+    async ({ deck, player, stage, gameId, gameIdentifier, lobbyId }) => {
+      changeGame({ deck, player, stage, gameId, gameIdentifier, lobbyId, io });
+    }
+  );
 });
