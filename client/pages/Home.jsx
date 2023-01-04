@@ -5,7 +5,7 @@ import { parseCookies, setCookie, destroyCookie } from "nookies";
 import { io } from "socket.io-client";
 import useLocalStorage from "./useLocalStorage.js";
 
-export const socket = io("http:localhost:5555", {
+export const socket = io("http://localhost:5555/", {
   reconnection: true, // enable reconnection
   reconnectionAttempts: 5, // try to reconnect 5 times
   reconnectionDelay: 3000, // increase the delay between reconnection attempts to 3 seconds
