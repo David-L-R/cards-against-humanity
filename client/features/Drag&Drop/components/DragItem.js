@@ -8,6 +8,7 @@ export function DragItem(props) {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: id,
+      disabled: card.pack >= 0 && card.pack !== undefined ? false : true,
     });
 
   const style = {

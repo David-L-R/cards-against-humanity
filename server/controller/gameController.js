@@ -122,6 +122,17 @@ export const changeGame = async ({
       player.hand = playerhand;
       return player;
     });
+
+    //setup the first random czar
+    const randomIndex = Math.floor(
+      Math.random() * (currentGame.Game.players.length - 1)
+    );
+    const randomPlayer = currentGame.Game.players[randomIndex];
+    currentGame.Game.turns[0].czar = {
+      randomPlayer,
+      currentIndex: randomIndex,
+    };
+
     currentGame.Game.turns[0].stage.push("dealing");
     currentGame.save();
     io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });

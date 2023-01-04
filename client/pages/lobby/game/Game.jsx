@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
+import CardTemplate from "../../../components/cardTemplate";
 import DragAndDropContainer from "../../../features/Drag&Drop";
 import { socket } from "../../Home";
 
@@ -14,13 +15,20 @@ const Game = () => {
   const [gameStage, setGameStage] = useState("");
   const [whiteCards, setWhiteCards] = useState([]);
   const [blackCards, setBlackCards] = useState([]);
+  const [playedBlack, setPlayedBlack] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState(null);
   const [timerTrigger, setTimerTrigger] = useState(false);
   const [cardsOnTable, setCardsOnTable] = useState(false);
+  const [rerender, setrerender] = useState(false);
+
+  const [isCzar, setIsCzar] = useState(false);
   let gameIdentifier = null;
 
   //getting games infos and rejoin player to socket io
   socket.on("currentGame", ({ currentGame, err }) => {
+    console.log("currentGame", currentGame);
+    const lastTurn = currentGame.turns.length - 1;
+    const currentCzarId = currentGame.turns[lastTurn]?.czar?.randomPlayer?.id;
     const playerId = cookies.socketId;
     gameIdentifier = currentGame?.gameIdentifier;
     const currentPlayer = currentGame.players?.find(
@@ -39,9 +47,12 @@ const Game = () => {
 
     //check if the host
     if (isHost) setHost(true);
+
+    //check is czar
+    if (currentCzarId === cookies.socketId) setIsCzar(true);
     if (err) return console.warn(err);
     setCardsOnTable({
-      table: { label: "table", cards: [{ text: "eins" }, { text: "zwei" }] },
+      table: { label: "table", cards: [] },
       player: { label: "player", cards: hand },
     });
     setCurrentPlayer(currentPlayer);
@@ -52,6 +63,22 @@ const Game = () => {
     setHand(hand);
     setGame(currentGame);
   });
+
+  const drawBlack = () => {
+    const blackCardsDeckLength = blackCards.length - 1;
+    const randomIndex = Math.floor(Math.random() * blackCardsDeckLength);
+    const [black] = blackCards.splice(randomIndex, 1);
+    setPlayedBlack((prev) => [...prev, black]);
+    setBlackCards((prev) => (prev = blackCards));
+  };
+
+  const confirmBlack = () => {
+    const confirmedBlack = playedBlack[playedBlack.length - 1];
+    const newCardsOnTable = { ...cardsOnTable };
+    newCardsOnTable.table.cards.push(confirmedBlack);
+
+    setCardsOnTable((prev) => (prev = newCardsOnTable));
+  };
 
   useEffect(() => {
     //self update page after got redirected, use key from query as lobby id
@@ -80,8 +107,16 @@ const Game = () => {
         <br />
         gamestage : {gameStage}
         <br />
+        Czar: {isCzar ? "yes" : "no"}
       </div>
-      <DragAndDropContainer data={cardsOnTable} setData={setCardsOnTable} />
+
+      <button onClick={drawBlack}>Choose Black Card</button>
+      <button onClick={confirmBlack}>Confirm Black Card</button>
+      <DragAndDropContainer
+        data={cardsOnTable}
+        setData={setCardsOnTable}
+        element={CardTemplate}
+      />
     </>
   );
 };
