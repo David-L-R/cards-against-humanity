@@ -1,8 +1,11 @@
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import CardTemplate from "../../../components/cardTemplate";
 import DragAndDropContainer from "../../../features/Drag&Drop";
+import { showToastAndRedirect } from "../../../utils/showToastAndRedirect";
+import "react-toastify/dist/ReactToastify.css";
 import { socket } from "../../Home";
 
 const Game = () => {
@@ -19,14 +22,14 @@ const Game = () => {
   const [currentPlayer, setCurrentPlayer] = useState(null);
   const [timerTrigger, setTimerTrigger] = useState(false);
   const [cardsOnTable, setCardsOnTable] = useState(false);
-  const [rerender, setrerender] = useState(false);
 
   const [isCzar, setIsCzar] = useState(false);
   let gameIdentifier = null;
 
   //getting games infos and rejoin player to socket io
   socket.on("currentGame", ({ currentGame, err }) => {
-    console.log("currentGame", currentGame);
+    if (err || !currentGame) return showToastAndRedirect(toast, router, err);
+
     const lastTurn = currentGame.turns.length - 1;
     const currentCzarId = currentGame.turns[lastTurn]?.czar?.randomPlayer?.id;
     const playerId = cookies.socketId;
@@ -67,7 +70,8 @@ const Game = () => {
   const drawBlack = () => {
     const blackCardsDeckLength = blackCards.length - 1;
     const randomIndex = Math.floor(Math.random() * blackCardsDeckLength);
-    const [black] = blackCards.splice(randomIndex, 1);
+    //const [black] = blackCards.splice(randomIndex, 1);
+    const [black] = blackCards.splice(0, 1);
     setPlayedBlack((prev) => [...prev, black]);
     setBlackCards((prev) => (prev = blackCards));
   };
@@ -75,7 +79,14 @@ const Game = () => {
   const confirmBlack = () => {
     const confirmedBlack = playedBlack[playedBlack.length - 1];
     const newCardsOnTable = { ...cardsOnTable };
-    newCardsOnTable.table.cards.push(confirmedBlack);
+
+    //add skelettons based on black cards pick
+    let skeletons = [];
+    for (let index = 0; index < confirmedBlack?.pick; index++) {
+      skeletons.push({ text: "" });
+    }
+    //newCardsOnTable.table.cards = [confirmedBlack, ...skeletons];
+    newCardsOnTable.table.cards = [confirmedBlack];
 
     setCardsOnTable((prev) => (prev = newCardsOnTable));
   };
@@ -117,6 +128,7 @@ const Game = () => {
         setData={setCardsOnTable}
         element={CardTemplate}
       />
+      <ToastContainer autoClose={3000} />
     </>
   );
 };

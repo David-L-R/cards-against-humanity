@@ -8,6 +8,11 @@
   box-sizing: border-box;
 }
 
+ul {
+  list-style: none;
+  padding: 0;
+}
+
 html,
 body {
   padding: 0;
@@ -22,5 +27,31 @@ body {
 }
 
 .cardDisplay {
+  position: relative;
   display: flex;
+}
+
+.skeleton-wrapper {
+  display: flex;
+  position: absolute;
+  left: 17%;
+  z-index: 0;
+}
+
+.hide-skell {
+  animation: hideSkell 1s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes hideSkell {
+  0% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
 }

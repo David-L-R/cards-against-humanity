@@ -3,12 +3,19 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 export function DragItem(props) {
-  const { card, id, element } = props;
+  const { card, id, element, allCards } = props;
   const CustomComponent = element;
-  const { attributes, listeners, setNodeRef, transform, transition } =
+  const isBlackCard = card.pick;
+  const isSkelettonCard = card.text === "";
+
+  const { attributes, listeners, setNodeRef, transform, transition, sortable } =
     useSortable({
       id: id,
-      disabled: card.pack >= 0 && card.pack !== undefined ? false : true,
+      disabled: isBlackCard ? true : false,
+      data: {
+        cardProps: { ...card },
+        allCards: [...allCards],
+      },
     });
 
   const style = {
@@ -18,8 +25,20 @@ export function DragItem(props) {
   };
 
   return (
-    <li ref={setNodeRef} style={style} {...listeners} {...attributes}>
-      {element ? <CustomComponent {...props} /> : <h2> {id}</h2>}
+    <li
+      ref={setNodeRef}
+      style={isBlackCard || isSkelettonCard ? null : style}
+      {...listeners}
+      {...attributes}>
+      {element ? (
+        <CustomComponent
+          {...props}
+          isBlackCard={isBlackCard ? true : false}
+          allcards={allCards}
+        />
+      ) : (
+        <h2> {id}</h2>
+      )}
     </li>
   );
 }

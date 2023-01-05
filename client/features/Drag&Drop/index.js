@@ -2,25 +2,24 @@ import React, { useState } from "react";
 import {
   rectIntersection,
   closestCenter,
-  pointerWithin,
   closestCorners,
   DndContext,
-  DragOverlay,
   KeyboardSensor,
   MouseSensor,
   TouchSensor,
   useSensor,
   useSensors,
+  DragOverlay,
 } from "@dnd-kit/core";
 import { sortableKeyboardCoordinates } from "@dnd-kit/sortable";
 import { DropZone } from "./components/DropZone.js";
-import { DragItem } from "./components/DragItem.js";
 import {
   handleDragStart,
   handleDragCancel,
   handleDragEnd,
   handleDragOver,
 } from "./hooks/handleDndEvents.js";
+import CardTemplate from "../../components/cardTemplate.js";
 
 function DragAndDropContainer(props) {
   const { setData, data, children, element } = props;
@@ -36,7 +35,7 @@ function DragAndDropContainer(props) {
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCenter}
+      collisionDetection={closestCorners}
       onDragStart={(e) => handleDragStart(e, setActiveId)}
       onDragCancel={() => handleDragCancel(setActiveId)}
       onDragOver={(e) => handleDragOver(e, setData)}
@@ -49,9 +48,14 @@ function DragAndDropContainer(props) {
             id={data[key].label}
             element={element}
             key={data[key].label}
+            activeId={activeId}
+            {...props}
           />
         );
       })}
+      <DragOverlay>
+        {activeId ? <CardTemplate id={activeId} /> : null}
+      </DragOverlay>
     </DndContext>
   );
 }

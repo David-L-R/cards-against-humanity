@@ -15,9 +15,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@dnd-kit/core": "^6.0.6",
+    "@dnd-kit/core": "^6.0.7",
     "@dnd-kit/modifiers": "^6.0.1",
-    "@dnd-kit/sortable": "^7.0.1",
+    "@dnd-kit/sortable": "^7.0.2",
     "boring-avatars": "^1.7.0",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
