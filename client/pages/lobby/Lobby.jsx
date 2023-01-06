@@ -8,6 +8,13 @@ import { socket } from "../Home";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { showToastAndRedirect } from "../../utils/showToastAndRedirect";
+import { motion as m } from "framer-motion";
+
+const socket = io("http://localhost:5555", {
+  reconnection: true, // enable reconnection
+  reconnectionAttempts: 5, // try to reconnect 5 times
+  reconnectionDelay: 3000, // increase the delay between reconnection attempts to 3 seconds
+});
 
 const Lobby = () => {
   const router = useRouter();
@@ -79,49 +86,47 @@ const Lobby = () => {
     <>
       <div className="waitingLobbyContainer">
         <div className="waitingLobbyCard">
-          <div className="waitingLobbyTextWrapper">
-            <h1>
-              Waiting for players
-              <div className="loadingContainer">
-                <div className="loader">
-                  <div className="circle" id="a"></div>
-                  <div className="circle" id="b"></div>
-                  <div className="circle" id="c"></div>
+          <m.div
+            className="framerContainer"
+            initial={{ y: -500, rotate: -30 }}
+            animate={{ y: 0, rotate: 0 }}
+            exit={{
+              x: -1300,
+              rotate: -120,
+              transition: { duration: 0.75 },
+            }}>
+            <div className="waitingLobbyTextWrapper">
+              <h1>
+                Waiting for players
+                <div className="loadingContainer">
+                  <div className="loader">
+                    <div className="circle" id="a"></div>
+                    <div className="circle" id="b"></div>
+                    <div className="circle" id="c"></div>
+                  </div>
                 </div>
-              </div>
-            </h1>
-          </div>
-          <div className="lobbyIdContainer">
-            <h3>Lobby code: </h3>
-            <div className="lobbyIdCopyField">
-              {copied ? <p className="tempCopyText">Copied!</p> : null}
-              <CopyToClipboard text={lobbyId} onCopy={toggleSomething}>
-                <p>
-                  {lobbyId}
-                  <BiCopy className="icon" />
-                </p>
-              </CopyToClipboard>
+              </h1>
             </div>
-          </div>
-          <div className="waitingLobbyButtonWrapper">
-            {isHost && (
-              <>
-                <input
-                  ref={amountOfRounds}
-                  type="number"
-                  placeholder="Amount of rounds (default 10)"
-                />
-                <input
-                  ref={handSize}
-                  type="number"
-                  placeholder="Hand size (default 10)"
-                />
-                <button onClick={handleGameCreation} className="lobbyButton">
+            <div className="lobbyIdContainer">
+              <h3>Game code: </h3>
+              <div className="lobbyIdCopyField">
+                {copied ? <p className="tempCopyText">Copied!</p> : null}
+                <CopyToClipboard text={lobbyId} onCopy={toggleSomething}>
+                  <p>
+                    {lobbyId}
+                    <BiCopy className="icon" />
+                  </p>
+                </CopyToClipboard>
+              </div>
+            </div>
+            <div className="waitingLobbyButtonWrapper">
+              {host && (
+                <button className="lobbyButton">
                   <span>Ready</span>
                 </button>
-              </>
-            )}
-          </div>
+              )}
+            </div>
+          </m.div>
           <div className="dragContainer">
             <ul>
               {players &&
@@ -148,5 +153,3 @@ const Lobby = () => {
 };
 
 export default Lobby;
-
-// onClose={() => router.push("/")}
