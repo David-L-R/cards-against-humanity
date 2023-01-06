@@ -10,12 +10,6 @@ import { ToastContainer, toast } from "react-toastify";
 import { showToastAndRedirect } from "../../utils/showToastAndRedirect";
 import { motion as m } from "framer-motion";
 
-const socket = io("http://localhost:5555", {
-  reconnection: true, // enable reconnection
-  reconnectionAttempts: 5, // try to reconnect 5 times
-  reconnectionDelay: 3000, // increase the delay between reconnection attempts to 3 seconds
-});
-
 const Lobby = () => {
   const router = useRouter();
   const { lobbyId, name } = router.query;
@@ -77,9 +71,9 @@ const Lobby = () => {
   };
 
   const handleGameCreation = () => {
-    const setRounds = amountOfRounds.current.value;
-    const maxHandSize = handSize.current.value;
-    socket.emit("createGameObject", { setRounds, maxHandSize, lobbyId });
+    // const setRounds = amountOfRounds.current.value;
+    // const maxHandSize = handSize.current.value;
+    socket.emit("createGameObject", { lobbyId }); //setRounds, maxHandSize,
   };
 
   return (
@@ -120,8 +114,8 @@ const Lobby = () => {
               </div>
             </div>
             <div className="waitingLobbyButtonWrapper">
-              {host && (
-                <button className="lobbyButton">
+              {isHost && (
+                <button className="lobbyButton" onClick={handleGameCreation}>
                   <span>Ready</span>
                 </button>
               )}
