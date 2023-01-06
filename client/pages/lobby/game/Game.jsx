@@ -7,6 +7,7 @@ import DragAndDropContainer from "../../../features/Drag&Drop";
 import { showToastAndRedirect } from "../../../utils/showToastAndRedirect";
 import "react-toastify/dist/ReactToastify.css";
 import { socket } from "../../Home";
+import BlackCardInDeck from "../../../components/BlackCardInDeck";
 
 const Game = () => {
   const router = useRouter();
@@ -18,7 +19,7 @@ const Game = () => {
   const [gameStage, setGameStage] = useState("");
   const [whiteCards, setWhiteCards] = useState([]);
   const [blackCards, setBlackCards] = useState([]);
-  const [playedBlack, setPlayedBlack] = useState([]);
+  const playedBlack = [];
   const [currentPlayer, setCurrentPlayer] = useState(null);
   const [timerTrigger, setTimerTrigger] = useState(false);
   const [cardsOnTable, setCardsOnTable] = useState(false);
@@ -68,12 +69,12 @@ const Game = () => {
   });
 
   // select a black card to inspect
-  const drawBlack = () => {
+  const drawBlack = (index) => {
     const blackCardsDeckLength = blackCards.length - 1;
     const randomIndex = Math.floor(Math.random() * blackCardsDeckLength);
     //const [black] = blackCards.splice(randomIndex, 1);
-    const [black] = blackCards.splice(0, 1);
-    setPlayedBlack((prev) => [...prev, black]);
+    const [black] = blackCards.splice(index, 1);
+    playedBlack.push(black);
     setBlackCards((prev) => (prev = blackCards));
   };
 
@@ -82,11 +83,6 @@ const Game = () => {
     const confirmedBlack = playedBlack[playedBlack.length - 1];
     const newCardsOnTable = { ...cardsOnTable };
 
-    //add skelettons based on black cards pick
-    let skeletons = [];
-    for (let index = 0; index < confirmedBlack?.pick; index++) {
-      skeletons.push({ text: "" });
-    }
     //newCardsOnTable.table.cards = [confirmedBlack, ...skeletons];
     newCardsOnTable.table.cards = [confirmedBlack];
 
@@ -114,7 +110,7 @@ const Game = () => {
   }, [gameStage]);
 
   return (
-    <>
+    <main className="game">
       <div>
         Game player : {name} <br />
         <br />
@@ -123,15 +119,26 @@ const Game = () => {
         Czar: {isCzar ? "yes" : "no"}
       </div>
 
-      <button onClick={drawBlack}>Choose Black Card</button>
-      <button onClick={confirmBlack}>Confirm Black Card</button>
+      <ul className="blackCards">
+        {blackCards &&
+          blackCards.map((card, index) => (
+            <BlackCardInDeck
+              card={card}
+              confirmBlack={confirmBlack}
+              index={index}
+              drawBlack={drawBlack}
+            />
+          ))}
+      </ul>
+
       <DragAndDropContainer
         data={cardsOnTable}
         setData={setCardsOnTable}
         element={CardTemplate}
       />
+
       <ToastContainer autoClose={3000} />
-    </>
+    </main>
   );
 };
 

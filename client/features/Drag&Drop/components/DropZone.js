@@ -59,32 +59,32 @@ export function DropZone(props) {
       id={id}
       items={cards.map((card) => card && card.text)}
       strategy={horizontalListSortingStrategy}>
-      <h1>{id}</h1>
-
-      <ul className="cardDisplay" ref={setNodeRef}>
-        {cards &&
-          cards.map((card) => {
-            return (
-              <DragItem
-                card={card}
-                allCards={cards}
-                id={card.text}
-                key={card.text}
-                element={element}
-              />
-            );
-          })}
-        <li className="skeleton-wrapper">
-          {skelletons &&
-            skelletons.map((skell) => (
-              <div
-                key={skell.key}
-                className={!skell.show ? "hide-skell " : null}>
-                <CardTemplate card={skell} />
-              </div>
-            ))}
-        </li>
-      </ul>
+      <div className={blackCard ? "onTable black-on-table" : "onTable"}>
+        <ul className="cardDisplay" ref={setNodeRef}>
+          {cards &&
+            cards.map((card) => {
+              return (
+                <DragItem
+                  card={card}
+                  allCards={cards}
+                  id={card.text}
+                  key={card.text}
+                  element={element}
+                />
+              );
+            })}
+          <li className="skeleton-wrapper">
+            {skelletons &&
+              skelletons.map((skell) => (
+                <div
+                  key={skell.key}
+                  className={!skell.show ? "hide-skell " : null}>
+                  <CardTemplate card={skell} />
+                </div>
+              ))}
+          </li>
+        </ul>
+      </div>
     </SortableContext>
   );
 }

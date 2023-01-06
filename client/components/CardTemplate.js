@@ -4,9 +4,12 @@ import { useDndMonitor } from "@dnd-kit/core";
 
 const CardTemplate = (props) => {
   const { id, isBlackCard, allcards, card } = props;
+
   const [blackText, setBlackText] = useState(allcards && allcards[0].text);
   let cardClass;
   const [changeText, setChangeText] = useState(false);
+
+  // cards for the black deck
 
   (() => {
     //Add classname fpr black cards, white cards or skellettons
