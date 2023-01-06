@@ -1,7 +1,8 @@
 .skeleton-wrapper {
   display: flex;
   position: absolute;
-  left: 17%;
+  left: 0;
+  transform: translateX(50%);
   z-index: 0;
 }
 
