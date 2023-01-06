@@ -1,5 +1,5 @@
 import React from "react";
-import { DragOverlay, useDroppable } from "@dnd-kit/core";
+import { DragOverlay, useDndMonitor, useDroppable } from "@dnd-kit/core";
 import {
   horizontalListSortingStrategy,
   SortableContext,
@@ -14,11 +14,13 @@ export function DropZone(props) {
   const [skelletons, setSkelletons] = useState(null);
   const { setNodeRef } = useDroppable({
     id: id,
+    disabled:
+      cards.length >= blackCard?.pick + 1 || cards.length === 0 ? true : false,
   });
 
-  function createSkelleton() {
+  //Rener skelettons based on the amount of white cards that are missing, using CSS classes to hide
+  const createSkelleton = () => {
     if (!blackCard) return;
-    //Rener skelettons based on the amount of white cards that are missing
     const maxAmountSkelleton = blackCard.pick;
     const hasWhiteCards = cards.length - 1;
     const amountToRender = maxAmountSkelleton - hasWhiteCards;
@@ -35,49 +37,54 @@ export function DropZone(props) {
     }
 
     setSkelletons((pre) => [...skelletonCollection].reverse());
-  }
+  };
+
+  //update skeletons after card got dropped somewhere else
+  useDndMonitor({
+    onDragEnd({ active, over }) {
+      createSkelleton();
+    },
+  });
 
   useEffect(() => {
     if (id === "table") setBlackCard(cards[0]);
   }, [cards]);
 
   useEffect(() => {
-    blackCard && createSkelleton();
-  }, [blackCard, cards]);
+    createSkelleton();
+  }, [blackCard]);
 
   return (
-    <article>
-      <SortableContext
-        id={id}
-        items={cards.map((card) => card && card.text)}
-        strategy={horizontalListSortingStrategy}>
-        <h1>{id}</h1>
+    <SortableContext
+      id={id}
+      items={cards.map((card) => card && card.text)}
+      strategy={horizontalListSortingStrategy}>
+      <h1>{id}</h1>
 
-        <ul className="cardDisplay" ref={setNodeRef}>
-          {cards &&
-            cards.map((card) => {
-              return (
-                <DragItem
-                  card={card}
-                  allCards={cards}
-                  id={card.text}
-                  key={card.text}
-                  element={element}
-                />
-              );
-            })}
-          <li className="skeleton-wrapper">
-            {skelletons &&
-              skelletons.map((skell) => (
-                <div
-                  key={skell.key}
-                  className={!skell.show ? "hide-skell " : null}>
-                  <CardTemplate card={skell} />
-                </div>
-              ))}
-          </li>
-        </ul>
-      </SortableContext>
-    </article>
+      <ul className="cardDisplay" ref={setNodeRef}>
+        {cards &&
+          cards.map((card) => {
+            return (
+              <DragItem
+                card={card}
+                allCards={cards}
+                id={card.text}
+                key={card.text}
+                element={element}
+              />
+            );
+          })}
+        <li className="skeleton-wrapper">
+          {skelletons &&
+            skelletons.map((skell) => (
+              <div
+                key={skell.key}
+                className={!skell.show ? "hide-skell " : null}>
+                <CardTemplate card={skell} />
+              </div>
+            ))}
+        </li>
+      </ul>
+    </SortableContext>
   );
 }

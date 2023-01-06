@@ -2,6 +2,7 @@
 @import url("./Countdown.css");
 @import url("./Lobbycards.css");
 @import url("./Lobby.css");
+@import url("./skelletton.css");
 @import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700&display=swap");
 
 * {
@@ -29,29 +30,10 @@ body {
 .cardDisplay {
   position: relative;
   display: flex;
+  min-height: 100px;
 }
 
-.skeleton-wrapper {
+.droppable-container {
   display: flex;
-  position: absolute;
-  left: 17%;
-  z-index: 0;
-}
-
-.hide-skell {
-  animation: hideSkell 1s;
-  animation-fill-mode: forwards;
-}
-
-@keyframes hideSkell {
-  0% {
-    opacity: 1;
-  }
-  70% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 0;
-    visibility: hidden;
-  }
+  flex-direction: column;
 }

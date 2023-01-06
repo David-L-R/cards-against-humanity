@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   rectIntersection,
+  pointerWithin,
   closestCenter,
   closestCorners,
   DndContext,
@@ -35,24 +36,26 @@ function DragAndDropContainer(props) {
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCorners}
+      collisionDetection={pointerWithin}
       onDragStart={(e) => handleDragStart(e, setActiveId)}
       onDragCancel={() => handleDragCancel(setActiveId)}
       onDragOver={(e) => handleDragOver(e, setData)}
       onDragEnd={(e) => handleDragEnd(e, setActiveId, setData)}>
       {children}
-      {Object.entries(data).map(([key, value]) => {
-        return (
-          <DropZone
-            cards={data[key].cards}
-            id={data[key].label}
-            element={element}
-            key={data[key].label}
-            activeId={activeId}
-            {...props}
-          />
-        );
-      })}
+      <div className="droppable-container">
+        {Object.entries(data).map(([key, value]) => {
+          return (
+            <DropZone
+              cards={data[key].cards}
+              id={data[key].label}
+              element={element}
+              key={data[key].label}
+              activeId={activeId}
+              {...props}
+            />
+          );
+        })}
+      </div>
       <DragOverlay>
         {activeId ? <CardTemplate id={activeId} /> : null}
       </DragOverlay>

@@ -21,9 +21,7 @@ export const handleDragEnd = ({ active, over }, setActiveId, setRaw) => {
     const activeIndex = active.data.current.sortable.index;
     const overIndex = over?.data?.current?.sortable.index;
 
-    if ((overContainer && overContainer) === "table" && overIndex === 0) return;
-    //dont move black card
-
+    if (activeContainer !== overContainer) return;
     if (
       !activeContainer ||
       !overContainer ||
@@ -46,42 +44,49 @@ export const handleDragEnd = ({ active, over }, setActiveId, setRaw) => {
 };
 
 export const handleDragOver = ({ active, over }, setRaw) => {
-  if (active.id !== over?.id) {
+  if (active.id !== over?.id || over?.id) {
     const activeContainer = active?.data.current?.sortable?.containerId;
     const overContainer = over?.data?.current?.sortable?.containerId;
     const activeIndex = active?.data.current?.sortable?.index;
     const overIndex = over?.data?.current?.sortable?.index;
 
-    console.log("active", active?.data.current);
-    console.log("activeContainer", active?.data.current?.sortable);
-    console.log("over", over?.data?.current);
+    if (activeContainer === overContainer || !over?.id) return;
 
-    if (!overContainer || !activeContainer || activeContainer === overContainer)
-      return;
-
-    if (overContainer === "table") {
+    if (overContainer === "table" || over.id === "table") {
       //dont move black card
+      const pick = over?.data?.current?.allCards[0]?.pick;
+      const maxLength = pick + 1;
+      const currentLength = over?.data?.current?.allCards.length;
 
-      const currentListLength = over?.data?.current?.sortable?.items.length;
+      if (overIndex === 0) return;
 
-      // if (overIndex === 0) return;
+      if (currentLength >= maxLength) return;
 
       setRaw((prev) => {
         const newDeck = { ...prev };
-        const incoming = newDeck.player.cards.splice(activeIndex, 1);
+        const incoming = newDeck[activeContainer].cards.splice(activeIndex, 1);
         let cards = newDeck.table.cards;
 
-        newDeck.table.cards = [...cards.splice(0, 1), ...incoming, ...cards];
-        console.log("cards", newDeck.table.cards);
+        newDeck.table.cards = [...cards.splice(0, cards.length), ...incoming];
 
         return newDeck;
       });
+    }
 
-      const pick = over?.data?.current?.allCards[0]?.pick;
-      const maxLength = pick * 2 + 1;
-      const currentLength = over?.data?.current?.allCards.length;
+    if (overContainer === "player" && overContainer !== activeContainer) {
+      setRaw((prev) => {
+        const newDeck = { ...prev };
+        const incoming = newDeck[activeContainer].cards.splice(activeIndex, 1);
+        let cards = newDeck.player.cards;
 
-      // if (currentLength >= maxLength) return;
+        newDeck.player.cards = [
+          ...cards.splice(0, activeIndex),
+          ...incoming,
+          ...cards,
+        ];
+
+        return newDeck;
+      });
     }
 
     // if (activeContainer === "table" && overContainer !== "table") {

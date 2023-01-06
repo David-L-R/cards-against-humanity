@@ -1,0 +1,23 @@
+.skeleton-wrapper {
+  display: flex;
+  position: absolute;
+  left: 17%;
+  z-index: 0;
+}
+
+.hide-skell {
+  animation: hideSkell 500ms;
+  animation-fill-mode: forwards;
+}
+
+@keyframes hideSkell {
+  0% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0;
+  }
+  100% {
+    visibility: hidden;
+  }
+}
