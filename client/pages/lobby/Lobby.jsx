@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { showToastAndRedirect } from "../../utils/showToastAndRedirect";
 import { motion as m } from "framer-motion";
+import randomInsult from "../../utils/randomInsult";
 
 const Lobby = () => {
   const router = useRouter();
@@ -38,6 +39,7 @@ const Lobby = () => {
     setPlayers((pre) => (pre = players));
   });
 
+  // creates new game if host and redirect everyone to game
   socket.on("newgame", ({ newGameData }) => {
     const stage = newGameData.Game.turns[0].stage[0];
     const gameId = newGameData.Game.gameIdentifier;
@@ -91,14 +93,14 @@ const Lobby = () => {
             }}>
             <div className="waitingLobbyTextWrapper">
               <h1>
-                Waiting for players
-                <div className="loadingContainer">
+                Waiting for players&nbsp;
+                <span className="loadingContainer">
                   <div className="loader">
-                    <div className="circle" id="a"></div>
-                    <div className="circle" id="b"></div>
-                    <div className="circle" id="c"></div>
+                    <div className="circle" id="a" />
+                    <div className="circle" id="b" />
+                    <div className="circle" id="c" />
                   </div>
-                </div>
+                </span>
               </h1>
             </div>
             <div className="lobbyIdContainer">
@@ -106,10 +108,10 @@ const Lobby = () => {
               <div className="lobbyIdCopyField">
                 {copied ? <p className="tempCopyText">Copied!</p> : null}
                 <CopyToClipboard text={lobbyId} onCopy={toggleSomething}>
-                  <p>
-                    {lobbyId}
+                  <div className="input-icon-wrapper">
+                    <p>{lobbyId}</p>
                     <BiCopy className="icon" />
-                  </p>
+                  </div>
                 </CopyToClipboard>
               </div>
             </div>
@@ -129,7 +131,9 @@ const Lobby = () => {
                     key={player.name}
                     className={player.inactive ? "inactive" : null}>
                     <h2>{player.name.toUpperCase()}</h2>
-                    {player.inactive && <p>lost connection</p>}
+                    {player.inactive && (
+                      <p>is disconnected and {randomInsult()}</p>
+                    )}
                     {player.isHost && (
                       <div className="hostCrown">
                         <RiVipCrown2Fill />

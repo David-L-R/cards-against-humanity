@@ -1,11 +1,11 @@
 import { is } from "@react-spring/shared";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import { parseCookies, setCookie, destroyCookie } from "nookies";
+import { setCookie } from "nookies";
 import { io } from "socket.io-client";
-import useLocalStorage from "../components/useLocalStorage.js";
 import { motion as m } from "framer-motion";
-import { signIn, signOut, getProviders, useSession } from "next-auth/react";
+import JoinGame from "../components/JoinLobby.jsx";
+import HostGame from "../components/HostGame.jsx";
 
 export const socket = io("http://localhost:5555/", {
   reconnection: true, // enable reconnection
@@ -17,13 +17,17 @@ const Home = () => {
   const roomKey = useRef("");
   const [hostOrJoin, setHostOrJoin] = useState(null);
   const router = useRouter();
-  const cookies = parseCookies();
   const [showErrMessage, setShowErrMessage] = useState(false);
-  const [firstName, setFirstName] = useState("");
-
-  useEffect(() => {
-    setCookie(null, "socketId", socket.id, { path: "/" });
-  }, [socket.id]);
+  const [isHostActive, setIsHostActive] = useState(false);
+  const [isJoinActive, setIsJoinActive] = useState(false);
+  const handleHostClick = (event) => {
+    setIsHostActive(true);
+    if (setIsJoinActive) setTimeout(() => setIsJoinActive(false), 150);
+  };
+  const handleJoinClick = (event) => {
+    setIsJoinActive(true);
+    if (setIsHostActive) setTimeout(() => setIsHostActive(false), 150);
+  };
 
   //If new lobby was createt, redirect to Lobby with room data
   socket.on("LobbyCreated", ({ lobbyId, hostName }) => {
@@ -55,103 +59,9 @@ const Home = () => {
     }
   });
 
-  //Hosting a new game
-  const HostGame = () => {
-    let [value, setValue] = useLocalStorage("name", "");
-
-    const handleSubmit = (e) => {
-      e.preventDefault();
-      const hostName = playerName.current.value;
-      const id = cookies.socketId;
-      if (!id) return console.warn("NO ID");
-      socket.emit("createNewLobby", { hostName, id });
-    };
-
-    return (
-      <form onSubmit={(e) => handleSubmit(e)} className="lobbyForm">
-        <input
-          maxLength={15}
-          ref={playerName}
-          type="text"
-          placeholder="Enter Name"
-          required
-          className="lobbyInputField"
-          value={value}
-          onChange={(event) => setValue(event.target.value)}
-        />
-
-        <div className="lobbyButtonWrapper">
-          <button type="submit" className="lobbyButton">
-            <span>Host Game</span>
-          </button>
-        </div>
-      </form>
-    );
-  };
-
-  //Join a game
-  const JoinGame = () => {
-    let [value, setValue] = useLocalStorage("name", "");
-
-    const handleSubmit = (e) => {
-      e.preventDefault();
-
-      // get values from form
-      const lobbyId = roomKey.current.value;
-      const newPlayerName = playerName.current.value;
-      const id = cookies.socketId;
-
-      // request to server to find the game by the given id from form
-      socket.emit("findRoom", { lobbyId, newPlayerName, id });
-    };
-
-    useEffect(() => {
-      roomKey.current.focus();
-    }, []);
-
-    return (
-      <div className="lobbyJoinFormContainer">
-        <h2>Join a Game.</h2>
-        <form onSubmit={(e) => handleSubmit(e)} className="lobbyJoinForm">
-          <p>Enter Your Name:</p>
-          <input
-            maxLength={15}
-            ref={playerName}
-            type="text"
-            placeholder="Name"
-            required
-            className="lobbyJoinInputField"
-            value={value}
-            onChange={(event) => setValue(event.target.value)}
-          />
-          <p>Enter Room Code:</p>
-          <input
-            ref={roomKey}
-            type="text"
-            placeholder="code"
-            required
-            className="lobbyJoinInputField"
-          />
-          <div className="lobbyButtonWrapper">
-            <button type="submit" className="lobbyButton">
-              <span>Join Game</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    );
-  };
-
-  const [isHostActive, setIsHostActive] = useState(false);
-  const [isJoinActive, setIsJoinActive] = useState(false);
-  const handleHostClick = (event) => {
-    setIsHostActive(true);
-    if (setIsJoinActive) setTimeout(() => setIsJoinActive(false), 150);
-  };
-  const handleJoinClick = (event) => {
-    setIsJoinActive(true);
-    if (setIsHostActive) setTimeout(() => setIsHostActive(false), 150);
-  };
+  useEffect(() => {
+    setCookie(null, "socketId", socket.id, { path: "/" });
+  }, [socket.id]);
 
   return (
     <>
@@ -186,7 +96,9 @@ const Home = () => {
               </div>
               <div className="lobbyBack">
                 <h2>I'm the Host but my Homies calls me</h2>
-                {hostOrJoin === "host" ? <HostGame /> : null}
+                {hostOrJoin === "host" ? (
+                  <HostGame playerName={playerName} />
+                ) : null}
               </div>
             </div>
           </div>
@@ -223,7 +135,9 @@ const Home = () => {
               </div>
 
               <div className="lobbyBack">
-                {hostOrJoin === "join" ? <JoinGame /> : null}
+                {hostOrJoin === "join" ? (
+                  <JoinGame roomKey={roomKey} playerName={playerName} />
+                ) : null}
               </div>
             </div>
           </div>

@@ -34,8 +34,10 @@ export const findRoomToJoin = async ({
   io,
 }) => {
   const player = { name: newPlayerName, id, inactive: false, isHost: false };
-  // searche game in MongoDb
 
+  console.log("lobbyId", lobbyId);
+
+  // searche game in MongoDb
   try {
     const lobby = await LobbyCollection.findById(lobbyId);
 

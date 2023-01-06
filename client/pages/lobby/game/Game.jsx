@@ -26,7 +26,7 @@ const Game = () => {
   const [isCzar, setIsCzar] = useState(false);
   let gameIdentifier = null;
 
-  //getting games infos and rejoin player to socket io
+  //getting game infos and rejoin player to socket io
   socket.on("currentGame", ({ currentGame, err }) => {
     if (err || !currentGame) return showToastAndRedirect(toast, router, err);
 
@@ -67,6 +67,7 @@ const Game = () => {
     setGame(currentGame);
   });
 
+  // select a black card to inspect
   const drawBlack = () => {
     const blackCardsDeckLength = blackCards.length - 1;
     const randomIndex = Math.floor(Math.random() * blackCardsDeckLength);
@@ -76,6 +77,7 @@ const Game = () => {
     setBlackCards((prev) => (prev = blackCards));
   };
 
+  //confirming black card is satisfied
   const confirmBlack = () => {
     const confirmedBlack = playedBlack[playedBlack.length - 1];
     const newCardsOnTable = { ...cardsOnTable };
@@ -91,14 +93,14 @@ const Game = () => {
     setCardsOnTable((prev) => (prev = newCardsOnTable));
   };
 
+  //self update page after got redirected, use key from query as lobby id
   useEffect(() => {
-    //self update page after got redirected, use key from query as lobby id
     if (lobbyId)
       socket.emit("getUpdatedGame", { lobbyId, name, id: cookies.socketId });
   }, [lobbyId]);
 
+  // if host start the game by send the server the current "starting" stage
   useEffect(() => {
-    // if host start the game by send the server the current "starting" stage
     if (gameStage === "start" && isHost) {
       socket.emit("changeGame", {
         deck: { white_cards: whiteCards, black_cards: blackCards },

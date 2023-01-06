@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useSpring, animated } from "react-spring";
-import Navbar from "../components/Navbar";
+import Navbar from "./Navbar";
 import Link from "next/link";
 import { motion as m } from "framer-motion";
+import { setCookie, parseCookies } from "nookies";
 
 const calc = (x, y) => [
   -(y - window.innerHeight / 2) / 20,
@@ -28,8 +29,7 @@ function FrontPage() {
           opacity: 1,
           rotate: -120,
           transition: { duration: 0.75 },
-        }}
-      >
+        }}>
         <Link href="./Home">
           <animated.div
             className="cardContainer"
@@ -37,8 +37,7 @@ function FrontPage() {
               set({ xys: calc(x, y) })
             }
             onMouseLeave={() => set({ xys: [0, 0, 1] })}
-            style={{ transform: props.xys.to(trans) }}
-          >
+            style={{ transform: props.xys.to(trans) }}>
             <div className="card">
               <div className="cardFace cardFace--front">
                 <h2>Cards Against Humanity.</h2>

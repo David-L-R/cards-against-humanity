@@ -1,4 +1,4 @@
-import FrontPage from "./FrontPage";
+import FrontPage from "../components/FrontPage";
 
 export default function index() {
   return (

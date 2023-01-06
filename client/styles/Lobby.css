@@ -26,25 +26,27 @@
   padding-bottom: 35px;
   padding-left: 25px;
 }
+
 .waitingLobbyButtonWrapper {
   display: flex;
   margin-top: 50px;
-
   justify-content: center;
 }
 .loadingContainer {
-  padding-top: 25px;
+  display: inline-block;
+  /*flex-direction: column;
   position: absolute;
-  top: 28%;
-  right: 27%;
-  display: flex;
   max-width: max-content;
-  flex-direction: column;
+  display: flex;
+  right: 0;
+   top: 28%;
+  right: 27%;
+  padding-top: 25px; */
 }
 .icon {
   font-size: 16px;
-  padding-left: 15px;
   cursor: pointer;
+  z-index: 2;
 }
 .icon:hover {
   color: #a0d68a;
@@ -74,6 +76,13 @@
   width: 210px;
   position: relative;
 }
+
+.input-icon-wrapper {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
 .lobbyIdContainer p {
   font-size: 12px;
   padding-left: 10px;
@@ -205,13 +214,13 @@
 
 @keyframes jump {
   0% {
-    margin-top: 0;
+    transform: translateY(0);
   }
   35% {
-    margin-top: -7px;
+    transform: translateY(-7px);
   }
   70% {
-    margin-top: 0px;
+    transform: translateY(0);
   }
 }
 
