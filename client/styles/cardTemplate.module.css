@@ -60,3 +60,19 @@
   font-weight: 400;
   position: absolute;
 }
+/* 
+ @keyframes fitFromDeck {
+  0% {
+    position: fixed;
+    left: 25%;
+    top: 25%;
+    scale: 1.4;
+  }
+
+
+  100% {
+    position: fixed;
+    left: 30%;
+    transition: all 250ms;
+  }
+}  */

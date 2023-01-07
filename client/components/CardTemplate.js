@@ -9,10 +9,8 @@ const CardTemplate = (props) => {
   let cardClass;
   const [changeText, setChangeText] = useState(false);
 
-  // cards for the black deck
-
   (() => {
-    //Add classname fpr black cards, white cards or skellettons
+    //Add classname for black cards, white cards or skellettons
     if (card) {
       const { pick, pack } = card;
 

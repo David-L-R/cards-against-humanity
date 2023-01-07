@@ -19,7 +19,8 @@ const Game = () => {
   const [gameStage, setGameStage] = useState("");
   const [whiteCards, setWhiteCards] = useState([]);
   const [blackCards, setBlackCards] = useState([]);
-  const playedBlack = [];
+  const [playedBlack, setplayedBlack] = useState([]);
+
   const [currentPlayer, setCurrentPlayer] = useState(null);
   const [timerTrigger, setTimerTrigger] = useState(false);
   const [cardsOnTable, setCardsOnTable] = useState(false);
@@ -68,25 +69,21 @@ const Game = () => {
     setGame(currentGame);
   });
 
-  // select a black card to inspect
-  const drawBlack = (index) => {
-    const blackCardsDeckLength = blackCards.length - 1;
-    const randomIndex = Math.floor(Math.random() * blackCardsDeckLength);
-    //const [black] = blackCards.splice(randomIndex, 1);
-    const [black] = blackCards.splice(index, 1);
-    playedBlack.push(black);
-    setBlackCards((prev) => (prev = blackCards));
+  // provide czar with 3 cards to select one
+  const drawCardsToSelect = (index) => {
+    const cardsForChoice = blackCards.slice(index, 3);
+    setplayedBlack((prev) => (prev = [...cardsForChoice]));
   };
 
-  //confirming black card is satisfied
-  const confirmBlack = () => {
-    const confirmedBlack = playedBlack[playedBlack.length - 1];
+  // changes main black array after black card got selected from czar
+  const selectBlackCard = (index) => {
+    const [selected] = blackCards.splice(index, 1);
     const newCardsOnTable = { ...cardsOnTable };
-
-    //newCardsOnTable.table.cards = [confirmedBlack, ...skeletons];
-    newCardsOnTable.table.cards = [confirmedBlack];
+    newCardsOnTable.table.cards = [selected];
+    setplayedBlack((prev) => (prev = []));
 
     setCardsOnTable((prev) => (prev = newCardsOnTable));
+    setBlackCards((prev) => [...blackCards]);
   };
 
   //self update page after got redirected, use key from query as lobby id
@@ -120,13 +117,15 @@ const Game = () => {
       </div>
 
       <ul className="blackCards">
+        {console.log("blackCards", blackCards)}
         {blackCards &&
           blackCards.map((card, index) => (
             <BlackCardInDeck
+              drawCardsToSelect={drawCardsToSelect}
               card={card}
-              confirmBlack={confirmBlack}
               index={index}
-              drawBlack={drawBlack}
+              playedBlack={playedBlack}
+              selectBlackCard={selectBlackCard}
             />
           ))}
       </ul>

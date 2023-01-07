@@ -14,28 +14,67 @@
 }
 
 .onTable {
-  position: relative;
   display: flex;
   justify-content: center;
 }
 
 .blackCards {
-  position: absolute;
+  position: fixed;
   left: 25%;
   top: 25%;
   z-index: 10;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-columns: 1fr;
+  display: flex;
 }
+
 .blackCards > li {
+  position: fixed;
   transform-style: preserve-3d;
+  perspective: 500px;
   border-radius: 0.6rem;
-  left: 0;
   grid-column: 1/1;
+  left: 25%;
+  top: 25%;
   grid-row: 1/1;
   z-index: 0;
-  transition: all 350ms;
+  transition: all 250ms;
+  animation: none;
+}
+
+.blackCards > li.default {
+  position: absolute;
+  left: 25%;
+  top: 25%;
+}
+
+.blackCards > li.active {
+  position: fixed;
+  scale: 1.2;
+  left: 25%;
+  top: 25%;
+  pointer-events: all;
+}
+
+.blackCards > li.choosed {
+  position: fixed;
+  left: 25%;
+  top: 25%;
+  scale: 1.4;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.blackCards > li.active:hover {
+  scale: 1.25;
+  z-index: 15;
+  transform: translateX(-100px);
+}
+
+.blackCards > li.active:hover::after {
+  content: "Choose";
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .blackCards > li:hover {
@@ -51,6 +90,6 @@
 .cardDisplay {
   position: relative;
   display: flex;
-  min-height: 50px;
+  min-height: 191px;
   min-width: 25%;
 }
