@@ -90,6 +90,6 @@
 .cardDisplay {
   position: relative;
   display: flex;
-  min-height: 191px;
+  min-height: 200px;
   min-width: 25%;
 }
