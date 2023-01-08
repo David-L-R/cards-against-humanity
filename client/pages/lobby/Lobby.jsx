@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { BiCopy } from "react-icons/Bi";
 import { RiVipCrown2Fill } from "react-icons/Ri";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { parseCookies } from "nookies";
+import { parseCookies, setCookie } from "nookies";
 import { socket } from "../Home";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
@@ -13,7 +13,7 @@ import randomInsult from "../../utils/randomInsult";
 
 const Lobby = () => {
   const router = useRouter();
-  const { lobbyId, name } = router.query;
+  const { lobbyId, name, joinGame } = router.query;
   const [players, setPlayers] = useState([]);
   const [copied, setCopied] = useState(false);
   const cookies = parseCookies();
@@ -21,22 +21,28 @@ const Lobby = () => {
   const [inactive, setInactive] = useState(false);
   const amountOfRounds = useRef(null);
   const handSize = useRef(null);
+  const [linkInvation, setlinkInvation] = useState("");
 
   //listener to update page from server after DB entry changed
   socket.on("updateRoom", ({ currentLobby, err }) => {
-    const player = currentLobby.players.find(
-      (player) => player.id === cookies.socketId
-    );
-    if (!player) return showToastAndRedirect(toast, router);
     const { players } = currentLobby;
-    const { id, name, isHost, inactive } = player;
-    //check if the host
-    isHost ? setHost(true) : setHost(false);
-    inactive ? setInactive(true) : setInactive(false);
+    const player = players.find((player) => player.id === cookies.socketId);
+    if (!currentLobby)
+      return showToastAndRedirect(
+        toast,
+        router,
+        "No Lobby found, please host a new game"
+      );
+    if (player) {
+      const { isHost, inactive } = player;
+      //check if the host
+      isHost ? setHost(true) : setHost(false);
+      inactive ? setInactive(true) : setInactive(false);
 
-    if (err) return console.warn(err);
+      if (err) return console.warn(err);
 
-    setPlayers((pre) => (pre = players));
+      setPlayers((pre) => (pre = players));
+    }
   });
 
   // creates new game if host and redirect everyone to game
@@ -59,10 +65,16 @@ const Lobby = () => {
   });
 
   useEffect(() => {
+    if (!cookies.socketId)
+      setCookie(null, "socketId", socket.id, { path: "/" });
+    setlinkInvation(`${window?.location.href}&joinGame=true`);
+  }, []);
+
+  useEffect(() => {
     //self update page after got redirected, use key from query as lobby id
-    if (lobbyId)
-      socket.emit("updateLobby", { lobbyId, name, id: cookies.socketId });
-  }, [lobbyId]);
+    if (lobbyId && cookies.socketId)
+      socket.emit("updateLobby", { lobbyId, id: cookies.socketId, joinGame });
+  }, [lobbyId, cookies.socketId]);
 
   //hello David :) WE good at naming conventions😘😘
   const toggleSomething = () => {
@@ -76,6 +88,14 @@ const Lobby = () => {
     // const setRounds = amountOfRounds.current.value;
     // const maxHandSize = handSize.current.value;
     socket.emit("createGameObject", { lobbyId }); //setRounds, maxHandSize,
+  };
+
+  const changePLayerName = (newPLayerName) => {
+    socket.emit("updateLobby", {
+      lobbyId,
+      id: cookies.socketId,
+      newPLayerName,
+    });
   };
 
   return (
@@ -104,12 +124,14 @@ const Lobby = () => {
               </h1>
             </div>
             <div className="lobbyIdContainer">
-              <h3>Game code: </h3>
+              <h3>Invite your Friends: </h3>
               <div className="lobbyIdCopyField">
-                {copied ? <p className="tempCopyText">Copied!</p> : null}
-                <CopyToClipboard text={lobbyId} onCopy={toggleSomething}>
+                {copied ? (
+                  <p className="tempCopyText">Copied to clipboard!</p>
+                ) : null}
+                <CopyToClipboard text={linkInvation} onCopy={toggleSomething}>
                   <div className="input-icon-wrapper">
-                    <p>{lobbyId}</p>
+                    <p>Click to copy invitation link</p>
                     <BiCopy className="icon" />
                   </div>
                 </CopyToClipboard>
@@ -122,6 +144,11 @@ const Lobby = () => {
                 </button>
               )}
             </div>
+            <input
+              type="text"
+              onChange={(e) => changePLayerName(e.target.value)}
+              placeholder="Change name"
+            />
           </m.div>
           <div className="dragContainer">
             <ul>

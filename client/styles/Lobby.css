@@ -70,6 +70,10 @@
   flex-wrap: wrap;
   justify-content: center;
 }
+.lobbyIdContainer div:hover {
+  cursor: pointer;
+}
+
 .lobbyIdCopyField {
   border: 2px solid white;
   border-radius: 10px;
@@ -86,6 +90,8 @@
 .lobbyIdContainer p {
   font-size: 12px;
   padding-left: 10px;
+  overflow: hidden;
+  max-width: 80%;
 }
 
 .tempCopyText {
@@ -201,7 +207,7 @@
 }
 
 .inactive {
-  opacity: 0.3;
+  opacity: 0.7;
 }
 
 @keyframes hideAnimation {

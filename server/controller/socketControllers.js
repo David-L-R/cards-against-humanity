@@ -2,10 +2,10 @@ import LobbyCollection from "../database/models/lobby.js";
 import GameCollection from "../database/models/game.js";
 import consoleSuccess from "../utils/consoleSuccess.js";
 import cardDecksData from "../data/allCards.json" assert { type: "json" };
+import randomName from "../utils/randomName.js";
 
 export const createNewLobby = async ({ socket, data }) => {
   const { hostName, id } = data;
-  socket.userId = id;
   const lobby = {
     games: [],
     waiting: [],
@@ -63,17 +63,25 @@ export const findRoomToJoin = async ({
   }
 };
 
-export const updateClient = async ({ lobbyId, socket, name, id, io }) => {
+export const updateClient = async ({
+  lobbyId,
+  socket,
+  joinGame,
+  id,
+  io,
+  newPLayerName,
+}) => {
+  socket.userId = id;
   if (!lobbyId || !id)
     return socket.emit("updateRoom", {
       err: "Cant find game to join. Wrong lobby id or player id",
     });
 
-  socket.userId = id;
-
   try {
     const currentLobby = await LobbyCollection.findOne({ _id: lobbyId });
     const foundPLayer = currentLobby.players.find((player) => player.id === id);
+
+    if (newPLayerName) foundPLayer.name = newPLayerName;
 
     if (foundPLayer) {
       foundPLayer.inactive = false;
@@ -89,11 +97,19 @@ export const updateClient = async ({ lobbyId, socket, name, id, io }) => {
           return player;
         });
       }
-      // const findHost = currentLobby.players.find((player) => player.isHost);
+    }
+    // join new player after using invitation link
+    if (!foundPLayer && joinGame) {
+      const newPLayer = {
+        id,
+        isHost: false,
+        inactive: false,
+        name: randomName(),
+      };
+      currentLobby.players.push(newPLayer);
     }
     socket.join(lobbyId);
-
-    await currentLobby.save();
+    currentLobby.save();
 
     io.to(lobbyId).emit("updateRoom", {
       currentLobby: currentLobby,

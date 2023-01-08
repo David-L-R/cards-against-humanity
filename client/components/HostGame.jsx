@@ -1,6 +1,7 @@
 import { parseCookies } from "nookies";
-import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { socket } from "../pages/Home";
+import { showToastAndRedirect } from "../utils/showToastAndRedirect";
 import useLocalStorage from "./useLocalStorage";
 
 //Hosting a new game
@@ -12,7 +13,13 @@ const HostGame = ({ playerName }) => {
     e.preventDefault();
     const hostName = playerName.current.value;
     const id = cookies.socketId;
-    if (!id) return console.warn("NO ID");
+    if (!id)
+      showToastAndRedirect(
+        toast,
+        router,
+        "Could not use cookies, redirect to Homepage"
+      );
+
     socket.emit("createNewLobby", { hostName, id });
   };
 

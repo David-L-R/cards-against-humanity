@@ -1,7 +1,7 @@
 import { is } from "@react-spring/shared";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import { setCookie } from "nookies";
+import { parseCookies, setCookie } from "nookies";
 import { io } from "socket.io-client";
 import { motion as m } from "framer-motion";
 import JoinGame from "../components/JoinLobby.jsx";
@@ -15,6 +15,7 @@ export const socket = io("http://localhost:5555/", {
 const Home = () => {
   const playerName = useRef("");
   const roomKey = useRef("");
+  const cookies = parseCookies();
   const [hostOrJoin, setHostOrJoin] = useState(null);
   const router = useRouter();
   const [showErrMessage, setShowErrMessage] = useState(false);
@@ -33,7 +34,7 @@ const Home = () => {
   socket.on("LobbyCreated", ({ lobbyId, hostName }) => {
     router.push({
       pathname: `/lobby/`,
-      query: { name: hostName, lobbyId: lobbyId },
+      query: { lobbyId: lobbyId },
     });
   });
 
@@ -60,8 +61,9 @@ const Home = () => {
   });
 
   useEffect(() => {
-    setCookie(null, "socketId", socket.id, { path: "/" });
-  }, [socket.id]);
+    if (!cookies.socketId)
+      setCookie(null, "socketId", socket.id, { path: "/" });
+  }, []);
 
   return (
     <>
@@ -127,18 +129,18 @@ const Home = () => {
                 setHostOrJoin("join");
                 handleJoinClick();
               }}>
-              <div
+              {/* <div
                 className={
                   isHostActive ? "lobbyFront lobbyjoinhidden" : "lobbyFront"
                 }>
                 <h2>Join a Game.</h2>
-              </div>
+              </div> */}
 
-              <div className="lobbyBack">
+              {/* <div className="lobbyBack">
                 {hostOrJoin === "join" ? (
                   <JoinGame roomKey={roomKey} playerName={playerName} />
                 ) : null}
-              </div>
+              </div> */}
             </div>
           </div>
         </m.div>
