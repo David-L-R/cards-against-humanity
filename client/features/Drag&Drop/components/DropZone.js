@@ -6,10 +6,10 @@ import {
 } from "@dnd-kit/sortable";
 import { DragItem } from "./DragItem";
 import { useState, useEffect } from "react";
-import CardTemplate from "../../../components/cardTemplate";
+import CardTemplate from "../../../components/CardTemplate";
 
 export function DropZone(props) {
-  let { cards, id, element, activeId } = props;
+  let { cards, id, element, isCzar } = props;
   const [blackCard, setBlackCard] = useState(null);
   const [skelletons, setSkelletons] = useState(null);
   const { setNodeRef } = useDroppable({
@@ -41,7 +41,7 @@ export function DropZone(props) {
 
   //update skeletons after card got dropped somewhere else
   useDndMonitor({
-    onDragEnd({ active, over }) {
+    onDragEnd() {
       createSkelleton();
     },
   });
@@ -54,37 +54,42 @@ export function DropZone(props) {
     createSkelleton();
   }, [blackCard]);
 
+  if (isCzar && !blackCard) return;
+
   return (
     <SortableContext
       id={id}
       items={cards.map((card) => card && card.text)}
       strategy={horizontalListSortingStrategy}>
-      <div className={blackCard ? "onTable black-on-table" : "onTable"}>
-        <ul className="cardDisplay" ref={setNodeRef}>
-          {cards &&
-            cards.map((card) => {
-              return (
-                <DragItem
-                  card={card}
-                  allCards={cards}
-                  id={card.text}
-                  key={card.text}
-                  element={element}
-                />
-              );
-            })}
-          <li className="skeleton-wrapper">
+      <article className={blackCard && "czarSelecteWhites"}>
+        {isCzar && blackCard && <h2>Choose a white card</h2>}
+        <div className={blackCard ? "onTable black-on-table" : "onTable"}>
+          <ul className="cardDisplay" ref={setNodeRef}>
+            {cards &&
+              cards.map((card) => {
+                return (
+                  <DragItem
+                    card={card}
+                    allCards={cards}
+                    id={card.text}
+                    key={card.text}
+                    element={element}
+                  />
+                );
+              })}
+            {/* <li className="skeleton-wrapper"> */}
             {skelletons &&
-              skelletons.map((skell) => (
-                <div
+              skelletons.map((skell, index) => (
+                <li
                   key={skell.key}
-                  className={!skell.show ? "hide-skell " : null}>
-                  <CardTemplate card={skell} />
-                </div>
+                  className={!skell.show ? "hide-skell " : `skeleton${index}`}>
+                  <CardTemplate card={skell} index={index} />
+                </li>
               ))}
-          </li>
-        </ul>
-      </div>
+            {/* </li> */}
+          </ul>
+        </div>
+      </article>
     </SortableContext>
   );
 }

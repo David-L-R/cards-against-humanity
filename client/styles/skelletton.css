@@ -1,10 +1,64 @@
-.skeleton-wrapper {
+/* .skeleton-wrapper {
   display: flex;
   width: 100%;
-  position: absolute;
+  position: relative;
+  border: 2px solid red;
   left: 0;
-  transform: translateX(33%);
+
   z-index: 0;
+} */
+
+div.skeleton {
+  position: absolute;
+  border: 2px dashed rgb(124, 124, 124);
+  background-color: transparent !important;
+  color: white;
+  left: 0;
+  pointer-events: none;
+}
+
+.skeleton::after {
+  content: "+";
+  display: flex;
+  font-size: 3rem;
+  font-weight: 300;
+  justify-content: center;
+  align-items: center;
+  color: rgb(124, 124, 124);
+  position: absolute;
+  width: 40%;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  aspect-ratio: 1/1;
+  border-radius: 50%;
+  border: 2px solid rgb(124, 124, 124);
+}
+
+.skeleton:hover::before {
+  content: "Drop your card here";
+  width: 80%;
+  border: 1px solid rgba(128, 128, 128, 0.534);
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(60%);
+  font-size: 1rem;
+  font-weight: 400;
+  position: absolute;
+}
+
+.skeleton:hover {
+  box-shadow: none;
+}
+
+.skeleton0 div {
+  transform: translateX(100%);
+  margin-left: 0.5rem;
+}
+
+.skeleton1 div {
+  transform: translateX(200%);
+  margin-left: 1rem;
 }
 
 .hide-skell {

@@ -19,47 +19,13 @@
   background-color: black;
   border: 1px solid white;
   color: white;
+  transition: all 250ms;
 }
 
-.skeleton {
-  position: relative;
-  border: 2px dashed rgb(124, 124, 124);
-  background-color: transparent;
-  color: white;
-}
-.skeleton:hover {
-  box-shadow: none;
+.black:hover {
+  scale: 1.1;
 }
 
-.skeleton::after {
-  content: "+";
-  display: flex;
-  font-size: 3rem;
-  font-weight: 300;
-  justify-content: center;
-  align-items: center;
-  color: rgb(124, 124, 124);
-  position: absolute;
-  width: 40%;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  aspect-ratio: 1/1;
-  border-radius: 50%;
-  border: 2px dashed rgb(124, 124, 124);
-}
-
-.skeleton:hover::before {
-  content: "Drop your card here";
-  width: 80%;
-  border: 1px solid rgba(128, 128, 128, 0.534);
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%) translateY(60%);
-  font-size: 1rem;
-  font-weight: 400;
-  position: absolute;
-}
 /* 
  @keyframes fitFromDeck {
   0% {

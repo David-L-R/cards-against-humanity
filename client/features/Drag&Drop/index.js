@@ -20,7 +20,7 @@ import {
   handleDragEnd,
   handleDragOver,
 } from "./hooks/handleDndEvents.js";
-import CardTemplate from "../../components/cardTemplate.js";
+import CardTemplate from "../../components/CardTemplate.jsx";
 
 function DragAndDropContainer(props) {
   const { setData, data, children, element } = props;
