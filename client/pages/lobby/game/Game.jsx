@@ -155,12 +155,14 @@ const Game = () => {
         />
       )}
 
-      <DragAndDropContainer
-        data={cardsOnTable}
-        setData={setCardsOnTable}
-        element={CardTemplate}
-        isCzar={isCzar}
-      />
+      {(isCzar && gameStage !== "black") || !isCzar ? (
+        <DragAndDropContainer
+          data={cardsOnTable}
+          setData={setCardsOnTable}
+          element={CardTemplate}
+          isCzar={isCzar}
+        />
+      ) : null}
       {timerTrigger && timer && <Countdown timer={timer} setTimer={setTimer} />}
       <ToastContainer autoClose={3000} />
     </main>
