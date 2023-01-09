@@ -78,8 +78,27 @@ io.on("connection", (socket) => {
 
   socket.on(
     "changeGame",
-    async ({ deck, player, stage, gameId, gameIdentifier, lobbyId }) => {
-      changeGame({ deck, player, stage, gameId, gameIdentifier, lobbyId, io });
+    async ({
+      blackCards,
+      player,
+      stage,
+      gameId,
+      gameIdentifier,
+      lobbyId,
+      playedBlack,
+      playedWhite,
+    }) => {
+      changeGame({
+        blackCards,
+        player,
+        stage,
+        gameId,
+        gameIdentifier,
+        lobbyId,
+        io,
+        playedBlack,
+        playedWhite,
+      });
     }
   );
 });

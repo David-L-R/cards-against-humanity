@@ -2,6 +2,8 @@ import GameCollection from "../database/models/game.js";
 import LobbyCollection from "../database/models/lobby.js";
 import allCards from "../data/allCards.json" assert { type: "json" };
 import { addNewGameToLobby } from "../utils/addGameToLobby.js";
+import updateTurn from "../utils/updateTurn.js";
+import { update } from "react-spring";
 
 export const createGame = async ({ setRounds, maxHandSize, lobbyId, io }) => {
   let amountOfRounds = parseInt(setRounds);
@@ -52,7 +54,7 @@ export const createGame = async ({ setRounds, maxHandSize, lobbyId, io }) => {
         czar: null,
         stage: ["start"],
         white_cards: [],
-        black_cards: [],
+        black_card: {},
         winner: {},
       },
     ],
@@ -99,13 +101,15 @@ export const sendCurrentGame = async ({ lobbyId, name, id, io, socket }) => {
 };
 
 export const changeGame = async ({
-  deck,
+  blackCards,
   player,
   stage,
   gameId,
   gameIdentifier,
   lobbyId,
   io,
+  playedBlack,
+  playedWhite,
 }) => {
   if (stage === "dealing") {
     const currentGame = await GameCollection.findOne({ "Game.id": gameId });
@@ -141,5 +145,25 @@ export const changeGame = async ({
     currentGame.Game.turns[0].stage.push("dealing");
     currentGame.save();
     io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });
+  }
+
+  if (stage === "black") {
+    try {
+      const currentGame = await GameCollection.findOne({ "Game.id": gameId });
+
+      const updatedGame = updateTurn({
+        currentGame,
+        playedBlack,
+        stage,
+        player,
+        blackCards,
+        playedWhite,
+      });
+      io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
+    } catch (error) {
+      io.to(lobbyId).emit("currentGame", {
+        err: "Server error, cant find game",
+      });
+    }
   }
 };

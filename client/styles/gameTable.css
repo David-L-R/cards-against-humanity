@@ -10,47 +10,101 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  justify-content: space-evenly;
-}
-
-.onTable {
-  position: relative;
-  display: flex;
-  justify-content: center;
-}
-
-.blackCards {
-  position: absolute;
-  left: 25%;
-  top: 25%;
-  z-index: 10;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-columns: 1fr;
-}
-.blackCards > li {
-  transform-style: preserve-3d;
-  border-radius: 0.6rem;
-  left: 0;
-  grid-column: 1/1;
-  grid-row: 1/1;
-  z-index: 0;
-  transition: all 350ms;
-}
-
-.blackCards > li:hover {
-  box-shadow: 0px 0px 20px 0px rgb(255 255 255 / 62%);
-}
-
-.devbug-h1 {
-  position: absolute;
-  left: 50%;
-  top: -20%;
+  justify-content: space-between;
+  padding: 3rem 1rem;
 }
 
 .cardDisplay {
   position: relative;
   display: flex;
-  min-height: 50px;
-  min-width: 25%;
+  justify-content: flex-start;
+  min-height: 200px;
+  min-width: 50%;
+  width: fit-content;
+}
+
+.onTable {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.black-on-table .cardDisplay {
+  justify-content: flex-start;
+  transform: translateX(30%);
+}
+
+/* .onTable {
+  display: flex;
+  justify-content: center;
+} */
+
+/* .blackCards {
+  position: fixed;
+  left: 25%;
+  top: 25%;
+  z-index: 10;
+  display: flex;
+} */
+
+/* .blackCards > li {
+  position: fixed;
+  transform-style: preserve-3d;
+  perspective: 500px;
+  border-radius: 0.6rem;
+  grid-column: 1/1;
+  left: 25%;
+  top: 25%;
+  grid-row: 1/1;
+  z-index: 0;
+  transition: all 250ms;
+  animation: none;
+}
+
+.blackCards > li.default {
+  position: absolute;
+  left: 25%;
+  top: 25%;
+}
+
+.blackCards > li.active {
+  position: fixed;
+  scale: 1.2;
+  left: 25%;
+  top: 25%;
+  pointer-events: all;
+}
+
+.blackCards > li.choosed {
+  position: fixed;
+  left: 25%;
+  top: 25%;
+  scale: 1.4;
+  pointer-events: none;
+  z-index: 20;
+}
+
+.blackCards > li.active:hover {
+  scale: 1.25;
+  z-index: 15;
+  transform: translateX(-100px);
+}
+
+.blackCards > li.active:hover::after {
+  content: "Choose";
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.blackCards > li:hover {
+  box-shadow: 0px 0px 20px 0px rgb(255 255 255 / 62%);
+} */
+
+.devbug-h1 {
+  position: absolute;
+  left: 50%;
+  top: -20%;
 }
