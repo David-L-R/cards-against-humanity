@@ -50,7 +50,7 @@ const Game = () => {
       const { hand, isHost } = currentPlayer;
       const { black_cards } = currentGame.deck;
       const { timerTrigger } = currentGame;
-      console.log("stage", stage);
+
       //check if the host
       if (isHost) setHost(true);
 
@@ -70,6 +70,7 @@ const Game = () => {
       setGameStage(stage);
       setHand(hand);
       setGameId(currentGame.id);
+      setTimerTrigger(currentGame.timerTrigger);
     }
   });
 
