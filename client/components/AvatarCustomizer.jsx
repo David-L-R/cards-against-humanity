@@ -5,8 +5,6 @@ const AvatarCustomizer = ({ handleSetAvatarOptions }) => {
   const avaProps = style.schema.properties;
   return (
     <>
-      <div>AvatarCustomizer</div>
-
       {
         <ul className="avata-settings">
           {Object.entries(avaProps)

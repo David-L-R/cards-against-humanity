@@ -21,8 +21,3 @@ ul {
   list-style: none;
   padding: 0;
 }
-
-.avata-settings {
-  display: flex;
-  flex-wrap: wrap;
-}
