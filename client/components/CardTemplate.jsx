@@ -40,6 +40,7 @@ const CardTemplate = (props) => {
         return letter;
       })
       .join(" ");
+
     setChangeText(false);
     return setBlackText(newBlackText);
   };

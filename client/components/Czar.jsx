@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import style from "../styles/cardTemplate.module.css";
+import { motion as m } from "framer-motion";
 
 const Czar = ({
   blackCards,
@@ -43,6 +44,8 @@ const Czar = ({
   console.log("gameStage", gameStage);
   if (!showBlackCards || gameStage !== "black") return;
 
+  /* <TEST></TEST>*/
+
   return (
     <section className="czarSelectionContainer">
       <div>
@@ -55,12 +58,12 @@ const Czar = ({
             showBlackCards.map((cardItem) => (
               <li key={cardItem.card.text}>
                 {
-                  <div
+                  <m.div
                     className={` ${style.black} czarPicking`}
                     onClick={() => selectCard({ index: cardItem.index })}
                   >
                     {cardItem.card.text}
-                  </div>
+                  </m.div>
                 }
               </li>
             ))}

@@ -163,7 +163,11 @@ const Game = () => {
           isCzar={isCzar}
         />
       ) : null}
-      {timerTrigger && timer && <Countdown timer={timer} setTimer={setTimer} />}
+      {timerTrigger && timer && (
+        <div className="timerContainer">
+          <Countdown timer={timer} setTimer={setTimer} />
+        </div>
+      )}
       <ToastContainer autoClose={3000} />
     </main>
   );

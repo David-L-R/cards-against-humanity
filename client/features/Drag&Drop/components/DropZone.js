@@ -7,6 +7,7 @@ import {
 import { DragItem } from "./DragItem";
 import { useState, useEffect } from "react";
 import CardTemplate from "../../../components/CardTemplate";
+import { motion as m } from "framer-motion";
 
 export function DropZone(props) {
   let { cards, id, element, isCzar } = props;
@@ -53,8 +54,8 @@ export function DropZone(props) {
   useEffect(() => {
     createSkelleton();
   }, [blackCard]);
-
-  if (isCzar && !blackCard) return;
+  /*
+  if (isCzar && !blackCard) return;*/
 
   return (
     <SortableContext
@@ -64,16 +65,35 @@ export function DropZone(props) {
     >
       <article
         className={
-          isCzar
-            ? "czarSelecteWhites danniTest"
-            : blackCard
-            ? "czarSelecteWhites testtesttest"
+          isCzar && blackCard
+            ? "czarSelecteWhites blackHand" //blue
+            : isCzar && !blackCard
+            ? "czarSelecteWhites whiteHand" //red
             : null
         }
       >
-        {isCzar && blackCard && <h2>Choose a white card</h2>}
-        <div className={blackCard ? "onTable black-on-table" : "onTable"}>
-          <ul className="cardDisplay" ref={setNodeRef}>
+        {/*isCzar && blackCard && (
+          <div className="">
+            <h2>Choose a white card</h2>
+          </div>
+        )*/}
+
+        <div
+          className={
+            blackCard ? "onTable black-on-table" : "onTable whiteCardTable"
+          }
+        >
+          <m.ul
+            className="cardDisplay"
+            ref={setNodeRef}
+            initial={{ x: -1100, rotate: 20 }}
+            animate={{ x: 0, rotate: 0 }}
+            exit={{
+              y: 1300,
+
+              transition: { duration: 0.5 },
+            }}
+          >
             {cards &&
               cards.map((card) => {
                 return (
@@ -97,7 +117,7 @@ export function DropZone(props) {
                 </li>
               ))}
             {/* </li> */}
-          </ul>
+          </m.ul>
         </div>
       </article>
     </SortableContext>

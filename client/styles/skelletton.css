@@ -9,7 +9,6 @@
 } */
 
 div.skeleton {
-  position: absolute;
   border: 2px dashed rgb(124, 124, 124);
   background-color: transparent !important;
   color: white;
@@ -52,12 +51,12 @@ div.skeleton {
 }
 
 .skeleton0 div {
-  transform: translateX(100%);
+  /*transform: translateX(100%);*/
   margin-left: 0.5rem;
 }
 
 .skeleton1 div {
-  transform: translateX(200%);
+  transform: translateX(-200%);
   margin-left: 1rem;
 }
 
@@ -78,19 +77,22 @@ div.skeleton {
   }
 }
 
-.testtesttest {
-  /* transform: translateY(1000px);*/
-  background-color: blue;
+.blackHand {
+  position: relative;
+  display: flex;
 }
-.danniTest {
-  /*animation: outOfView 2s forwards;*/
-  background-color: red;
+.whiteHand {
+  animation: outOfView 0.75s forwards;
+  display: grid;
 }
 @keyframes outOfView {
-  from {
+  0% {
     transform: translateY(1000px);
   }
-  to {
+  50% {
+    transform: translateY(-80px);
+  }
+  100% {
     transform: translateY(0px);
   }
 }

@@ -11,16 +11,22 @@
   flex-direction: column;
   position: relative;
   justify-content: space-between;
-  padding: 3rem 1rem;
+  padding: 0;
 }
-
+.whiteCardTable ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+.whiteCardTable ul li:hover {
+  transform: rotate(3deg);
+}
 .cardDisplay {
-  position: relative;
+  /* position: relative;
   display: flex;
   justify-content: flex-start;
   min-height: 200px;
   min-width: 50%;
-  width: fit-content;
+  width: fit-content;*/
 }
 
 .onTable {
@@ -31,8 +37,14 @@
 }
 
 .black-on-table .cardDisplay {
-  justify-content: flex-start;
-  transform: translateX(30%);
+  /* transform: translateX(27%);*/
+}
+.cardDisplay {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  width: max-content;
+  justify-content: center;
 }
 
 /* .onTable {
