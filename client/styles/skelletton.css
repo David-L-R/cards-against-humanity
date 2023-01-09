@@ -77,3 +77,20 @@ div.skeleton {
     visibility: hidden;
   }
 }
+
+.testtesttest {
+  /* transform: translateY(1000px);*/
+  background-color: blue;
+}
+.danniTest {
+  /*animation: outOfView 2s forwards;*/
+  background-color: red;
+}
+@keyframes outOfView {
+  from {
+    transform: translateY(1000px);
+  }
+  to {
+    transform: translateY(0px);
+  }
+}

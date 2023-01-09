@@ -23,7 +23,7 @@ const Czar = ({
   };
 
   const selectCard = ({ index }) => {
-    //update all balck cards
+    //update all black cards
     const [selected] = blackCards.splice(index, 1);
     setBlackCards(() => [...blackCards]);
     //update Drad and Drop data
@@ -44,17 +44,20 @@ const Czar = ({
 
   return (
     <section className="czarSelectionContainer">
-      <h1>You are the Czar</h1>
       <div>
-        <h2>Choose your black Card </h2>
-        <ul>
+        <h1 className="czarPickingH1">You are the Czar!</h1>
+        <h2>Select a Card </h2>
+      </div>
+      <div>
+        <ul className="czarPickingContainer">
           {showBlackCards &&
             showBlackCards.map((cardItem) => (
               <li key={cardItem.card.text}>
                 {
                   <div
-                    className={`${style.cardTemplateContainer} ${style.black}`}
-                    onClick={() => selectCard({ index: cardItem.index })}>
+                    className={` ${style.black} czarPicking`}
+                    onClick={() => selectCard({ index: cardItem.index })}
+                  >
                     {cardItem.card.text}
                   </div>
                 }
