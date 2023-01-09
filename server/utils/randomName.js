@@ -3,7 +3,7 @@ const randomName = () => {
     "Anal Intruder",
     "Dick Master",
     "King Dingeling",
-    "Lana Reverse",
+    "Lana Reversed",
     "MOM",
   ];
   const randomIndex = Math.floor(Math.random() * (names.length - 1));
