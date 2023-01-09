@@ -1,10 +1,37 @@
 import React from "react";
+import * as style from "@dicebear/avatars-avataaars-sprites";
+
 const AvatarCustomizer = () => {
+  const avaProps = style.schema.properties;
   return (
     <>
       <div>AvatarCustomizer</div>
-      <br />
-      <form>
+
+      {
+        <ul>
+          {Object.entries(avaProps).map((entry) => {
+            const optionList = entry[1].items.enum;
+            const title = entry[1].title;
+            const value = entry[0];
+            // console.log("value", entry[0]);
+            console.log("Title", entry[1]);
+            // console.log("data", entry[1].items?.enum);
+            return (
+              <li>
+                <h3>{title}</h3>
+                <select>
+                  {optionList &&
+                    optionList.map((option) => {
+                      return <option value={option}>{option}</option>;
+                    })}
+                </select>
+              </li>
+            );
+          })}
+        </ul>
+      }
+
+      {/* <form>
         <label for="mode">Mode:</label>
         <br />
         <select id="mode" name="mode">
@@ -337,7 +364,7 @@ const AvatarCustomizer = () => {
           <option value="bat">bat</option>
         </select>
         <br />
-      </form>
+      </form> */}
     </>
   );
 };

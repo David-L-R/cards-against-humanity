@@ -6,19 +6,11 @@ import AvatarCustomizer from "../components/AvatarCustomizer";
 
 export default function index() {
   const [userName, setUsername] = useState("Kevin");
+  const [savedAvatar, setSavedAvatar] = useState(null);
 
   return (
     <main>
-      <AvatarCustomizer />
-      <input
-        onChange={(e) => setUsername(e.target.value)}
-        type="text"
-        name="UserName"
-        id="UserName"
-        placeholder="Default-Username"
-      />
-      <Avatar UserName={userName} />
-
+      <Avatar UserName={userName} savedAvatar={savedAvatar} />
       <Home />
     </main>
   );
