@@ -142,6 +142,9 @@ export const changeGame = async ({
       currentIndex: randomIndex,
     };
 
+    //activate the timmer trigger
+    currentGame.Game.timerTrigger = true;
+
     currentGame.Game.turns[0].stage.push("dealing");
     currentGame.save();
     io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });
