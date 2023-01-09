@@ -1,33 +1,45 @@
 import React from "react";
 import * as style from "@dicebear/avatars-avataaars-sprites";
 
-const AvatarCustomizer = () => {
+const AvatarCustomizer = ({ handleSetAvatarOptions }) => {
   const avaProps = style.schema.properties;
   return (
     <>
       <div>AvatarCustomizer</div>
 
       {
-        <ul>
-          {Object.entries(avaProps).map((entry) => {
-            const optionList = entry[1].items.enum;
-            const title = entry[1].title;
-            const value = entry[0];
-            // console.log("value", entry[0]);
-            console.log("Title", entry[1]);
-            // console.log("data", entry[1].items?.enum);
-            return (
-              <li>
-                <h3>{title}</h3>
-                <select>
-                  {optionList &&
-                    optionList.map((option) => {
-                      return <option value={option}>{option}</option>;
-                    })}
-                </select>
-              </li>
-            );
-          })}
+        <ul className="avata-settings">
+          {Object.entries(avaProps)
+            .filter(
+              (entry) =>
+                entry[1].type !== "integer" &&
+                entry[1].description != "@deprecated"
+            )
+            .map((entry) => {
+              const optionList = entry[1].items
+                ? entry[1].items.enum
+                : entry[1].enum;
+              const title = entry[1].title;
+              const value = entry[0];
+              return (
+                <li>
+                  <h3>{title}</h3>
+                  <select
+                    onChange={(e) =>
+                      handleSetAvatarOptions(e.target.value, entry[0])
+                    }>
+                    {optionList &&
+                      optionList.map((option) => {
+                        return (
+                          <option propertie={entry[0]} value={option}>
+                            {option}
+                          </option>
+                        );
+                      })}
+                  </select>
+                </li>
+              );
+            })}
         </ul>
       }
 
