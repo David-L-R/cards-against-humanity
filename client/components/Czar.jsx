@@ -6,6 +6,7 @@ const Czar = ({
   chooseBlackCard,
   setCardsOnTable,
   setBlackCards,
+  gameStage,
 }) => {
   const [showBlackCards, setshowBlackCards] = useState([]);
 
@@ -39,8 +40,8 @@ const Czar = ({
   useEffect(() => {
     randomBlackCards();
   }, []);
-
-  if (!showBlackCards) return;
+  console.log("gameStage", gameStage);
+  if (!showBlackCards || gameStage !== "black") return;
 
   return (
     <section className="czarSelectionContainer">
