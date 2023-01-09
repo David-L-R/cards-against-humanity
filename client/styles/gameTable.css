@@ -17,6 +17,10 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
+.whiteCardTable ul li {
+  cursor: grab;
+}
+
 .whiteCardTable ul li:hover {
   transform: rotate(3deg);
 }

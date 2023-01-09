@@ -39,7 +39,7 @@ const CardTemplate = (props) => {
         }
         return letter;
       })
-      .join(" ");
+      .join("");
 
     setChangeText(false);
     return setBlackText(newBlackText);

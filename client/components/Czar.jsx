@@ -8,6 +8,7 @@ const Czar = ({
   setCardsOnTable,
   setBlackCards,
   gameStage,
+  timer,
 }) => {
   const [showBlackCards, setshowBlackCards] = useState([]);
 
@@ -26,25 +27,43 @@ const Czar = ({
 
   const selectCard = ({ index }) => {
     //update all black cards
-    const [selected] = blackCards.splice(index, 1);
+    if (index) {
+      const [selected] = blackCards.splice(index, 1);
+
+      setBlackCards(() => [...blackCards]);
+      //update Drad and Drop data
+      setCardsOnTable((prev) => {
+        const newDeck = { ...prev };
+        newDeck.table.cards = [selected.card];
+        return newDeck;
+      });
+      setshowBlackCards(null);
+      return chooseBlackCard(selected);
+    }
+
+    const [selected] = showBlackCards.splice(1, 1);
     setBlackCards(() => [...blackCards]);
     //update Drad and Drop data
     setCardsOnTable((prev) => {
       const newDeck = { ...prev };
-      newDeck.table.cards = [selected];
+      newDeck.table.cards = [selected.card];
       return newDeck;
     });
     setshowBlackCards(null);
-    chooseBlackCard(selected);
+    return chooseBlackCard(selected.card);
   };
+
+  useEffect(() => {
+    if (timer === null) {
+      selectCard({ index: null });
+    }
+  }, [timer]);
 
   useEffect(() => {
     randomBlackCards();
   }, []);
   console.log("gameStage", gameStage);
   if (!showBlackCards || gameStage !== "black") return;
-
-  /* <TEST></TEST>*/
 
   return (
     <section className="czarSelectionContainer">

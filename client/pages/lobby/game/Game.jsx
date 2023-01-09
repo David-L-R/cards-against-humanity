@@ -100,6 +100,7 @@ const Game = () => {
       gameId,
       lobbyId,
     };
+
     socket.emit("changeGame", { ...playerData });
   };
 
@@ -124,10 +125,10 @@ const Game = () => {
     }
 
     if (gameStage === "black" && timerTrigger) {
-      setTimer(30);
+      setTimer(10);
     }
     if (gameStage === "white" && timerTrigger) {
-      setTimer(30);
+      setTimer(10);
     }
   }, [gameStage]);
 
@@ -145,13 +146,14 @@ const Game = () => {
         timer:{timer}
       </div>
 
-      {isCzar && (
+      {isCzar && gameStage === "black" && (
         <Czar
           blackCards={blackCards}
           chooseBlackCard={chooseBlackCard}
           setCardsOnTable={setCardsOnTable}
           setBlackCards={setBlackCards}
           gameStage={gameStage}
+          timer={timer}
         />
       )}
 
@@ -166,6 +168,11 @@ const Game = () => {
       {timerTrigger && timer && (
         <div className="timerContainer">
           <Countdown timer={timer} setTimer={setTimer} />
+        </div>
+      )}
+      {!timer && (
+        <div>
+          <h1>Time's up Bitch!</h1>
         </div>
       )}
       <ToastContainer autoClose={3000} />

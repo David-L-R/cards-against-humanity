@@ -34,9 +34,14 @@ input:focus {
 html,
 body {
   padding: 0;
+  width: 100%;
+  height: 100%;
   margin: auto;
   font-family: Roboto;
-  background: black;
+  background: url("../public/background3.svg");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
   color: white;
   overflow: hidden;
 }
