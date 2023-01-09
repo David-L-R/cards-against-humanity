@@ -11,7 +11,7 @@ const updateTurn = ({
 
     const currentTurnIndex = currentGame.Game.turns.length - 1;
     const currentTurn = currentGame.Game.turns[currentTurnIndex];
-    currentTurn.stage = [...currentTurn.stage, "black", "white"];
+    currentTurn.stage = [...currentTurn.stage, "white"];
     currentTurn.black_card = playedBlack;
     currentGame.save();
     return currentGame;
