@@ -4,6 +4,7 @@ import { CountdownCircleTimer } from "react-countdown-circle-timer";
 function Countdown({ timer, setTimer }) {
   const renderTime = ({ remainingTime }) => {
     if (remainingTime === 0) {
+      setTimer(null);
       return <div className="timer">Time's up!</div>;
     } else
       return (

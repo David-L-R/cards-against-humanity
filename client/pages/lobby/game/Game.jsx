@@ -151,6 +151,7 @@ const Game = () => {
           chooseBlackCard={chooseBlackCard}
           setCardsOnTable={setCardsOnTable}
           setBlackCards={setBlackCards}
+          gameStage={gameStage}
         />
       )}
 
