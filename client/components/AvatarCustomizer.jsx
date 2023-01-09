@@ -1,6 +1,5 @@
 import React from "react";
-
-export const AvatarCustomizer = () => {
+const AvatarCustomizer = () => {
   return (
     <>
       <div>AvatarCustomizer</div>
@@ -342,3 +341,4 @@ export const AvatarCustomizer = () => {
     </>
   );
 };
+export default AvatarCustomizer;
