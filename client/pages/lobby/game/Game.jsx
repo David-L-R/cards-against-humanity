@@ -7,8 +7,8 @@ import DragAndDropContainer from "../../../features/Drag&Drop";
 import { showToastAndRedirect } from "../../../utils/showToastAndRedirect";
 import "react-toastify/dist/ReactToastify.css";
 import { socket } from "../../Home";
-import BlackCardInDeck from "../../../components/BlackCardInDeck";
 import Czar from "../../../components/Czar";
+import Countdown from "../../../components/Countdown";
 
 const Game = () => {
   const router = useRouter();
@@ -21,14 +21,15 @@ const Game = () => {
   const [blackCards, setBlackCards] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState(null);
   const [timerTrigger, setTimerTrigger] = useState(false);
+  const [timer, setTimer] = useState(false);
   const [cardsOnTable, setCardsOnTable] = useState(false);
   let playedBlackFromCzar = null;
-
   const [isCzar, setIsCzar] = useState(false);
   let gameIdentifier = null;
 
   //getting game infos and rejoin player to socket io
   socket.on("currentGame", ({ currentGame, err }) => {
+    console.log("currentGame", currentGame);
     if (err || !currentGame) return showToastAndRedirect(toast, router, err);
     const lastTurnIndex = currentGame.turns.length - 1;
     const lastTurn = currentGame.turns[lastTurnIndex];
@@ -49,7 +50,6 @@ const Game = () => {
         currentGame.turns[currentTurnIndex].stage[currentStageIndex];
       const { hand, isHost } = currentPlayer;
       const { black_cards } = currentGame.deck;
-      const { timerTrigger } = currentGame;
 
       //check if the host
       if (isHost) setHost(true);
@@ -65,12 +65,11 @@ const Game = () => {
         player: { label: "player", cards: hand },
       });
       setCurrentPlayer(currentPlayer);
-      setTimerTrigger(timerTrigger);
       setBlackCards((prev) => (prev = black_cards));
-      setGameStage(stage);
       setHand(hand);
       setGameId(currentGame.id);
       setTimerTrigger(currentGame.timerTrigger);
+      setGameStage(stage);
     }
   });
 
@@ -112,6 +111,7 @@ const Game = () => {
 
   // if host start the game by send the server the current "starting" stage
   useEffect(() => {
+    console.log("timerTrigger", timerTrigger);
     if (gameStage === "start" && isHost) {
       socket.emit("changeGame", {
         blackCards,
@@ -121,6 +121,13 @@ const Game = () => {
         gameIdentifier,
         lobbyId,
       });
+    }
+
+    if (gameStage === "black" && timerTrigger) {
+      setTimer(30);
+    }
+    if (gameStage === "white" && timerTrigger) {
+      setTimer(30);
     }
   }, [gameStage]);
 
@@ -132,6 +139,10 @@ const Game = () => {
         gamestage : {gameStage}
         <br />
         Czar: {isCzar ? "yes" : "no"}
+        <br />
+        timerTrigger: {timerTrigger ? "true" : "false"}
+        <br />
+        timer:{timer}
       </div>
 
       {isCzar && (
@@ -149,7 +160,7 @@ const Game = () => {
         element={CardTemplate}
         isCzar={isCzar}
       />
-
+      {timerTrigger && timer && <Countdown timer={timer} setTimer={setTimer} />}
       <ToastContainer autoClose={3000} />
     </main>
   );

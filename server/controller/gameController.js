@@ -145,11 +145,14 @@ export const changeGame = async ({
     //activate the timmer trigger
     currentGame.Game.timerTrigger = true;
 
-    currentGame.Game.turns[0].stage.push("dealing");
+    let currentStage = currentGame.Game.turns[0].stage;
+    currentGame.Game.turns[0].stage = [...currentStage, "dealing", "black"];
+    console.log("currentStage", currentGame.Game.turns[0].stage);
     currentGame.save();
     io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });
   }
 
+  //If gamestage is "black"
   if (stage === "black") {
     try {
       const currentGame = await GameCollection.findOne({ "Game.id": gameId });
