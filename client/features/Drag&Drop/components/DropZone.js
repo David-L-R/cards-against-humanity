@@ -61,8 +61,7 @@ export function DropZone(props) {
     <SortableContext
       id={id}
       items={cards.map((card) => card && card.text)}
-      strategy={horizontalListSortingStrategy}
-    >
+      strategy={horizontalListSortingStrategy}>
       <article
         className={
           isCzar && blackCard
@@ -70,8 +69,7 @@ export function DropZone(props) {
             : isCzar && !blackCard
             ? "czarSelecteWhites whiteHand" //red
             : null
-        }
-      >
+        }>
         {/*isCzar && blackCard && (
           <div className="">
             <h2>Choose a white card</h2>
@@ -81,8 +79,7 @@ export function DropZone(props) {
         <div
           className={
             blackCard ? "onTable black-on-table" : "onTable whiteCardTable"
-          }
-        >
+          }>
           <m.ul
             className="cardDisplay"
             ref={setNodeRef}
@@ -92,8 +89,7 @@ export function DropZone(props) {
               y: 1300,
 
               transition: { duration: 0.5 },
-            }}
-          >
+            }}>
             {cards &&
               cards.map((card) => {
                 return (
@@ -111,8 +107,11 @@ export function DropZone(props) {
               skelletons.map((skell, index) => (
                 <li
                   key={skell.key}
-                  className={!skell.show ? "hide-skell " : `skeleton${index}`}
-                >
+                  className={
+                    !skell.show
+                      ? `hide-skell skeleton${index}`
+                      : `skeleton${index}`
+                  }>
                   <CardTemplate card={skell} index={index} />
                 </li>
               ))}

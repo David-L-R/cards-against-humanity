@@ -13,9 +13,11 @@
   justify-content: space-between;
   padding: 0;
 }
+
 .whiteCardTable ul {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
 }
 .whiteCardTable ul li {
   cursor: grab;
@@ -23,14 +25,6 @@
 
 .whiteCardTable ul li:hover {
   transform: rotate(3deg);
-}
-.cardDisplay {
-  /* position: relative;
-  display: flex;
-  justify-content: flex-start;
-  min-height: 200px;
-  min-width: 50%;
-  width: fit-content;*/
 }
 
 .onTable {
@@ -40,15 +34,12 @@
   justify-content: center;
 }
 
-.black-on-table .cardDisplay {
-  /* transform: translateX(27%);*/
-}
 .cardDisplay {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr;
+  grid-template-areas: "blackCard white1 white2";
   width: max-content;
   justify-content: center;
+  column-gap: 10px;
 }
 .timeMessageContainer {
   position: absolute;
@@ -59,73 +50,17 @@
   z-index: 200;
 }
 
-/* .onTable {
-  display: flex;
-  justify-content: center;
-} */
-
-/* .blackCards {
-  position: fixed;
-  left: 25%;
-  top: 25%;
-  z-index: 10;
-  display: flex;
-} */
-
-/* .blackCards > li {
-  position: fixed;
-  transform-style: preserve-3d;
-  perspective: 500px;
-  border-radius: 0.6rem;
-  grid-column: 1/1;
-  left: 25%;
-  top: 25%;
-  grid-row: 1/1;
-  z-index: 0;
-  transition: all 250ms;
-  animation: none;
+.cardDisplay li[role="button"]:nth-child(1) {
+  grid-area: blackCard;
 }
 
-.blackCards > li.default {
-  position: absolute;
-  left: 25%;
-  top: 25%;
+.cardDisplay li[role="button"]:nth-child(2) {
+  grid-area: white1;
 }
 
-.blackCards > li.active {
-  position: fixed;
-  scale: 1.2;
-  left: 25%;
-  top: 25%;
-  pointer-events: all;
+.cardDisplay li[role="button"]:nth-child(3) {
+  grid-area: white2;
 }
-
-.blackCards > li.choosed {
-  position: fixed;
-  left: 25%;
-  top: 25%;
-  scale: 1.4;
-  pointer-events: none;
-  z-index: 20;
-}
-
-.blackCards > li.active:hover {
-  scale: 1.25;
-  z-index: 15;
-  transform: translateX(-100px);
-}
-
-.blackCards > li.active:hover::after {
-  content: "Choose";
-  position: absolute;
-  bottom: 10%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.blackCards > li:hover {
-  box-shadow: 0px 0px 20px 0px rgb(255 255 255 / 62%);
-} */
 
 .devbug-h1 {
   position: absolute;
