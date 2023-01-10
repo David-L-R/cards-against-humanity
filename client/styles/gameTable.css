@@ -50,6 +50,14 @@
   width: max-content;
   justify-content: center;
 }
+.timeMessageContainer {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  transform: translate(-50%, -50%);
+  font-size: larger;
+  z-index: 200;
+}
 
 /* .onTable {
   display: flex;

@@ -171,7 +171,7 @@ const Game = () => {
         </div>
       )}
       {!timer && (
-        <div>
+        <div className="timeMessageContainer">
           <h1>Time's up Bitch!</h1>
         </div>
       )}
