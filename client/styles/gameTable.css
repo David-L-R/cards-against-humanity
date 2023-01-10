@@ -36,7 +36,10 @@
 
 .cardDisplay {
   display: grid;
-  grid-template-areas: "blackCard white1 white2";
+  grid-template-areas:
+    "blackCard white1 white2 ."
+    ". selectButton selectButton .";
+
   width: max-content;
   justify-content: center;
   column-gap: 10px;
