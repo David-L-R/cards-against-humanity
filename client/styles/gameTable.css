@@ -37,11 +37,9 @@
 .cardDisplay {
   display: grid;
   grid-template-areas:
-    "blackCard white1 white2 ."
-    ". selectButton selectButton .";
-
+    "blackCard white1 white2"
+    ". selectButton selectButton";
   width: max-content;
-  justify-content: center;
   column-gap: 10px;
 }
 .timeMessageContainer {
@@ -63,6 +61,24 @@
 
 .cardDisplay li[role="button"]:nth-child(3) {
   grid-area: white2;
+}
+
+.selectButton {
+  grid-area: selectButton;
+  display: flex;
+  justify-content: center;
+  animation: slideIn 2000ms forwards;
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0%);
+  }
 }
 
 .devbug-h1 {

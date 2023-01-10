@@ -70,12 +70,6 @@ export function DropZone(props) {
             ? "czarSelecteWhites whiteHand" //red
             : null
         }>
-        {/*isCzar && blackCard && (
-          <div className="">
-            <h2>Choose a white card</h2>
-          </div>
-        )*/}
-
         <div
           className={
             blackCard ? "onTable black-on-table" : "onTable whiteCardTable"
@@ -115,7 +109,11 @@ export function DropZone(props) {
                   <CardTemplate card={skell} index={index} />
                 </li>
               ))}
-            {/* </li> */}
+            {blackCard && cards.length === blackCard.pick + 1 && (
+              <li className="selectButton">
+                <button>Confirm</button>
+              </li>
+            )}
           </m.ul>
         </div>
       </article>
