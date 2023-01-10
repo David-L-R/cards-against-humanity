@@ -1,19 +1,10 @@
-/* .skeleton-wrapper {
-  display: flex;
-  width: 100%;
-  position: relative;
-  border: 2px solid red;
-  left: 0;
-
-  z-index: 0;
-} */
-
 div.skeleton {
   border: 2px dashed rgb(124, 124, 124);
   background-color: transparent !important;
   color: white;
   left: 0;
   pointer-events: none;
+  z-index: 0;
 }
 
 .skeleton::after {
@@ -50,18 +41,16 @@ div.skeleton {
   box-shadow: none;
 }
 
-.skeleton0 div {
-  /*transform: translateX(100%);*/
-  margin-left: 0.5rem;
+.skeleton0 {
+  grid-area: white1;
 }
 
-.skeleton1 div {
-  transform: translateX(-200%);
-  margin-left: 1rem;
+.skeleton1 {
+  grid-area: white2;
 }
 
 .hide-skell {
-  animation: hideSkell 500ms;
+  animation: hideSkell 0ms;
   animation-fill-mode: forwards;
 }
 
@@ -69,11 +58,9 @@ div.skeleton {
   0% {
     opacity: 1;
   }
-  70% {
-    opacity: 0;
-  }
+
   100% {
-    visibility: hidden;
+    opacity: 0;
   }
 }
 
