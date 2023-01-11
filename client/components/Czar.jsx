@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import style from "../styles/cardTemplate.module.css";
-import { motion as m } from "framer-motion";
+import { motion as m, transform } from "framer-motion";
 
 const Czar = ({
   blackCards,
@@ -11,6 +11,7 @@ const Czar = ({
   timer,
 }) => {
   const [showBlackCards, setshowBlackCards] = useState([]);
+  const [activeIndex, setActiveIndex] = useState(false);
 
   const randomBlackCards = () => {
     const amountCardsToSelect = 3;
@@ -27,6 +28,12 @@ const Czar = ({
 
   const selectCard = ({ index }) => {
     //update all black cards
+    /*
+    
+      element.classList.add("testClass");
+      setActiveIndex(index);
+    }
+    */
     if (index) {
       const [selected] = blackCards.splice(index, 1);
 
@@ -74,16 +81,65 @@ const Czar = ({
       <div>
         <ul className="czarPickingContainer">
           {showBlackCards &&
-            showBlackCards.map((cardItem) => (
-              <li key={cardItem.card.text}>
-                {
+            showBlackCards.map((cardItem, blackIndex) => (
+              <li
+                key={cardItem.card.text}
+                data-index={cardItem.index}
+                className={
+                  blackIndex === (showBlackCards.length - 1) / 2
+                    ? "middle"
+                    : blackIndex === showBlackCards.length - 1
+                    ? "highest"
+                    : "lowest"
+                }
+              >
+                {cardItem.index === activeIndex ? (
                   <m.div
+                    initial={
+                      blackIndex === (showBlackCards.length - 1) / 2
+                        ? {
+                            top: "30%",
+                            left: "43%",
+                          }
+                        : blackIndex === showBlackCards.length - 1
+                        ? { top: "30%", left: "58%" }
+                        : { top: "30%", left: "28%" }
+                    }
+                    animate={{
+                      top: "50%",
+                      left: "50%",
+                      translateX: "-50%",
+                      translateY: "-50%",
+                      zIndex: "500000",
+                      opacity: 1,
+                      scale: 2,
+                      rotate: 360,
+                      position: "fixed",
+                    }}
+                    transition={{ duration: 0.3 }}
+                    exit={{
+                      x: -1300,
+                      opacity: 1,
+                      rotate: -120,
+                      transition: { duration: 0.75 },
+                    }}
                     className={` ${style.black} czarPicking`}
-                    onClick={() => selectCard({ index: cardItem.index })}
+                    onClick={(e) => {
+                      selectCard({ index: cardItem.index, element: e.target });
+                    }}
                   >
                     {cardItem.card.text}
                   </m.div>
-                }
+                ) : (
+                  <div
+                    className={` ${style.black} czarPicking`}
+                    onClick={(e) => {
+                      selectCard({ index: cardItem.index, element: e.target });
+                    }}
+                  >
+                    {cardItem.card.text}
+                  </div>
+                )}
               </li>
             ))}
         </ul>
