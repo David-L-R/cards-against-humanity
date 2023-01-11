@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import style from "../styles/cardTemplate.module.css";
 import { AnimatePresence, motion as m } from "framer-motion";
+import { unmountComponentAtNode } from "react-dom";
 
 const Czar = ({
   blackCards,
@@ -9,6 +10,7 @@ const Czar = ({
   setBlackCards,
   gameStage,
   timer,
+  setTimer,
 }) => {
   const [showBlackCards, setshowBlackCards] = useState([]);
   const [activeIndex, setActiveIndex] = useState(false);
@@ -26,7 +28,7 @@ const Czar = ({
     return setshowBlackCards((prev) => [...cardsToDisplay]);
   };
 
-  const selectCard = ({ index, element }) => {
+  const selectCard = ({ index, element, event }) => {
     //update all black cards
     /*
     if (index) {
@@ -34,32 +36,49 @@ const Czar = ({
       setActiveIndex(index);
     }
     */
+
     if (index) {
       const [selected] = blackCards.splice(index, 1);
 
       setBlackCards(() => [...blackCards]);
       //update Drad and Drop data
+      /*
       setCardsOnTable((prev) => {
         const newDeck = { ...prev };
         newDeck.table.cards = [selected.card];
-        element.classList.add("testClass");
-        setActiveIndex(index);
+
+        ;
         return newDeck;
       });
-      setshowBlackCards(null);
-      return chooseBlackCard(selected);
+*/
+      setActiveIndex(index);
+      setTimeout(() => {
+        setshowBlackCards(null);
+        chooseBlackCard(selected);
+      }, 2000);
+      setTimer(false);
+      return;
     }
 
     const [selected] = showBlackCards.splice(1, 1);
     setBlackCards(() => [...blackCards]);
     //update Drad and Drop data
+    /*
     setCardsOnTable((prev) => {
       const newDeck = { ...prev };
       newDeck.table.cards = [selected.card];
+      console.log("new dick", newDeck);
       return newDeck;
     });
-    setshowBlackCards(null);
-    return chooseBlackCard(selected.card);
+    */
+    setActiveIndex(index);
+    setTimeout(() => {
+      setshowBlackCards(null);
+      chooseBlackCard(selected.card);
+    }, 2000);
+
+    setTimer(false);
+    return;
   };
 
   useEffect(() => {
@@ -122,26 +141,26 @@ const Czar = ({
                         position: "fixed",
                       }}
                       transition={{ duration: 0.3 }}
-                      exit={{ opacity: 0, transition: { duration: 1 } }}
                       /*
-                    exit={{
-                      top: "50%",
-                      left: "50%",
-                      translateX: "-50%",
-                      translateY: "-50%",
-                      zIndex: "500000",
-                      opacity: 1,
-                      scale: 2,
-                      rotate: 360,
-                      position: "fixed",
-                      transition: { duration: 0.75 },
-                    }}
-                    */
+                      exit={{
+                        top: "50%",
+                        left: "50%",
+                        translateX: "-50%",
+                        translateY: "-50%",
+                        zIndex: "500000",
+                        opacity: 1,
+                        scale: 2,
+                        rotate: 360,
+                        position: "fixed",
+                        transition: { duration: 0.75 },
+                      }}
+                      */
                       className={` ${style.black} czarPicking`}
                       onClick={(e) => {
                         selectCard({
                           index: cardItem.index,
-                          element: e.target,
+
+                          event: e,
                         });
                       }}
                     >
@@ -153,7 +172,8 @@ const Czar = ({
                       onClick={(e) => {
                         selectCard({
                           index: cardItem.index,
-                          element: e.target,
+
+                          event: e,
                         });
                       }}
                     >

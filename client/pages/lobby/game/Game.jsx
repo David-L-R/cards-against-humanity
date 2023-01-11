@@ -100,6 +100,7 @@ const Game = () => {
       gameId,
       lobbyId,
     };
+    console.log("playerData", playerData);
 
     socket.emit("changeGame", { ...playerData });
   };
@@ -154,9 +155,10 @@ const Game = () => {
           setBlackCards={setBlackCards}
           gameStage={gameStage}
           timer={timer}
+          setTimer={setTimer}
         />
       )}
-
+      {console.log(cardsOnTable, "cardsOnTable")}
       {(isCzar && gameStage !== "black") || !isCzar ? (
         <DragAndDropContainer
           data={cardsOnTable}
