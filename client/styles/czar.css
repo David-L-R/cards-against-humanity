@@ -11,11 +11,10 @@
   gap: 1rem;
 }
 .testClass {
-  /*
   transition: none !important;
   animation: flyOut 2s linear;
   animation-fill-mode: forwards !important;
-  */
+  background-color: red;
 }
 
 .czarSelectionContainer > div {
