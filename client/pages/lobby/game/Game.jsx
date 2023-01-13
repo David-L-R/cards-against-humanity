@@ -1,11 +1,8 @@
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
 import CardTemplate from "../../../components/CardTemplate";
 import DragAndDropContainer from "../../../features/Drag&Drop";
-import { showToastAndRedirect } from "../../../utils/showToastAndRedirect";
-import "react-toastify/dist/ReactToastify.css";
 import { socket } from "../../Home";
 import Czar from "../../../components/Czar";
 import Countdown from "../../../components/Countdown";

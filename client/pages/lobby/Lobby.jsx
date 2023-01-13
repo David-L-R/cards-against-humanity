@@ -5,9 +5,6 @@ import { RiVipCrown2Fill } from "react-icons/Ri";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { parseCookies, setCookie } from "nookies";
 import { socket } from "../Home";
-import "react-toastify/dist/ReactToastify.css";
-import { ToastContainer, toast } from "react-toastify";
-import { showToastAndRedirect } from "../../utils/showToastAndRedirect";
 import { motion as m } from "framer-motion";
 import randomInsult from "../../utils/randomInsult";
 import { Main } from "next/document";
@@ -50,7 +47,7 @@ const Lobby = () => {
       const player = currentLobby.players.find(
         (player) => player.id === cookies.socketId
       );
-      if (!player) return showToastAndRedirect(toast, router);
+      if (!player) return setShowErrMessage("Player not found");
       const { players } = currentLobby;
       const { id, name, isHost, inactive } = player;
       //check if the host
@@ -116,7 +113,12 @@ const Lobby = () => {
     return (
       <main>
         <h1>Loading...</h1>
-        <ToastContainer autoClose={3000} />
+        {showErrMessage && (
+          <Error
+            showErrMessage={showErrMessage}
+            setShowErrMessage={setShowErrMessage}
+          />
+        )}
       </main>
     );
 

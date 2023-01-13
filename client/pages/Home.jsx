@@ -6,8 +6,6 @@ import { io } from "socket.io-client";
 import { motion as m } from "framer-motion";
 import JoinGame from "../components/JoinLobby.jsx";
 import HostGame from "../components/HostGame.jsx";
-import { showToastAndRedirect } from "../utils/showToastAndRedirect.js";
-import { toast } from "react-toastify";
 import Error from "../components/Error.jsx";
 
 export const socket = io("http://localhost:5555/", {
