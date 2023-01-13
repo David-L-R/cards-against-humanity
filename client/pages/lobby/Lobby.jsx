@@ -22,41 +22,47 @@ const Lobby = () => {
   const amountOfRounds = useRef(null);
   const handSize = useRef(null);
 
-  //listener to update page from server after DB entry changed
-  socket.on("updateRoom", ({ currentLobby, err }) => {
-    const player = currentLobby.players.find(
-      (player) => player.id === cookies.socketId
-    );
-    if (!player) return showToastAndRedirect(toast, router);
-    const { players } = currentLobby;
-    const { id, name, isHost, inactive } = player;
-    //check if the host
-    isHost ? setHost(true) : setHost(false);
-    inactive ? setInactive(true) : setInactive(false);
+  useEffect(() => {
+    //listener to update page from server after DB entry changed
+    socket.on("updateRoom", ({ currentLobby, err }) => {
+      const player = currentLobby.players.find(
+        (player) => player.id === cookies.socketId
+      );
+      if (!player) return showToastAndRedirect(toast, router);
+      const { players } = currentLobby;
+      const { id, name, isHost, inactive } = player;
+      //check if the host
+      isHost ? setHost(true) : setHost(false);
+      inactive ? setInactive(true) : setInactive(false);
 
-    if (err) return console.warn(err);
+      if (err) return console.warn(err);
 
-    setPlayers((pre) => (pre = players));
-  });
+      setPlayers((pre) => (pre = players));
+    });
 
-  // creates new game if host and redirect everyone to game
-  socket.on("newgame", ({ newGameData }) => {
-    const stage = newGameData.Game.turns[0].stage[0];
-    const gameId = newGameData.Game.gameIdentifier;
-    if (lobbyId) {
-      if (stage === "start") {
-        let gamePath = {
-          pathname: `/lobby/game`,
-          query: {
-            name,
-            lobbyId: lobbyId,
-            game: gameId,
-          },
-        };
-        router.push(gamePath);
+    // creates new game if host and redirect everyone to game
+    socket.on("newgame", ({ newGameData }) => {
+      const stage = newGameData.Game.turns[0].stage[0];
+      const gameId = newGameData.Game.gameIdentifier;
+      if (lobbyId) {
+        if (stage === "start") {
+          let gamePath = {
+            pathname: `/lobby/game`,
+            query: {
+              name,
+              lobbyId: lobbyId,
+              game: gameId,
+            },
+          };
+          router.push(gamePath);
+        }
       }
-    }
-  });
+    });
+
+    return () => {
+      socket.removeAllListeners();
+    };
+  }, []);
 
   useEffect(() => {
     //self update page after got redirected, use key from query as lobby id

@@ -19,12 +19,12 @@ const Game = () => {
   const [isHost, setHost] = useState(false);
   const [gameId, setGameId] = useState(null);
   const [hand, setHand] = useState(null);
-  const [gameStage, setGameStage] = useState("");
+  const [gameStage, setGameStage] = useState(null);
   const [blackCards, setBlackCards] = useState([]);
   const [playedWhite, setPlayedWhite] = useState(null);
   const [timerTrigger, setTimerTrigger] = useState(false);
   const [confirmed, setConfirmed] = useState();
-  const [loading, setLoading] = useState(false);
+  let loading = false;
   const [timer, setTimer] = useState(false);
   const [cardsOnTable, setCardsOnTable] = useState(false);
   let playedBlackFromCzar = null;
@@ -32,80 +32,87 @@ const Game = () => {
   const [currentTurn, setCurrentTurn] = useState(null);
   let gameIdentifier = null;
 
-  //getting game infos and rejoin player to socket io
-  socket.on("currentGame", ({ currentGame, err }) => {
-    if (err || !currentGame) return showToastAndRedirect(toast, router, err);
+  useEffect(() => {
+    //getting game infos and rejoin player to socket io
+    socket.on("currentGame", ({ currentGame, err }) => {
+      console.log("currentGame", currentGame);
+      if (err || !currentGame) return showToastAndRedirect(toast, router, err);
 
-    const lastTurnIndex = currentGame.turns.length - 1;
-    const lastTurn = currentGame.turns[lastTurnIndex];
-    playedBlackFromCzar = lastTurn.black_card;
-    const currentCzarId = lastTurn?.czar?.id;
-    const playerId = cookies.socketId;
-    gameIdentifier = currentGame?.gameIdentifier;
-    const currentPlayer = currentGame.players?.find(
-      (player) => player.id === playerId
-    );
-    const confirmedWhiteCards = lastTurn.white_cards?.find(
-      (player) => player.player === playerId
-    )?.played_card;
-    const currentTurnIndex = currentGame.turns.length - 1;
-    const currentStageIndex =
-      currentGame.turns[currentTurnIndex].stage.length - 1;
-    if (currentPlayer) {
-      // get game stage and player cards from current game wich is response from server
-      const stage =
-        currentGame.turns[currentTurnIndex].stage[currentStageIndex];
-      let { hand, isHost } = currentPlayer;
-      const { black_cards } = currentGame.deck;
+      const lastTurnIndex = currentGame.turns.length - 1;
+      const lastTurn = currentGame.turns[lastTurnIndex];
+      playedBlackFromCzar = lastTurn.black_card;
+      const currentCzarId = lastTurn?.czar?.id;
+      const playerId = cookies.socketId;
+      gameIdentifier = currentGame?.gameIdentifier;
+      const currentPlayer = currentGame.players?.find(
+        (player) => player.id === playerId
+      );
+      const confirmedWhiteCards = lastTurn.white_cards?.find(
+        (player) => player.player === playerId
+      )?.played_card;
+      const currentTurnIndex = currentGame.turns.length - 1;
+      const currentStageIndex =
+        currentGame.turns[currentTurnIndex].stage.length - 1;
+      if (currentPlayer) {
+        // get game stage and player cards from current game wich is response from server
+        const stage =
+          currentGame.turns[currentTurnIndex].stage[currentStageIndex];
+        let { hand, isHost } = currentPlayer;
+        const { black_cards } = currentGame.deck;
 
-      //check if the host
-      if (isHost) setHost(true);
+        //check if the host
+        if (isHost) setHost(true);
 
-      //skipp dealing phase because of rerender
-      if (stage === "dealing") return setGameStage(stage);
+        //skipp dealing phase because of rerender
+        if (stage === "dealing") return setGameStage(stage);
 
-      //check is czar
-      currentCzarId === cookies.socketId ? setIsCzar(true) : setIsCzar(false);
-      //if czar and white is is currently runnning, display white cards from users
-      if (
-        currentCzarId === cookies.socketId &&
-        (stage === "white" || stage === "deciding")
-      ) {
-        const playerList = lastTurn.white_cards.map(
-          (player) => player.played_card
-        );
-        setPlayedWhite(playerList);
+        //check is czar
+        currentCzarId === cookies.socketId ? setIsCzar(true) : setIsCzar(false);
+        //if czar and white is is currently runnning, display white cards from users
+        if (
+          currentCzarId === cookies.socketId &&
+          (stage === "white" || stage === "deciding")
+        ) {
+          const playerList = lastTurn.white_cards.map(
+            (player) => player.played_card
+          );
+          setPlayedWhite(playerList);
+        }
+
+        if (confirmedWhiteCards && !isCzar) {
+          // setConfirmed(true);
+          setCardsOnTable({
+            table: {
+              label: "table",
+              cards: playedBlackFromCzar
+                ? [playedBlackFromCzar, ...confirmedWhiteCards]
+                : [],
+            },
+            player: { label: "player", cards: hand },
+          });
+        } else {
+          setCardsOnTable({
+            table: {
+              label: "table",
+              cards: playedBlackFromCzar ? [playedBlackFromCzar] : [],
+            },
+            player: { label: "player", cards: hand },
+          });
+        }
+        setCurrentTurn(lastTurn);
+        setBlackCards((prev) => (prev = black_cards));
+        setHand(hand);
+        setGameId(currentGame.id);
+        setTimerTrigger(currentGame.timerTrigger);
+        setGameStage(stage);
+        loading = false;
       }
+    });
 
-      if (confirmedWhiteCards && !isCzar) {
-        // setConfirmed(true);
-        setCardsOnTable({
-          table: {
-            label: "table",
-            cards: playedBlackFromCzar
-              ? [playedBlackFromCzar, ...confirmedWhiteCards]
-              : [],
-          },
-          player: { label: "player", cards: hand },
-        });
-      } else {
-        setCardsOnTable({
-          table: {
-            label: "table",
-            cards: playedBlackFromCzar ? [playedBlackFromCzar] : [],
-          },
-          player: { label: "player", cards: hand },
-        });
-      }
-      setCurrentTurn(lastTurn);
-      setBlackCards((prev) => (prev = black_cards));
-      setHand(hand);
-      setGameId(currentGame.id);
-      setTimerTrigger(currentGame.timerTrigger);
-      setGameStage(stage);
-      setLoading(false);
-    }
-  });
+    return () => {
+      socket.removeAllListeners();
+    };
+  }, []);
 
   const chooseBlackCard = (selected) => {
     const playerData = {
@@ -177,13 +184,13 @@ const Game = () => {
 
   //self update page after got redirected, use key from query as lobby id
   useEffect(() => {
-    if (lobbyId && !loading) {
-      setLoading(true);
+    if (router.query.lobbyId && !loading) {
+      loading = true;
       socket.emit("getUpdatedGame", { lobbyId, name, id: cookies.socketId });
     }
-  }, [lobbyId]);
+  }, [router.isReady]);
 
-  //if host start the game by send the server the current "starting" stage
+  // if host start the game by send the server the current "starting" stage
   useEffect(() => {
     if (lobbyId) {
       if (gameStage === "start" && isHost && !loading) {

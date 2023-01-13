@@ -29,39 +29,44 @@ const Home = () => {
     if (setIsHostActive) setTimeout(() => setIsHostActive(false), 150);
   };
 
-  //If new lobby was createt, redirect to Lobby with room data
-  socket.on("LobbyCreated", ({ lobbyId, hostName }) => {
-    router.push({
-      pathname: `/lobby/`,
-      query: { name: hostName, lobbyId: lobbyId },
-    });
-  });
-
-  //redirecting to lobby with data after server found the game in DB
-  socket.on("foundRoom", (data) => {
-    try {
-      const { noRoom, lobbyId, playerName, err } = data;
-      if (noRoom) {
-        setShowErrMessage(true);
-        return;
-      }
-      if (!lobbyId || !playerName) {
-        throw new Error("Invalid lobbyId or playerName");
-      }
-      router.push({
-        pathname: `/lobby/`,
-        query: { name: playerName, lobbyId: lobbyId },
-      });
-    } catch (error) {
-      console.error(error);
-      alert("An error occurred while trying to navigate to the lobby");
-      console.log(error);
-    }
-  });
-
   useEffect(() => {
     setCookie(null, "socketId", socket.id, { path: "/" });
   }, [socket.id]);
+
+  useEffect(() => {
+    //If new lobby was createt, redirect to Lobby with room data
+    socket.on("LobbyCreated", ({ lobbyId, hostName }) => {
+      router.push({
+        pathname: `/lobby/`,
+        query: { name: hostName, lobbyId: lobbyId },
+      });
+    });
+
+    //redirecting to lobby with data after server found the game in DB
+    socket.on("foundRoom", (data) => {
+      try {
+        const { noRoom, lobbyId, playerName, err } = data;
+        if (noRoom) {
+          setShowErrMessage(true);
+          return;
+        }
+        if (!lobbyId || !playerName) {
+          throw new Error("Invalid lobbyId or playerName");
+        }
+        router.push({
+          pathname: `/lobby/`,
+          query: { name: playerName, lobbyId: lobbyId },
+        });
+      } catch (error) {
+        console.error(error);
+        alert("An error occurred while trying to navigate to the lobby");
+      }
+    });
+
+    return () => {
+      socket.removeAllListeners();
+    };
+  }, []);
 
   return (
     <>

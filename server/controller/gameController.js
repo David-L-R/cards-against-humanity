@@ -73,7 +73,8 @@ export const sendCurrentGame = async ({ lobbyId, name, id, io, socket }) => {
     return io
       .to(lobbyId)
       .emit("currentGame", { err: "Please add a lobby ID and " });
-
+  console.log("socket.id", socket.id);
+  console.log("lobbyId", lobbyId);
   socket.userId = id;
   //jopin socket after disconnect
   socket.join(lobbyId);
@@ -99,7 +100,7 @@ export const sendCurrentGame = async ({ lobbyId, name, id, io, socket }) => {
     "Game.gameIdentifier": currentGameId,
   });
 
-  io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });
+  io.to(socket.id).emit("currentGame", { currentGame: currentGame.Game });
 };
 
 export const changeGame = async (
