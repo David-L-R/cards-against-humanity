@@ -30,13 +30,14 @@ const Game = () => {
   let playedBlackFromCzar = null;
   const [isCzar, setIsCzar] = useState(false);
   const [currentTurn, setCurrentTurn] = useState(null);
+  const [showErrMessage, setShowErrMessage] = useState(false);
+
   let gameIdentifier = null;
 
   useEffect(() => {
     //getting game infos and rejoin player to socket io
     socket.on("currentGame", ({ currentGame, err }) => {
-      console.log("currentGame", currentGame);
-      if (err || !currentGame) return showToastAndRedirect(toast, router, err);
+      if (err || !currentGame) return setShowErrMessage(err);
 
       const lastTurnIndex = currentGame.turns.length - 1;
       const lastTurn = currentGame.turns[lastTurnIndex];
@@ -275,24 +276,21 @@ const Game = () => {
               isCzar={isCzar}
               whiteCardChoosed={whiteCardChoosed}
               confirmed={confirmed}
-              stage={gameStage}
-            >
+              stage={gameStage}>
               {playedWhite && isCzar && (
                 <ul className={"cardDisplay playedWhite"}>
                   {playedWhite.map((cards, index) => (
                     <li
                       onMouseEnter={() => handleMouseOver(cards)}
                       onMouseLeave={() => handleMouseLeave(cards)}
-                      key={cards[index] + index}
-                    >
+                      key={cards[index] + index}>
                       {cards.map((card) => (
                         <PlayedWhite card={card} key={card.text} />
                       ))}
                       <h3
                         onClick={() => submitWinner(cards)}
                         className="choose-button"
-                        disabled={gameStage === "deciding" ? false : true}
-                      >
+                        disabled={gameStage === "deciding" ? false : true}>
                         Choose as the Winner
                       </h3>
                     </li>
@@ -312,7 +310,12 @@ const Game = () => {
               <h1>Time's up Bitch!</h1>
             </div>
           )}
-          <ToastContainer autoClose={3000} />
+          {showErrMessage && (
+            <Error
+              showErrMessage={showErrMessage}
+              setShowErrMessage={setShowErrMessage}
+            />
+          )}
         </>
       )}
     </main>

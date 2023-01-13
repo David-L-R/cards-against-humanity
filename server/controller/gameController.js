@@ -13,59 +13,65 @@ export const createGame = async ({ setRounds, maxHandSize, lobbyId, io }) => {
   if (!setRounds) amountOfRounds = 10;
   if (!maxHandSize) handSize = 10;
 
-  //if alreday games where played, increase to game indentifiyer
-  let existingGames = GameCollection.find({ id: lobbyId });
+  try {
+    //if alreday games where played, increase to game indentifiyer
+    let existingGames = GameCollection.find({ id: lobbyId });
 
-  let lastGame = 0;
+    let lastGame = 0;
 
-  if (existingGames.length > 0)
-    lastGame = existingGames[existingGames.length - 1].gameIdentifier + 1;
+    if (existingGames.length > 0)
+      lastGame = existingGames[existingGames.length - 1].gameIdentifier + 1;
 
-  let lobbyPLayers = await LobbyCollection.findOne({ _id: lobbyId });
-  if (!lobbyPLayers)
-    return socket.to(lobbyId).emit("newgame", { err: "cant find lobby" });
+    let lobbyPLayers = await LobbyCollection.findOne({ _id: lobbyId });
+    if (!lobbyPLayers)
+      return socket.to(lobbyId).emit("newgame", { err: "cant find lobby" });
 
-  // add each player all necessary keys
-  lobbyPLayers = lobbyPLayers.players.map((player) => {
-    player.active = true;
-    player.points = 0;
-    player.hand = [];
-    player.bet = false;
-    return player;
-  });
+    // add each ACTIVE players all necessary keys
+    lobbyPLayers = lobbyPLayers.players
+      .filter((player) => !player.inactive)
+      .map((player) => {
+        player.active = true;
+        player.points = 0;
+        player.hand = [];
+        player.bet = false;
+        return player;
+      });
 
-  const [black] = allCards.map((set) => set.black);
-  const [white] = allCards.map((set) => set.white);
+    const [black] = allCards.map((set) => set.black);
+    const [white] = allCards.map((set) => set.white);
 
-  const gamedata = {
-    id: lobbyId,
-    setRounds: amountOfRounds,
-    gameIdentifier: lastGame,
-    handSize: handSize,
-    concluded: false,
-    players: lobbyPLayers,
-    deck: {
-      black_cards: [...black],
-      white_cards: [...white],
-    },
-    turns: [
-      {
-        turn: 0,
-        czar: null,
-        stage: ["start"],
-        white_cards: [],
-        black_card: {},
-        winner: {},
-        completed: [],
+    const gamedata = {
+      id: lobbyId,
+      setRounds: amountOfRounds,
+      gameIdentifier: lastGame,
+      handSize: handSize,
+      concluded: false,
+      players: lobbyPLayers,
+      deck: {
+        black_cards: [...black],
+        white_cards: [...white],
       },
-    ],
-    timerTrigger: false,
-  };
+      turns: [
+        {
+          turn: 0,
+          czar: null,
+          stage: ["start"],
+          white_cards: [],
+          black_card: {},
+          winner: {},
+          completed: [],
+        },
+      ],
+      timerTrigger: false,
+    };
 
-  const newGameData = await GameCollection.create({ Game: gamedata });
-  await addNewGameToLobby(newGameData);
+    const newGameData = await GameCollection.create({ Game: gamedata });
+    await addNewGameToLobby(newGameData);
 
-  io.to(lobbyId).emit("newgame", { newGameData });
+    io.to(lobbyId).emit("newgame", { newGameData });
+  } catch (error) {
+    io.to(lobbyId).emit("newgame", { err: "Cant create new Game" });
+  }
 };
 
 export const sendCurrentGame = async ({ lobbyId, name, id, io, socket }) => {

@@ -50,8 +50,8 @@ io.on("connection", (socket) => {
 
   socket.on("createNewLobby", (data) => createNewLobby({ socket, data }));
 
-  socket.on("updateLobby", ({ lobbyId, name, id }) =>
-    updateClient({ lobbyId, socket, name, id, io })
+  socket.on("updateLobby", ({ lobbyId, id, joinGame, newPLayerName }) =>
+    updateClient({ lobbyId, socket, id, io, joinGame, newPLayerName })
   );
 
   socket.on("findRoom", ({ lobbyId, newPlayerName, id }) => {
@@ -60,7 +60,6 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", async (reason) => {
     const userId = socket.userId;
-
     setPlayerInactive({
       reason,
       userId,

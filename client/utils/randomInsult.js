@@ -1,7 +1,7 @@
 const randomInsult = () => {
   const reason = [
     "with your Mom ",
-    "goes just pooping",
+    "just goes pooping",
     "is dancing in the rain",
     "just cries",
     "search for some cotton",

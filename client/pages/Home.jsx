@@ -1,11 +1,14 @@
 import { is } from "@react-spring/shared";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import { setCookie } from "nookies";
+import { parseCookies, setCookie } from "nookies";
 import { io } from "socket.io-client";
 import { motion as m } from "framer-motion";
 import JoinGame from "../components/JoinLobby.jsx";
 import HostGame from "../components/HostGame.jsx";
+import { showToastAndRedirect } from "../utils/showToastAndRedirect.js";
+import { toast } from "react-toastify";
+import Error from "../components/Error.jsx";
 
 export const socket = io("http://localhost:5555/", {
   reconnection: true, // enable reconnection
@@ -15,6 +18,7 @@ export const socket = io("http://localhost:5555/", {
 const Home = () => {
   const playerName = useRef("");
   const roomKey = useRef("");
+  const cookies = parseCookies();
   const [hostOrJoin, setHostOrJoin] = useState(null);
   const router = useRouter();
   const [showErrMessage, setShowErrMessage] = useState(false);
@@ -37,8 +41,7 @@ const Home = () => {
     //If new lobby was createt, redirect to Lobby with room data
     socket.on("LobbyCreated", ({ lobbyId, hostName }) => {
       router.push({
-        pathname: `/lobby/`,
-        query: { name: hostName, lobbyId: lobbyId },
+        pathname: `/lobby/${lobbyId}`,
       });
     });
 
@@ -47,15 +50,14 @@ const Home = () => {
       try {
         const { noRoom, lobbyId, playerName, err } = data;
         if (noRoom) {
-          setShowErrMessage(true);
+          setShowErrMessage(err);
           return;
         }
         if (!lobbyId || !playerName) {
           throw new Error("Invalid lobbyId or playerName");
         }
         router.push({
-          pathname: `/lobby/`,
-          query: { name: playerName, lobbyId: lobbyId },
+          pathname: `/lobby/${lobbyId}`,
         });
       } catch (error) {
         console.error(error);
@@ -149,15 +151,12 @@ const Home = () => {
         </m.div>
       </div>
 
-      <div className="errorBox">
-        {showErrMessage ? (
-          <div
-            className="errMessage"
-            onClose={setTimeout(() => setShowErrMessage(false), 5000)}>
-            Invalid Room Code - please try again
-          </div>
-        ) : null}
-      </div>
+      {showErrMessage && (
+        <Error
+          showErrMessage={showErrMessage}
+          setShowErrMessage={setShowErrMessage}
+        />
+      )}
     </>
   );
 };

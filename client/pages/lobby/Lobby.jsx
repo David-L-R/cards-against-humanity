@@ -3,17 +3,21 @@ import React, { useEffect, useRef, useState } from "react";
 import { BiCopy } from "react-icons/Bi";
 import { RiVipCrown2Fill } from "react-icons/Ri";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { parseCookies } from "nookies";
+import { parseCookies, setCookie } from "nookies";
 import { socket } from "../Home";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from "react-toastify";
 import { showToastAndRedirect } from "../../utils/showToastAndRedirect";
 import { motion as m } from "framer-motion";
 import randomInsult from "../../utils/randomInsult";
+import { Main } from "next/document";
+import Error from "../../components/Error";
 
 const Lobby = () => {
   const router = useRouter();
-  const { lobbyId, name } = router.query;
+  const { joinGame } = router.query;
+  const [lobbyId, setLobbyId] = useState(null);
+  const [showErrMessage, setShowErrMessage] = useState(false);
   const [players, setPlayers] = useState([]);
   const [copied, setCopied] = useState(false);
   const cookies = parseCookies();
@@ -21,10 +25,28 @@ const Lobby = () => {
   const [inactive, setInactive] = useState(false);
   const amountOfRounds = useRef(null);
   const handSize = useRef(null);
+  const [linkInvation, setlinkInvation] = useState("");
+  const [isLoading, setIsloading] = useState(true);
+
+  const handleGameCreation = () => {
+    // const setRounds = amountOfRounds.current.value;
+    // const maxHandSize = handSize.current.value;
+    socket.emit("createGameObject", { lobbyId }); //setRounds, maxHandSize,
+  };
+
+  const changePLayerName = (newPLayerName) => {
+    socket.emit("updateLobby", {
+      lobbyId,
+      id: cookies.socketId,
+      newPLayerName,
+    });
+  };
 
   useEffect(() => {
     //listener to update page from server after DB entry changed
     socket.on("updateRoom", ({ currentLobby, err }) => {
+      if (!currentLobby || err) return setShowErrMessage(err);
+      setIsloading(false);
       const player = currentLobby.players.find(
         (player) => player.id === cookies.socketId
       );
@@ -41,7 +63,8 @@ const Lobby = () => {
     });
 
     // creates new game if host and redirect everyone to game
-    socket.on("newgame", ({ newGameData }) => {
+    socket.on("newgame", ({ newGameData, err }) => {
+      if (!newGameData || err) return setShowErrMessage(err);
       const stage = newGameData.Game.turns[0].stage[0];
       const gameId = newGameData.Game.gameIdentifier;
       if (lobbyId) {
@@ -59,16 +82,27 @@ const Lobby = () => {
       }
     });
 
+    if (!cookies.socketId)
+      setCookie(null, "socketId", socket.id, { path: "/" });
+
     return () => {
       socket.removeAllListeners();
     };
-  }, []);
+  }, [lobbyId]);
 
   useEffect(() => {
     //self update page after got redirected, use key from query as lobby id
-    if (lobbyId)
-      socket.emit("updateLobby", { lobbyId, name, id: cookies.socketId });
+    if (lobbyId && cookies.socketId) {
+      socket.emit("updateLobby", { lobbyId, id: cookies.socketId, joinGame });
+    }
   }, [lobbyId]);
+
+  useEffect(() => {
+    if (router.query.lobbyId) {
+      setlinkInvation(`${window?.location.href}?joinGame=true`);
+      setLobbyId(router.query.lobbyId[0]);
+    }
+  }, [router.isReady]);
 
   //hello David :) WE good at naming conventions😘😘
   const toggleSomething = () => {
@@ -78,11 +112,13 @@ const Lobby = () => {
     }, 3000);
   };
 
-  const handleGameCreation = () => {
-    // const setRounds = amountOfRounds.current.value;
-    // const maxHandSize = handSize.current.value;
-    socket.emit("createGameObject", { lobbyId }); //setRounds, maxHandSize,
-  };
+  if (isLoading)
+    return (
+      <main>
+        <h1>Loading...</h1>
+        <ToastContainer autoClose={3000} />
+      </main>
+    );
 
   return (
     <>
@@ -109,18 +145,22 @@ const Lobby = () => {
                 </span>
               </h1>
             </div>
-            <div className="lobbyIdContainer">
-              <h3>Game code: </h3>
-              <div className="lobbyIdCopyField">
-                {copied ? <p className="tempCopyText">Copied!</p> : null}
-                <CopyToClipboard text={lobbyId} onCopy={toggleSomething}>
-                  <div className="input-icon-wrapper">
-                    <p>{lobbyId}</p>
-                    <BiCopy className="icon" />
-                  </div>
-                </CopyToClipboard>
+            {isHost && (
+              <div className="lobbyIdContainer">
+                <h3>Invite your Friends: </h3>
+                <div className="lobbyIdCopyField">
+                  {copied ? (
+                    <p className="tempCopyText">Copied to clipboard!</p>
+                  ) : null}
+                  <CopyToClipboard text={linkInvation} onCopy={toggleSomething}>
+                    <div className="input-icon-wrapper">
+                      <p>Click to copy invitation link</p>
+                      <BiCopy className="icon" />
+                    </div>
+                  </CopyToClipboard>
+                </div>
               </div>
-            </div>
+            )}
             <div className="waitingLobbyButtonWrapper">
               {isHost && (
                 <button className="lobbyButton" onClick={handleGameCreation}>
@@ -128,6 +168,11 @@ const Lobby = () => {
                 </button>
               )}
             </div>
+            <input
+              type="text"
+              onChange={(e) => changePLayerName(e.target.value)}
+              placeholder="Change name"
+            />
           </m.div>
           <div className="dragContainer">
             <ul>
@@ -150,7 +195,12 @@ const Lobby = () => {
             </ul>
           </div>
         </div>
-        <ToastContainer autoClose={3000} />
+        {showErrMessage && (
+          <Error
+            showErrMessage={showErrMessage}
+            setShowErrMessage={setShowErrMessage}
+          />
+        )}
       </div>
     </>
   );
