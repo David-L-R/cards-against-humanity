@@ -9,6 +9,7 @@ import Countdown from "../../../components/Countdown";
 import PlayedWhite from "../../../components/PlayedWhite";
 import Winner from "../../../components/Winner";
 import Error from "../../../components/Error";
+import Scoreboard from "../../../components/Scoreboard";
 
 const Game = () => {
   const router = useRouter();
@@ -30,12 +31,14 @@ const Game = () => {
   const [isCzar, setIsCzar] = useState(false);
   const [currentTurn, setCurrentTurn] = useState(null);
   const [showErrMessage, setShowErrMessage] = useState(false);
+  const [currentLobby, setCurrentLobby] = useState(true);
 
   let gameIdentifier = null;
 
   useEffect(() => {
     //getting game infos and rejoin player to socket io
     socket.on("currentGame", ({ currentGame, err }) => {
+      console.log("currentGame", currentGame);
       if (err || !currentGame) return setShowErrMessage(err);
       const lastTurnIndex = currentGame.turns.length - 1;
       const lastTurn = currentGame.turns[lastTurnIndex];
@@ -75,7 +78,7 @@ const Game = () => {
           const playerList = lastTurn.white_cards.map(
             (player) => player.played_card
           );
-          setPlayedWhite(playerList);
+          setPlayedWhite(playerList[0].length > 0 ? playerList : null);
         }
 
         if (confirmedWhiteCards && !isCzar) {
@@ -98,6 +101,7 @@ const Game = () => {
             player: { label: "player", cards: hand },
           });
         }
+        setCurrentLobby(currentGame);
         setPlayerName(currentPlayer.name);
         setCurrentTurn(lastTurn);
         setBlackCards((prev) => (prev = black_cards));
@@ -138,6 +142,7 @@ const Game = () => {
       lobbyId,
       playedWhite: cards,
     };
+    console.log("playerData", playerData);
     socket.emit("changeGame", { ...playerData });
   };
 
@@ -260,7 +265,11 @@ const Game = () => {
             <br />
             Loadin:{loading ? "true" : "false"}
           </div>
-
+          {currentLobby && (
+            <section className="scoreboard-container">
+              <Scoreboard currentLobby={currentLobby} />
+            </section>
+          )}
           {isCzar && blackCards && gameStage === "black" && (
             <Czar
               blackCards={blackCards}
@@ -281,6 +290,8 @@ const Game = () => {
               whiteCardChoosed={whiteCardChoosed}
               confirmed={confirmed}
               stage={gameStage}>
+              {console.log("playedWhite", playedWhite)}
+              {console.log("playedWhite", playedWhite && playedWhite.length)}
               {playedWhite && isCzar && (
                 <ul className={"cardDisplay playedWhite"}>
                   {playedWhite.map((cards, index) => (
@@ -309,11 +320,11 @@ const Game = () => {
         </div>
       )} */}
 
-          {!timer && (
+          {/* {!timer && (
             <div className="timeMessageContainer">
               <h1>Time's up Bitch!</h1>
             </div>
-          )}
+          )} */}
           {showErrMessage && (
             <Error
               showErrMessage={showErrMessage}

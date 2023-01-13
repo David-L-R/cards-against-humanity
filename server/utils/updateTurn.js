@@ -35,6 +35,7 @@ const updateTurn = ({
       player: currentPlayer.id,
       cards: updatedHand,
       played_card: playedWhite,
+      points: 0,
     };
 
     //update player in turns.white_cards
@@ -65,8 +66,15 @@ const updateTurn = ({
     const wonPlayer = currentTurn.white_cards.find(
       (player) => player.played_card[0].text === winningCards[0].text
     );
-
+    //add points to turn
+    console.log("wonPlayer", wonPlayer);
+    wonPlayer.played_card.forEach((card) => (wonPlayer.points += 10));
     currentTurn.winner = wonPlayer;
+    //add points to global players
+    Game.players.map((player) => {
+      if (player.id === wonPlayer.player) player.points += wonPlayer.points;
+      return player;
+    });
     currentTurn.stage.push("winner");
     currentGame.Game = Game;
     currentGame.save();

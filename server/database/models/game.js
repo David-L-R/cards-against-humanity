@@ -39,10 +39,20 @@ const gameModel = mongoose.Schema(
             "scoreboard", // Display score per player in decending order, amount of rounds. timer to go back to lobby? 10 min?
           ], // game progresses left-to-right, loops at "winner" back to "election". having added a "dealing" function at "winner" stage
           white_cards: [
-            { player: String, cards: Array, played_card: [Object] },
+            {
+              player: String,
+              cards: Array,
+              played_card: [Object],
+              points: Number,
+            },
           ], //this.Game.players(n).id; this.Game.players(n).hand, this.Game.players(n).hand.splice(n, 1)
           black_card: Object, //this.Game.deck.black_cards.(splice(math.random, 1)) ()=> remove from black_cards array to prevent repeats
-          winner: { player: String, cards: Array, played_card: [Object] }, // same as white_cards, except just an Object rather than an Array of Objects.
+          winner: {
+            player: String,
+            cards: Array,
+            played_card: [Object],
+            points: Number,
+          }, // same as white_cards, except just an Object rather than an Array of Objects.
           completed: [{ player_id: String }],
         },
       ],

@@ -155,12 +155,11 @@ export function DropZone(props) {
               : null}
             {blackCard && cards.length === blackCard.pick + 1 && !isCzar && (
               <li
+                onClick={() => whiteCardChoosed([...cards.slice(1)])}
                 className={
                   !confirmed && !isCzar ? "selectButton active" : "selectButton"
                 }>
-                <h3 onClick={() => whiteCardChoosed([...cards.slice(1)])}>
-                  Confirm
-                </h3>
+                <h3>Confirm</h3>
               </li>
             )}
           </m.ul>
