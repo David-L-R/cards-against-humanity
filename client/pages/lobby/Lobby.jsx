@@ -23,18 +23,15 @@ const Lobby = () => {
   const handSize = useRef(null);
   const [linkInvation, setlinkInvation] = useState("");
 
-  //listener to update page from server after DB entry changed
-  socket.on("updateRoom", ({ currentLobby, err }) => {
-    const { players } = currentLobby;
-    const player = players.find((player) => player.id === cookies.socketId);
-    if (!currentLobby)
-      return showToastAndRedirect(
-        toast,
-        router,
-        "No Lobby found, please host a new game"
+  useEffect(() => {
+    //listener to update page from server after DB entry changed
+    socket.on("updateRoom", ({ currentLobby, err }) => {
+      const player = currentLobby.players.find(
+        (player) => player.id === cookies.socketId
       );
-    if (player) {
-      const { isHost, inactive } = player;
+      if (!player) return showToastAndRedirect(toast, router);
+      const { players } = currentLobby;
+      const { id, name, isHost, inactive } = player;
       //check if the host
       isHost ? setHost(true) : setHost(false);
       inactive ? setInactive(true) : setInactive(false);
@@ -42,32 +39,30 @@ const Lobby = () => {
       if (err) return console.warn(err);
 
       setPlayers((pre) => (pre = players));
-    }
-  });
+    });
 
-  // creates new game if host and redirect everyone to game
-  socket.on("newgame", ({ newGameData }) => {
-    const stage = newGameData.Game.turns[0].stage[0];
-    const gameId = newGameData.Game.gameIdentifier;
-    if (lobbyId) {
-      if (stage === "start") {
-        let gamePath = {
-          pathname: `/lobby/game`,
-          query: {
-            name,
-            lobbyId: lobbyId,
-            game: gameId,
-          },
-        };
-        router.push(gamePath);
+    // creates new game if host and redirect everyone to game
+    socket.on("newgame", ({ newGameData }) => {
+      const stage = newGameData.Game.turns[0].stage[0];
+      const gameId = newGameData.Game.gameIdentifier;
+      if (lobbyId) {
+        if (stage === "start") {
+          let gamePath = {
+            pathname: `/lobby/game`,
+            query: {
+              name,
+              lobbyId: lobbyId,
+              game: gameId,
+            },
+          };
+          router.push(gamePath);
+        }
       }
-    }
-  });
+    });
 
-  useEffect(() => {
-    if (!cookies.socketId)
-      setCookie(null, "socketId", socket.id, { path: "/" });
-    setlinkInvation(`${window?.location.href}&joinGame=true`);
+    return () => {
+      socket.removeAllListeners();
+    };
   }, []);
 
   useEffect(() => {

@@ -28,16 +28,18 @@ function FrontPage() {
           x: -1300,
           opacity: 1,
           rotate: -120,
-          transition: { duration: 0.75 },
-        }}>
-        <Link href="./Home">
+          transition: { duration: 0.6 },
+        }}
+      >
+        <Link href="./Home" className="linkElement">
           <animated.div
             className="cardContainer"
             onMouseMove={({ clientX: x, clientY: y }) =>
               set({ xys: calc(x, y) })
             }
             onMouseLeave={() => set({ xys: [0, 0, 1] })}
-            style={{ transform: props.xys.to(trans) }}>
+            style={{ transform: props.xys.to(trans) }}
+          >
             <div className="card">
               <div className="cardFace cardFace--front">
                 <h2>Cards Against Humanity.</h2>

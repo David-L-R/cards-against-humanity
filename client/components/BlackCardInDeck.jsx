@@ -1,47 +1,62 @@
 import React, { useEffect, useState } from "react";
 import style from "../styles/cardTemplate.module.css";
 
-const BlackCardInDeck = ({ card, confirmBlack, drawBlack, index }) => {
+const BlackCardInDeck = ({
+  card,
+  index,
+  drawCardsToSelect,
+  playedBlack,
+  selectBlackCard,
+}) => {
   const [randomDeg, setrandomDeg] = useState(0);
   const [active, setactive] = useState(false);
-  const [rejected, setrejected] = useState(false);
+  const [ischoosed, setIschoosed] = useState(false);
+  const randomCardTurn = () => setrandomDeg(Math.random() * 10 - 5);
 
+  //style for displaying 3 cards to choose from
   let presentOptions = {
-    position: "absolute",
-    top: `50%`,
-    transform: `translateY(-50%) translateZ(0) rotateX(0deg) rotateY(0deg)
-    rotateZ(0deg)`,
-    scale: "1.5",
-    zIndex: 10,
+    transform: `translateY(0) translateZ(0) rotateX(0deg) rotateY(0deg)
+    rotateZ(0deg) translateX(${-160 + index * 110}%)`,
   };
 
+  //standart style while lying on deck
   let defaultOptions = {
-    transform: `translateZ(50px) rotateX(50deg) rotateY(-10deg) rotateZ(${
-      randomDeg + 30
-    }deg)`,
+    transform: `translateY(${index / 8}px) translateX(${
+      randomDeg + 10
+    }px) rotateX(50deg) rotateY(-10deg) rotateZ(${randomDeg + 30}deg)`,
+    zIndex: -index,
+    pointerEvents: index > 1 ? "none" : "all",
+    margin: "0rem",
   };
 
-  let rejectOptions = {
-    left: 0,
-    transform: `translateX(-1000px) rotateZ(180deg) `,
-  };
-  const randomCardTurn = () =>
-    setrandomDeg(Math.floor(Math.random() * 20 - 10));
-
-  const selectCard = () => {
-    if (!active) {
-      setactive(true);
-      drawBlack(index);
-    }
+  // style if a card got choosed
+  let choosed = {
+    transform: `translateY(0) translateZ(0) rotateX(0deg) rotateY(0deg)
+    rotateZ(0) translateX(0)`,
   };
 
-  const confirmCard = () => {
-    if (active) confirmBlack();
+  // animation section to animate the card from the deck to the actuall "table"
+  const animateCard = () => {
+    //animate your card
+    return;
   };
 
-  const rejectCard = () => {
-    if (active) setrejected(true);
+  const blackIsSelected = (index) => {
+    setIschoosed(true);
+
+    animateCard();
+
+    // timeout befor cards going back to deck
+    setTimeout(() => {
+      setIschoosed(false);
+      setactive(false);
+      selectBlackCard(index);
+    }, 1000);
   };
+
+  useEffect(() => {
+    playedBlack[index]?.text === card.text ? setactive(true) : setactive(false);
+  }, [playedBlack]);
 
   useEffect(() => {
     randomCardTurn();
@@ -49,22 +64,18 @@ const BlackCardInDeck = ({ card, confirmBlack, drawBlack, index }) => {
 
   return (
     <li
-      onClick={selectCard}
-      className={`${style.cardTemplateContainer} ${style.black}`}
-      style={
-        !active && !rejected
-          ? defaultOptions
-          : rejected
-          ? rejectOptions
-          : presentOptions
-      }>
-      {card.text}
-      {active && (
-        <div>
-          <button onClick={confirmCard}>Conform</button>
-          <button onClick={rejectCard}>Reject</button>
-        </div>
-      )}
+      onClick={
+        !active
+          ? () => drawCardsToSelect(index)
+          : () => {
+              blackIsSelected(index);
+            }
+      }
+      className={`${style.cardTemplateContainer} ${style.black} ${
+        ischoosed ? "choosed" : active ? "active" : "default "
+      }`}
+      style={ischoosed ? choosed : active ? presentOptions : defaultOptions}>
+      {card.text + index}
     </li>
   );
 };

@@ -3,43 +3,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-}
-
-.droppable-container {
-  flex-basis: 100%;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  justify-content: space-evenly;
-}
-
-.onTable {
-  position: relative;
-  display: flex;
-  justify-content: center;
-}
-
-.blackCards {
-  position: absolute;
-  left: 25%;
-  top: 25%;
-  z-index: 10;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-columns: 1fr;
-}
-.blackCards > li {
-  transform-style: preserve-3d;
-  border-radius: 0.6rem;
-  left: 0;
-  grid-column: 1/1;
-  grid-row: 1/1;
-  z-index: 0;
-  transition: all 350ms;
-}
-
-.blackCards > li:hover {
-  box-shadow: 0px 0px 20px 0px rgb(255 255 255 / 62%);
+  /* padding-top: 10rem;*/
 }
 
 .devbug-h1 {
@@ -48,9 +12,240 @@
   top: -20%;
 }
 
+.droppable-container {
+  flex-basis: 50%;
+  /* display: flex; */
+  flex-direction: column;
+  position: relative;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
+}
+
+.whiteCardTable ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  gap: 10px;
+  padding-top: 50px;
+}
+.whiteCardTable ul li {
+  cursor: grab;
+}
+
+.whiteCardTable ul li:hover {
+  transform: rotate(3deg);
+}
+
+.onTable {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding-top: 30px;
+}
+
 .cardDisplay {
+  display: grid;
+  grid-template-areas:
+    "blackCard white1 white2"
+    ". selectButton selectButton";
+  width: max-content;
+  column-gap: 10px;
+}
+
+.cardDisplay.playedWhite {
+  display: flex;
+  width: 100%;
+  gap: 0.5rem;
+  background-color: transparent;
+  padding: 0 1rem;
+}
+
+.cardDisplay.playedWhite li {
+  display: flex;
+  position: relative;
+  gap: 0.25rem;
+  background-color: transparent;
+  transition: all 250ms;
+}
+
+.cardDisplay.playedWhite li div:nth-child(1) {
+  transform: rotate(-15deg) translateX(25%);
+  z-index: 0;
+  scale: 0.85;
+}
+
+.cardDisplay.playedWhite li div:nth-child(2) {
+  transform: rotate(15deg) translateX(-25%);
+  z-index: 0;
+  scale: 0.85;
+}
+
+.cardDisplay.playedWhite li:hover {
+  scale: 1.1;
+}
+
+.cardDisplay.playedWhite:hover li div {
+  box-shadow: 0 0px 18px 0px rgba(255, 255, 255, 0.2);
+}
+
+.choose-button {
+  position: absolute;
+  bottom: 20%;
+  left: 80%;
+  width: 220px;
+  border: 2px solid white;
+  margin: auto;
+  text-align: center;
+  border-radius: 30px;
+  padding: 10px;
+  font-size: 16px;
+  transform: translateX(-50%) translateY(100%);
+  z-index: 2;
+  transition: all 250ms;
+  opacity: 0;
+  color: white;
+  background-color: black;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+
+.cardDisplay.playedWhite li:hover .choose-button {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.cardDisplay.confirmed li {
+  position: relative;
+  transition: all 500ms !important;
+}
+
+.cardDisplay.confirmed li:nth-child(2):hover,
+.cardDisplay.confirmed li:nth-child(3):hover {
+  scale: 1.1 !important;
+  z-index: 1 !important;
+}
+
+.cardDisplay.confirmed {
+  position: relative;
+}
+
+.cardDisplay.confirmed li:nth-child(1) {
+  z-index: 1;
+  transform: translateX(100%);
+}
+
+.cardDisplay.confirmed li:nth-child(2) {
+  z-index: 0;
+  scale: 0.9;
+  transform: translateX(-50%) rotateZ(-20deg);
+}
+
+.cardDisplay.confirmed li:nth-child(3) {
+  z-index: 0;
+  scale: 0.9;
+  transform: translateX(-75%) rotateZ(20deg);
+}
+
+.timeMessageContainer {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  transform: translate(-50%, -50%);
+  font-size: larger;
+  z-index: 200;
+}
+
+.cardDisplay li[role="button"]:nth-child(1) {
+  grid-area: blackCard;
+}
+
+.cardDisplay li[role="button"]:nth-child(2) {
+  grid-area: white1;
+}
+
+.cardDisplay li[role="button"]:nth-child(3) {
+  grid-area: white2;
+}
+
+.selectButton {
+  grid-area: selectButton;
+  display: flex;
+  position: absolute;
+  bottom: -28%;
+  left: 50%;
+  z-index: 20;
+  justify-content: center;
+  width: 200px;
+  height: 50px;
+  align-items: center;
+  /*border: 1px dotted white;*/
+  /*border-bottom: 1px solid white;*/
+  /*border-top: 1px solid white;*/
+  border-radius: 30px;
+  background-color: black;
+  letter-spacing: 1px;
+  font-size: 16px;
+  color: white;
+  opacity: 0;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: 0.3;
+  box-shadow: 0px 0px 15px 2px rgb(0, 0, 0);
+}
+
+.selectButton.active {
+  animation: slideIn 2000ms forwards;
+}
+.selectButton:hover {
+  background-color: white;
+  color: black;
+  transition: 0.5s;
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.white-in-black {
+  font-style: italic;
+  font-family: Arial, Helvetica, sans-serif;
+  border-bottom: 2px solid white;
+  font-weight: 600;
+}
+
+.blackHand {
   position: relative;
   display: flex;
-  min-height: 50px;
-  min-width: 25%;
+  grid-area: blackHand;
+}
+
+.whiteHand {
+  animation: outOfView 0.75s forwards;
+  display: grid;
+
+  transition: all 250ms;
+}
+
+.whiteHandOut {
+  position: fixed;
+  bottom: -70%;
+  left: 50%;
+  transform: translateX(-50%) translateY(25%);
+}
+
+@keyframes outOfView {
+  0% {
+    transform: translateY(1000px);
+  }
+  50% {
+    transform: translateY(-80px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }

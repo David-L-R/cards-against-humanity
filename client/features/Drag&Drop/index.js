@@ -20,7 +20,7 @@ import {
   handleDragEnd,
   handleDragOver,
 } from "./hooks/handleDndEvents.js";
-import CardTemplate from "../../components/cardTemplate.js";
+import CardTemplate from "../../components/CardTemplate.jsx";
 
 function DragAndDropContainer(props) {
   const { setData, data, children, element } = props;
@@ -41,21 +41,35 @@ function DragAndDropContainer(props) {
       onDragCancel={() => handleDragCancel(setActiveId)}
       onDragOver={(e) => handleDragOver(e, setData)}
       onDragEnd={(e) => handleDragEnd(e, setActiveId, setData)}>
-      {children}
       <div className="droppable-container">
-        {Object.entries(data).map(([key, value]) => {
-          return (
-            <DropZone
-              cards={data[key].cards}
-              id={data[key].label}
-              element={element}
-              key={data[key].label}
-              activeId={activeId}
-              {...props}
-            />
+        {Object.entries(data).map(([key], index) => {
+          return index === 0 ? (
+            <div key={key}>
+              <DropZone
+                cards={data[key].cards}
+                id={data[key].label}
+                element={element}
+                key={data[key].label}
+                activeId={activeId}
+                {...props}
+              />
+              {children}
+            </div>
+          ) : (
+            <div key={key}>
+              <DropZone
+                cards={data[key].cards}
+                id={data[key].label}
+                element={element}
+                key={data[key].label}
+                activeId={activeId}
+                {...props}
+              />
+            </div>
           );
         })}
       </div>
+
       <DragOverlay>
         {activeId ? <CardTemplate id={activeId} /> : null}
       </DragOverlay>

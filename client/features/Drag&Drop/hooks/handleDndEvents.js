@@ -20,6 +20,7 @@ export const handleDragEnd = ({ active, over }, setActiveId, setRaw) => {
     const overContainer = over.data.current?.sortable?.containerId;
     const activeIndex = active.data.current.sortable.index;
     const overIndex = over?.data?.current?.sortable.index;
+    if (overIndex === 0 && overContainer === "table") return;
 
     if (activeContainer !== overContainer) return;
     if (
@@ -49,7 +50,7 @@ export const handleDragOver = ({ active, over }, setRaw) => {
     const overContainer = over?.data?.current?.sortable?.containerId;
     const activeIndex = active?.data.current?.sortable?.index;
     const overIndex = over?.data?.current?.sortable?.index;
-
+    if (overIndex === 0) return;
     if (activeContainer === overContainer || !over?.id) return;
 
     if (overContainer === "table" || over.id === "table") {
@@ -57,8 +58,6 @@ export const handleDragOver = ({ active, over }, setRaw) => {
       const pick = over?.data?.current?.allCards[0]?.pick;
       const maxLength = pick + 1;
       const currentLength = over?.data?.current?.allCards.length;
-
-      if (overIndex === 0) return;
 
       if (currentLength >= maxLength) return;
 
@@ -84,33 +83,8 @@ export const handleDragOver = ({ active, over }, setRaw) => {
           ...incoming,
           ...cards,
         ];
-
         return newDeck;
       });
     }
-
-    // if (activeContainer === "table" && overContainer !== "table") {
-    //   setRaw(pre => {
-
-    //   })
-    // }
-
-    // if (!overContainer || !activeContainer || activeContainer === overContainer)
-    //   return;
-    // setRaw((old) => {
-    //   const newObj = { ...old };
-    //   const newItem = old[activeContainer].cards[activeIndex];
-    //   newObj[activeContainer].cards = removeAtIndex(
-    //     newObj[activeContainer].cards,
-    //     activeIndex
-    //   );
-    //   newObj[overContainer].cards = insertAtIndex(
-    //     newObj[overContainer].cards,
-    //     overIndex,
-    //     newItem
-    //   );
-
-    //   return newObj;
-    // });
   }
 };
