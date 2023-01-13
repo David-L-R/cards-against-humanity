@@ -37,7 +37,6 @@ const Game = () => {
     //getting game infos and rejoin player to socket io
     socket.on("currentGame", ({ currentGame, err }) => {
       if (err || !currentGame) return setShowErrMessage(err);
-
       const lastTurnIndex = currentGame.turns.length - 1;
       const lastTurn = currentGame.turns[lastTurnIndex];
       playedBlackFromCzar = lastTurn.black_card;
@@ -262,7 +261,7 @@ const Game = () => {
             Loadin:{loading ? "true" : "false"}
           </div>
 
-          {isCzar && gameStage === "black" && (
+          {isCzar && blackCards && gameStage === "black" && (
             <Czar
               blackCards={blackCards}
               chooseBlackCard={chooseBlackCard}
@@ -288,7 +287,7 @@ const Game = () => {
                     <li
                       onMouseEnter={() => handleMouseOver(cards)}
                       onMouseLeave={() => handleMouseLeave(cards)}
-                      key={cards[index] + index}>
+                      key={cards[index].text + cards[index].pack + index}>
                       {cards.map((card) => (
                         <PlayedWhite card={card} key={card.text} />
                       ))}

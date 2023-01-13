@@ -28,6 +28,8 @@ const JoinGame = ({ roomKey, playerName }) => {
     const startIndex = url.indexOf("lobby") + 6;
     const endIndex = url.indexOf("?");
     const roomCode = url.slice(startIndex, endIndex);
+    if (url.length <= 50) return setRoomeCode("Wrong code. Check your link");
+
     setRoomeCode(roomCode);
   };
 

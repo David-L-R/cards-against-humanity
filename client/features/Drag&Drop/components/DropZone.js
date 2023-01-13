@@ -94,8 +94,7 @@ export function DropZone(props) {
     <SortableContext
       id={id}
       items={cards.map((card) => card && card.text)}
-      strategy={horizontalListSortingStrategy}
-    >
+      strategy={horizontalListSortingStrategy}>
       <article
         className={
           isCzar && blackCard
@@ -105,13 +104,11 @@ export function DropZone(props) {
             : isCzar && !blackCard
             ? "czarSelecteWhites whiteHandOut"
             : null
-        }
-      >
+        }>
         <div
           className={
             blackCard ? "onTable black-on-table" : "onTable whiteCardTable"
-          }
-        >
+          }>
           <m.ul
             className={
               confirmed && blackCard ? "cardDisplay confirmed" : "cardDisplay"
@@ -123,8 +120,7 @@ export function DropZone(props) {
               y: 1300,
 
               transition: { duration: 0.5 },
-            }}
-          >
+            }}>
             {cards &&
               cards.map((card, index) => {
                 return (
@@ -132,7 +128,7 @@ export function DropZone(props) {
                     card={card}
                     allCards={cards}
                     id={card.text}
-                    key={card.text + index}
+                    key={card.text + card.pack + index}
                     element={element}
                     confirmed={confirmed}
                     blackText={blackText}
@@ -152,8 +148,7 @@ export function DropZone(props) {
                       !skell.show
                         ? `hide-skell skeleton${index}`
                         : `skeleton${index}`
-                    }
-                  >
+                    }>
                     <CardTemplate card={skell} index={index} />
                   </li>
                 ))
@@ -162,8 +157,7 @@ export function DropZone(props) {
               <li
                 className={
                   !confirmed && !isCzar ? "selectButton active" : "selectButton"
-                }
-              >
+                }>
                 <h3 onClick={() => whiteCardChoosed([...cards.slice(1)])}>
                   Confirm
                 </h3>

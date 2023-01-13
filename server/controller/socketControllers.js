@@ -90,7 +90,7 @@ export const updateClient = async ({
       );
       if (playerIndex === 0) {
         foundPLayer.isHost = true;
-
+        //change alle other palyer to be not the host
         currentLobby.players = currentLobby.players.map((player, index) => {
           if (index === 0) return player;
           player.isHost = false;
