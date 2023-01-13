@@ -23,7 +23,7 @@ const CardTemplate = (props) => {
 
   return (
     <>
-      <div className={cardClass}>{!isBlackCard ? id : blackText}</div>#{" "}
+      <div className={cardClass}>{!isBlackCard ? id : blackText}</div>
     </>
   );
 };

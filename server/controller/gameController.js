@@ -81,7 +81,7 @@ export const sendCurrentGame = async ({ lobbyId, name, id, io, socket }) => {
   //find the gameIdentifiyer from Lobby
   const currentLobby = await LobbyCollection.findById(lobbyId);
 
-  //if cnat find loby, sen error back
+  //if cant find loby, send error back
   if (!currentLobby)
     return io.to(lobbyId).emit("currentGame", { err: "Can not find Lobby" });
 
@@ -89,7 +89,7 @@ export const sendCurrentGame = async ({ lobbyId, name, id, io, socket }) => {
   const currentGameId =
     currentLobby.games[currentGameIndex].Game.gameIdentifier;
 
-  // if no game is stored in lobby
+  // if no game is stored in lobby send error
   if (currentGameIndex < 0)
     io.to(lobbyId).emit("currentGame", { err: "Cant find a running game" });
 

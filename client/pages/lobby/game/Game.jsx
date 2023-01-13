@@ -22,9 +22,9 @@ const Game = () => {
   const [gameStage, setGameStage] = useState("");
   const [blackCards, setBlackCards] = useState([]);
   const [playedWhite, setPlayedWhite] = useState(null);
-  // const [currentPlayer, setCurrentPlayer] = useState(null);
   const [timerTrigger, setTimerTrigger] = useState(false);
   const [confirmed, setConfirmed] = useState();
+  const [loading, setLoading] = useState(false);
   const [timer, setTimer] = useState(false);
   const [cardsOnTable, setCardsOnTable] = useState(false);
   let playedBlackFromCzar = null;
@@ -35,6 +35,7 @@ const Game = () => {
   //getting game infos and rejoin player to socket io
   socket.on("currentGame", ({ currentGame, err }) => {
     if (err || !currentGame) return showToastAndRedirect(toast, router, err);
+
     const lastTurnIndex = currentGame.turns.length - 1;
     const lastTurn = currentGame.turns[lastTurnIndex];
     playedBlackFromCzar = lastTurn.black_card;
@@ -74,7 +75,6 @@ const Game = () => {
           (player) => player.played_card
         );
         setPlayedWhite(playerList);
-        // hand = [].concat(...playerList);
       }
 
       if (confirmedWhiteCards && !isCzar) {
@@ -98,12 +98,12 @@ const Game = () => {
         });
       }
       setCurrentTurn(lastTurn);
-      // setCurrentPlayer(currentPlayer);
       setBlackCards((prev) => (prev = black_cards));
       setHand(hand);
       setGameId(currentGame.id);
       setTimerTrigger(currentGame.timerTrigger);
       setGameStage(stage);
+      setLoading(false);
     }
   });
 
@@ -152,6 +152,7 @@ const Game = () => {
     });
   };
 
+  // sbumit choosed winner from czar
   const submitWinner = (cards) => {
     const playerData = {
       playerId: cookies.socketId,
@@ -163,6 +164,7 @@ const Game = () => {
     socket.emit("changeGame", { ...playerData });
   };
 
+  //finish the current round and start a new one
   const checkoutRound = () => {
     const playerData = {
       playerId: cookies.socketId,
@@ -175,14 +177,16 @@ const Game = () => {
 
   //self update page after got redirected, use key from query as lobby id
   useEffect(() => {
-    if (lobbyId)
+    if (lobbyId && !loading) {
+      setLoading(true);
       socket.emit("getUpdatedGame", { lobbyId, name, id: cookies.socketId });
+    }
   }, [lobbyId]);
 
-  // if host start the game by send the server the current "starting" stage
+  //if host start the game by send the server the current "starting" stage
   useEffect(() => {
     if (lobbyId) {
-      if (gameStage === "start" && isHost) {
+      if (gameStage === "start" && isHost && !loading) {
         socket.emit("changeGame", {
           blackCards,
           player: { hand, id: cookies.socketId },
@@ -196,6 +200,7 @@ const Game = () => {
       if (gameStage === "black" && timerTrigger) {
         setTimer(10);
       }
+
       if (gameStage === "white" && timerTrigger) {
         setTimer(10);
       }
@@ -221,12 +226,10 @@ const Game = () => {
             timerTrigger: {timerTrigger ? "true" : "false"}
             <br />
             timer:{timer}
+            <br />
+            Loadin:{loading ? "true" : "false"}
           </div>
-          <Winner
-            currentTurn={currentTurn}
-            // currentPlayer={currentPlayer}
-            checkoutRound={checkoutRound}
-          />
+          <Winner currentTurn={currentTurn} checkoutRound={checkoutRound} />
         </>
       ) : (
         <>
@@ -242,6 +245,8 @@ const Game = () => {
             timerTrigger: {timerTrigger ? "true" : "false"}
             <br />
             timer:{timer}
+            <br />
+            Loadin:{loading ? "true" : "false"}
           </div>
 
           {isCzar && gameStage === "black" && (
@@ -252,9 +257,9 @@ const Game = () => {
               setBlackCards={setBlackCards}
               gameStage={gameStage}
               timer={timer}
+              setTimer={setTimer}
             />
           )}
-
           {(isCzar && gameStage !== "black") || !isCzar ? (
             <DragAndDropContainer
               data={cardsOnTable}
