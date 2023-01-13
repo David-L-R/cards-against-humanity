@@ -62,7 +62,6 @@ const Czar = ({
   useEffect(() => {
     randomBlackCards();
   }, []);
-  console.log("gameStage", gameStage);
   if (!showBlackCards || gameStage !== "black") return;
 
   return (
@@ -79,8 +78,7 @@ const Czar = ({
                 {
                   <m.div
                     className={` ${style.black} czarPicking`}
-                    onClick={() => selectCard({ index: cardItem.index })}
-                  >
+                    onClick={() => selectCard({ index: cardItem.index })}>
                     {cardItem.card.text}
                   </m.div>
                 }

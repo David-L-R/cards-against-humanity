@@ -52,6 +52,7 @@ div.skeleton {
 .hide-skell {
   animation: hideSkell 0ms;
   animation-fill-mode: forwards;
+  z-index: -1;
 }
 
 @keyframes hideSkell {
@@ -61,25 +62,5 @@ div.skeleton {
 
   100% {
     opacity: 0;
-  }
-}
-
-.blackHand {
-  position: relative;
-  display: flex;
-}
-.whiteHand {
-  animation: outOfView 0.75s forwards;
-  display: grid;
-}
-@keyframes outOfView {
-  0% {
-    transform: translateY(1000px);
-  }
-  50% {
-    transform: translateY(-80px);
-  }
-  100% {
-    transform: translateY(0px);
   }
 }

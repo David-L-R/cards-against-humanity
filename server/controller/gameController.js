@@ -56,6 +56,7 @@ export const createGame = async ({ setRounds, maxHandSize, lobbyId, io }) => {
         white_cards: [],
         black_card: {},
         winner: {},
+        completed: [],
       },
     ],
     timerTrigger: false,
@@ -73,6 +74,7 @@ export const sendCurrentGame = async ({ lobbyId, name, id, io, socket }) => {
       .to(lobbyId)
       .emit("currentGame", { err: "Please add a lobby ID and " });
 
+  socket.userId = id;
   //jopin socket after disconnect
   socket.join(lobbyId);
 
@@ -100,76 +102,99 @@ export const sendCurrentGame = async ({ lobbyId, name, id, io, socket }) => {
   io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });
 };
 
-export const changeGame = async ({
-  blackCards,
-  player,
-  stage,
-  gameId,
-  gameIdentifier,
-  lobbyId,
-  io,
-  playedBlack,
-  playedWhite,
-}) => {
+export const changeGame = async (
+  {
+    blackCards,
+    playerId,
+    stage,
+    gameId,
+    gameIdentifier,
+    lobbyId,
+    playedBlack,
+    playedWhite,
+    winningCards,
+  },
+  io
+) => {
   if (stage === "dealing") {
-    const currentGame = await GameCollection.findOne({ "Game.id": gameId });
-
-    //deal random white cards to players
-    currentGame.Game.players = currentGame.Game.players.map((player) => {
-      const playerhand = [];
-      const handsize = currentGame.Game.handSize;
-
-      for (let counter = handsize; counter > 0; counter--) {
-        const deckLength = currentGame.Game.deck.white_cards.length - 1;
-        const randomIndex = Math.floor(Math.random() * deckLength);
-        const [randomCard] = currentGame.Game.deck.white_cards.splice(
-          randomIndex,
-          1
-        );
-        playerhand.push(randomCard);
-      }
-      player.hand = playerhand;
-      return player;
-    });
-
-    //setup the first random czar
-    const randomIndex = Math.floor(
-      Math.random() * (currentGame.Game.players.length - 1)
-    );
-    const randomPlayer = currentGame.Game.players[randomIndex];
-    currentGame.Game.turns[0].czar = {
-      randomPlayer,
-      currentIndex: randomIndex,
-    };
-
-    //activate the timmer trigger
-    currentGame.Game.timerTrigger = true;
-
-    let currentStage = currentGame.Game.turns[0].stage;
-    currentGame.Game.turns[0].stage = [...currentStage, "dealing", "black"];
-    console.log("currentStage", currentGame.Game.turns[0].stage);
-    currentGame.save();
-    io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });
-  }
-
-  //If gamestage is "black"
-  if (stage === "black") {
     try {
       const currentGame = await GameCollection.findOne({ "Game.id": gameId });
+      if (currentGame.Game.turns[0].stage.includes("dealing")) return;
 
-      const updatedGame = updateTurn({
-        currentGame,
-        playedBlack,
-        stage,
-        player,
-        blackCards,
-        playedWhite,
+      //deal random white cards to players
+      const { Game } = currentGame;
+      currentGame.Game.players = currentGame.Game.players.map((player) => {
+        const playerhand = [];
+        const handsize = currentGame.Game.handSize;
+
+        for (let counter = handsize; counter > 0; counter--) {
+          const deckLength = currentGame.Game.deck.white_cards.length - 1;
+          const randomIndex = Math.floor(Math.random() * deckLength);
+          const [randomCard] = currentGame.Game.deck.white_cards.splice(
+            randomIndex,
+            1
+          );
+          playerhand.push(randomCard);
+        }
+        player.hand = playerhand;
+        return player;
       });
-      io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
+
+      //setup the first random czar
+      const randomIndex = Math.floor(
+        Math.random() * (currentGame.Game.players.length - 1)
+      );
+      const randomPlayer = currentGame.Game.players[randomIndex];
+      currentGame.Game.turns[0].czar = randomPlayer;
+
+      //add player to turn
+      const foundPlayer = Game.turns[0].white_cards.find(
+        (player) => player.player === playerId
+      );
+      if (!foundPlayer) {
+        Game.players.forEach((player) => {
+          if (player.id !== randomPlayer.id)
+            currentGame.Game.turns[0].white_cards.push({
+              player: player.id,
+              cards: player.hand,
+              played_card: [],
+            });
+        });
+      }
+      //activate timer trigger
+      Game.timerTrigger = true;
+
+      let currentStage = currentGame.Game.turns[0].stage;
+      currentGame.Game.turns[0].stage = [...currentStage, "dealing", "black"];
+      currentGame.save();
+      io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });
+      return;
     } catch (error) {
+      console.log("error", error);
       io.to(lobbyId).emit("currentGame", {
-        err: "Server error, cant find game",
+        err: "Can't create Game, please create a new one",
       });
+      return;
     }
+  }
+
+  //change current turn
+  try {
+    const currentGame = await GameCollection.findOne({ "Game.id": gameId });
+    const updatedGame = updateTurn({
+      currentGame,
+      playedBlack,
+      stage,
+      playerId,
+      blackCards,
+      playedWhite,
+      winningCards,
+    });
+    io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
+  } catch (error) {
+    console.log("error", error);
+    io.to(lobbyId).emit("currentGame", {
+      err: "Server error, cant find game",
+    });
   }
 };

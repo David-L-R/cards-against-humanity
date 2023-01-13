@@ -76,29 +76,7 @@ io.on("connection", (socket) => {
     sendCurrentGame({ lobbyId, name, id, io, socket })
   );
 
-  socket.on(
-    "changeGame",
-    async ({
-      blackCards,
-      player,
-      stage,
-      gameId,
-      gameIdentifier,
-      lobbyId,
-      playedBlack,
-      playedWhite,
-    }) => {
-      changeGame({
-        blackCards,
-        player,
-        stage,
-        gameId,
-        gameIdentifier,
-        lobbyId,
-        io,
-        playedBlack,
-        playedWhite,
-      });
-    }
-  );
+  socket.on("changeGame", (data) => {
+    changeGame(data, io);
+  });
 });

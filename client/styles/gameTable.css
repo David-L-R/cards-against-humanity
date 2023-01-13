@@ -3,14 +3,22 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
+  padding-top: 10rem;
+}
+
+.devbug-h1 {
+  position: absolute;
+  left: 50%;
+  top: -20%;
 }
 
 .droppable-container {
-  flex-basis: 100%;
-  display: flex;
+  flex-basis: 50%;
+  /* display: flex; */
   flex-direction: column;
   position: relative;
   justify-content: space-between;
+  align-items: center;
   padding: 0;
 }
 
@@ -42,6 +50,90 @@
   width: max-content;
   column-gap: 10px;
 }
+
+.cardDisplay.playedWhite {
+  display: flex;
+  width: 100%;
+  gap: 0.5rem;
+  background-color: transparent;
+  padding: 0 1rem;
+}
+
+.cardDisplay.playedWhite li {
+  display: flex;
+  position: relative;
+  gap: 0.25rem;
+  background-color: transparent;
+  transition: all 250ms;
+}
+
+.cardDisplay.playedWhite li div:nth-child(1) {
+  transform: rotate(-15deg) translateX(25%);
+  z-index: 0;
+  scale: 0.85;
+}
+
+.cardDisplay.playedWhite li div:nth-child(2) {
+  transform: rotate(15deg) translateX(-25%);
+  z-index: 0;
+  scale: 0.85;
+}
+
+.cardDisplay.playedWhite li:hover {
+  scale: 1.1;
+}
+
+.cardDisplay.playedWhite:hover li div {
+  box-shadow: 0 0px 18px 0px rgba(255, 255, 255, 0.2);
+}
+
+.choose-button {
+  position: absolute;
+  top: 60%;
+  left: 50%;
+  transform: translateX(-50%) translateY(100%);
+  z-index: 2;
+  transition: all 250ms;
+  opacity: 0;
+}
+
+.cardDisplay.playedWhite li:hover .choose-button {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+.cardDisplay.confirmed li {
+  position: relative;
+  transition: all 500ms !important;
+}
+
+.cardDisplay.confirmed li:nth-child(2):hover,
+.cardDisplay.confirmed li:nth-child(3):hover {
+  scale: 1.1 !important;
+  z-index: 1 !important;
+}
+
+.cardDisplay.confirmed {
+  position: relative;
+}
+
+.cardDisplay.confirmed li:nth-child(1) {
+  z-index: 1;
+  transform: translateX(100%);
+}
+
+.cardDisplay.confirmed li:nth-child(2) {
+  z-index: 0;
+  scale: 0.9;
+  transform: translateX(-50%) rotateZ(-20deg);
+}
+
+.cardDisplay.confirmed li:nth-child(3) {
+  z-index: 0;
+  scale: 0.9;
+  transform: translateX(-75%) rotateZ(20deg);
+}
+
 .timeMessageContainer {
   position: absolute;
   top: 10%;
@@ -67,6 +159,11 @@
   grid-area: selectButton;
   display: flex;
   justify-content: center;
+  opacity: 0;
+  transform: translateY(-50%);
+}
+
+.selectButton.active {
   animation: slideIn 2000ms forwards;
 }
 
@@ -81,8 +178,34 @@
   }
 }
 
-.devbug-h1 {
-  position: absolute;
+.blackHand {
+  position: relative;
+  display: flex;
+  grid-area: blackHand;
+}
+
+.whiteHand {
+  animation: outOfView 0.75s forwards;
+  display: grid;
+
+  transition: all 250ms;
+}
+
+.whiteHandOut {
+  position: fixed;
+  bottom: -70%;
   left: 50%;
-  top: -20%;
+  transform: translateX(-50%) translateY(25%);
+}
+
+@keyframes outOfView {
+  0% {
+    transform: translateY(1000px);
+  }
+  50% {
+    transform: translateY(-80px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
