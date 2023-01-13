@@ -70,43 +70,47 @@ export const createGame = async ({ setRounds, maxHandSize, lobbyId, io }) => {
 
     io.to(lobbyId).emit("newgame", { newGameData });
   } catch (error) {
-    io.to(lobbyId).emit("newgame", { err: "Cant create new Game" });
+    io.to(lobbyId).emit("newgame", {
+      err: "Can not create new Game, please host a new one",
+    });
   }
 };
 
 export const sendCurrentGame = async ({ lobbyId, name, id, io, socket }) => {
   if (!lobbyId || !id)
-    return io
-      .to(lobbyId)
-      .emit("currentGame", { err: "Please add a lobby ID and " });
-  console.log("socket.id", socket.id);
-  console.log("lobbyId", lobbyId);
+    return io.to(socket.id).emit("currentGame", { err: "Missing Lobby ID " });
+
   socket.userId = id;
   //jopin socket after disconnect
   socket.join(lobbyId);
+  try {
+    //find the gameIdentifiyer from Lobby
+    const currentLobby = await LobbyCollection.findById(lobbyId);
 
-  //find the gameIdentifiyer from Lobby
-  const currentLobby = await LobbyCollection.findById(lobbyId);
+    //if cant find loby, send error back
+    if (!currentLobby)
+      return io.to(lobbyId).emit("currentGame", { err: "Can not find Lobby" });
 
-  //if cant find loby, send error back
-  if (!currentLobby)
-    return io.to(lobbyId).emit("currentGame", { err: "Can not find Lobby" });
+    const currentGameIndex = currentLobby.games.length - 1;
+    const currentGameId =
+      currentLobby.games[currentGameIndex].Game.gameIdentifier;
 
-  const currentGameIndex = currentLobby.games.length - 1;
-  const currentGameId =
-    currentLobby.games[currentGameIndex].Game.gameIdentifier;
+    // if no game is stored in lobby send error
+    if (currentGameIndex < 0)
+      io.to(lobbyId).emit("currentGame", { err: "Cant find a running game" });
 
-  // if no game is stored in lobby send error
-  if (currentGameIndex < 0)
-    io.to(lobbyId).emit("currentGame", { err: "Cant find a running game" });
+    // find current game by lobby id and gameidentifyer from lobby games array
+    const currentGame = await GameCollection.findOne({
+      "Game.id": lobbyId,
+      "Game.gameIdentifier": currentGameId,
+    });
 
-  // find current game by lobby id and gameidentifyer from lobby games array
-  const currentGame = await GameCollection.findOne({
-    "Game.id": lobbyId,
-    "Game.gameIdentifier": currentGameId,
-  });
-
-  io.to(socket.id).emit("currentGame", { currentGame: currentGame.Game });
+    io.to(socket.id).emit("currentGame", { currentGame: currentGame.Game });
+  } catch (error) {
+    io.to(socket.id).emit("currentGame", {
+      err: "Wrong lobby ID, please check your room code",
+    });
+  }
 };
 
 export const changeGame = async (

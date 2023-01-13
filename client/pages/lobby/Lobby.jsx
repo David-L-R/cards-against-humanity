@@ -67,12 +67,7 @@ const Lobby = () => {
       if (lobbyId) {
         if (stage === "start") {
           let gamePath = {
-            pathname: `/lobby/game`,
-            query: {
-              name,
-              lobbyId: lobbyId,
-              game: gameId,
-            },
+            pathname: `/lobby/game/${lobbyId}/${gameId}`,
           };
           router.push(gamePath);
         }

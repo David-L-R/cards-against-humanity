@@ -8,12 +8,14 @@ import Czar from "../../../components/Czar";
 import Countdown from "../../../components/Countdown";
 import PlayedWhite from "../../../components/PlayedWhite";
 import Winner from "../../../components/Winner";
+import Error from "../../../components/Error";
 
 const Game = () => {
   const router = useRouter();
-  const { lobbyId, name } = router.query;
+  const [lobbyId, setLobbyId] = useState(null);
   const cookies = parseCookies();
   const [isHost, setHost] = useState(false);
+  const [playerName, setPlayerName] = useState(null);
   const [gameId, setGameId] = useState(null);
   const [hand, setHand] = useState(null);
   const [gameStage, setGameStage] = useState(null);
@@ -97,6 +99,7 @@ const Game = () => {
             player: { label: "player", cards: hand },
           });
         }
+        setPlayerName(currentPlayer.name);
         setCurrentTurn(lastTurn);
         setBlackCards((prev) => (prev = black_cards));
         setHand(hand);
@@ -110,7 +113,7 @@ const Game = () => {
     return () => {
       socket.removeAllListeners();
     };
-  }, []);
+  }, [lobbyId]);
 
   const chooseBlackCard = (selected) => {
     const playerData = {
@@ -184,7 +187,12 @@ const Game = () => {
   useEffect(() => {
     if (router.query.lobbyId && !loading) {
       loading = true;
-      socket.emit("getUpdatedGame", { lobbyId, name, id: cookies.socketId });
+      setLobbyId(router.query.lobbyId[0]);
+      socket.emit("getUpdatedGame", {
+        lobbyId: router.query.lobbyId[0],
+        playerName,
+        id: cookies.socketId,
+      });
     }
   }, [router.isReady]);
 
@@ -220,7 +228,7 @@ const Game = () => {
       {gameStage === "winner" ? (
         <>
           <div className="debuggerMonitor">
-            Game player : {name} <br />
+            Game player : {playerName} <br />
             <br />
             gamestage : {gameStage}
             <br />
@@ -239,7 +247,7 @@ const Game = () => {
       ) : (
         <>
           <div className="debuggerMonitor">
-            Game player : {name} <br />
+            Game player : {playerName} <br />
             <br />
             gamestage : {gameStage}
             <br />
