@@ -3,7 +3,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-top: 10rem;
+  /* padding-top: 10rem;*/
 }
 
 .devbug-h1 {
@@ -26,6 +26,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   gap: 10px;
+  padding-top: 50px;
 }
 .whiteCardTable ul li {
   cursor: grab;
@@ -40,6 +41,7 @@
   width: 100%;
   display: flex;
   justify-content: center;
+  padding-top: 30px;
 }
 
 .cardDisplay {
@@ -89,12 +91,23 @@
 
 .choose-button {
   position: absolute;
-  top: 60%;
-  left: 50%;
+  bottom: 20%;
+  left: 80%;
+  width: 220px;
+  border: 2px solid white;
+  margin: auto;
+  text-align: center;
+  border-radius: 30px;
+  padding: 10px;
+  font-size: 16px;
   transform: translateX(-50%) translateY(100%);
   z-index: 2;
   transition: all 250ms;
   opacity: 0;
+  color: white;
+  background-color: black;
+  letter-spacing: 1px;
+  cursor: pointer;
 }
 
 .cardDisplay.playedWhite li:hover .choose-button {
@@ -158,24 +171,51 @@
 .selectButton {
   grid-area: selectButton;
   display: flex;
+  position: absolute;
+  bottom: -28%;
+  left: 50%;
+  z-index: 20;
   justify-content: center;
+  width: 200px;
+  height: 50px;
+  align-items: center;
+  /*border: 1px dotted white;*/
+  /*border-bottom: 1px solid white;*/
+  /*border-top: 1px solid white;*/
+  border-radius: 30px;
+  background-color: black;
+  letter-spacing: 1px;
+  font-size: 16px;
+  color: white;
   opacity: 0;
-  transform: translateY(-50%);
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  transition: 0.3;
+  box-shadow: 0px 0px 15px 2px rgb(0, 0, 0);
 }
 
 .selectButton.active {
   animation: slideIn 2000ms forwards;
 }
+.selectButton:hover {
+  background-color: white;
+  color: black;
+  transition: 0.5s;
+}
 
 @keyframes slideIn {
   0% {
     opacity: 0;
-    transform: translateY(-50%);
   }
   100% {
     opacity: 1;
-    transform: translateY(0%);
   }
+}
+.white-in-black {
+  font-style: italic;
+  font-family: Arial, Helvetica, sans-serif;
+  border-bottom: 2px solid white;
+  font-weight: 600;
 }
 
 .blackHand {

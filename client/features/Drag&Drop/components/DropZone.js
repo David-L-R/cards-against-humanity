@@ -94,7 +94,8 @@ export function DropZone(props) {
     <SortableContext
       id={id}
       items={cards.map((card) => card && card.text)}
-      strategy={horizontalListSortingStrategy}>
+      strategy={horizontalListSortingStrategy}
+    >
       <article
         className={
           isCzar && blackCard
@@ -104,23 +105,26 @@ export function DropZone(props) {
             : isCzar && !blackCard
             ? "czarSelecteWhites whiteHandOut"
             : null
-        }>
+        }
+      >
         <div
           className={
             blackCard ? "onTable black-on-table" : "onTable whiteCardTable"
-          }>
+          }
+        >
           <m.ul
             className={
               confirmed && blackCard ? "cardDisplay confirmed" : "cardDisplay"
             }
             ref={setNodeRef}
-            initial={{ x: -1100, rotate: 20 }}
-            animate={{ x: 0, rotate: 0 }}
+            initial={{ y: -500, rotate: 20 }}
+            animate={{ y: 0, rotate: 0 }}
             exit={{
               y: 1300,
 
               transition: { duration: 0.5 },
-            }}>
+            }}
+          >
             {cards &&
               cards.map((card, index) => {
                 return (
@@ -148,7 +152,8 @@ export function DropZone(props) {
                       !skell.show
                         ? `hide-skell skeleton${index}`
                         : `skeleton${index}`
-                    }>
+                    }
+                  >
                     <CardTemplate card={skell} index={index} />
                   </li>
                 ))
@@ -157,10 +162,11 @@ export function DropZone(props) {
               <li
                 className={
                   !confirmed && !isCzar ? "selectButton active" : "selectButton"
-                }>
-                <button onClick={() => whiteCardChoosed([...cards.slice(1)])}>
+                }
+              >
+                <h3 onClick={() => whiteCardChoosed([...cards.slice(1)])}>
                   Confirm
-                </button>
+                </h3>
               </li>
             )}
           </m.ul>

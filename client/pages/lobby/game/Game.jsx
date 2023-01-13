@@ -275,23 +275,26 @@ const Game = () => {
               isCzar={isCzar}
               whiteCardChoosed={whiteCardChoosed}
               confirmed={confirmed}
-              stage={gameStage}>
+              stage={gameStage}
+            >
               {playedWhite && isCzar && (
                 <ul className={"cardDisplay playedWhite"}>
                   {playedWhite.map((cards, index) => (
                     <li
                       onMouseEnter={() => handleMouseOver(cards)}
                       onMouseLeave={() => handleMouseLeave(cards)}
-                      key={cards[index] + index}>
+                      key={cards[index] + index}
+                    >
                       {cards.map((card) => (
                         <PlayedWhite card={card} key={card.text} />
                       ))}
-                      <button
+                      <h3
                         onClick={() => submitWinner(cards)}
                         className="choose-button"
-                        disabled={gameStage === "deciding" ? false : true}>
-                        choose as winner
-                      </button>
+                        disabled={gameStage === "deciding" ? false : true}
+                      >
+                        Choose as the Winner
+                      </h3>
                     </li>
                   ))}
                 </ul>
