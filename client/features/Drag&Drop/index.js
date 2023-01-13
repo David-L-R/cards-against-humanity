@@ -40,24 +40,36 @@ function DragAndDropContainer(props) {
       onDragStart={(e) => handleDragStart(e, setActiveId)}
       onDragCancel={() => handleDragCancel(setActiveId)}
       onDragOver={(e) => handleDragOver(e, setData)}
-      onDragEnd={(e) => handleDragEnd(e, setActiveId, setData)}
-    >
-      {children}
-
+      onDragEnd={(e) => handleDragEnd(e, setActiveId, setData)}>
       <div className="droppable-container">
-        {Object.entries(data).map(([key, value]) => {
-          return (
-            <DropZone
-              cards={data[key].cards}
-              id={data[key].label}
-              element={element}
-              key={data[key].label}
-              activeId={activeId}
-              {...props}
-            />
+        {Object.entries(data).map(([key], index) => {
+          return index === 0 ? (
+            <div key={key}>
+              <DropZone
+                cards={data[key].cards}
+                id={data[key].label}
+                element={element}
+                key={data[key].label}
+                activeId={activeId}
+                {...props}
+              />
+              {children}
+            </div>
+          ) : (
+            <div key={key}>
+              <DropZone
+                cards={data[key].cards}
+                id={data[key].label}
+                element={element}
+                key={data[key].label}
+                activeId={activeId}
+                {...props}
+              />
+            </div>
           );
         })}
       </div>
+
       <DragOverlay>
         {activeId ? <CardTemplate id={activeId} /> : null}
       </DragOverlay>

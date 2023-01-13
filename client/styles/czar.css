@@ -10,6 +10,12 @@
   display: flex;
   gap: 1rem;
 }
+.testClass {
+  transition: none !important;
+  animation: flyOut 2s linear;
+  animation-fill-mode: forwards !important;
+  background-color: red;
+}
 
 .czarSelectionContainer > div {
   display: flex;
@@ -40,7 +46,9 @@
 }
 .czarPicking {
   padding: 15px;
+  /*
   position: relative;
+  */
 
   display: inline-block;
   width: 240px;
@@ -55,16 +63,44 @@
 }
 .czarPickingContainer {
   position: absolute;
+  width: 100%;
+  height: 100%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 100;
 }
-.czarPickingContainer li:hover {
-  transform: rotate(2deg);
+
+.lowest {
+  position: fixed;
+  top: 30%;
+  left: 28%;
 }
+.middle {
+  position: fixed;
+  top: 30%;
+  left: 43%;
+}
+.highest {
+  position: fixed;
+  top: 30%;
+  left: 58%;
+}
+
 .czarPickingH1 {
   font-size: 48px;
   font-weight: 800;
   letter-spacing: 2px;
+}
+@keyframes flyOut {
+  0% {
+    position: absolute !important;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  100% {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(0%, 0%);
+  }
 }

@@ -3,11 +3,8 @@ import { useState, useEffect } from "react";
 import { useDndMonitor } from "@dnd-kit/core";
 
 const CardTemplate = (props) => {
-  const { id, isBlackCard, allcards, card, index } = props;
-
-  const [blackText, setBlackText] = useState(allcards && allcards[0].text);
+  const { id, isBlackCard, card, blackText } = props;
   let cardClass;
-  const [changeText, setChangeText] = useState(false);
 
   (() => {
     //Add classname for black cards, white cards or skellettons
@@ -24,38 +21,11 @@ const CardTemplate = (props) => {
     return (cardClass = `${style.cardTemplateContainer}`);
   })();
 
-  const addTextToBlack = () => {
-    if (!allcards) return;
-    //add text from thite cards to black cards
-    const blackText = allcards[0].text.split("");
-    const textList = allcards.slice(1).map((card) => card.text);
-
-    const newBlackText = blackText
-      .map((letter) => {
-        if (letter === "_") {
-          const sentance = textList.splice(0, 1);
-          if (!sentance[0]) return letter;
-          return sentance[0];
-        }
-        return letter;
-      })
-      .join("");
-
-    setChangeText(false);
-    return setBlackText(newBlackText);
-  };
-
-  useDndMonitor({
-    onDragEnd({ over }) {
-      setChangeText(true);
-    },
-  });
-
-  useEffect(() => {
-    isBlackCard && addTextToBlack();
-  }, [changeText]);
-
-  return <div className={cardClass}>{!isBlackCard ? id : blackText}</div>;
+  return (
+    <>
+      <div className={cardClass}>{!isBlackCard ? id : blackText}</div>
+    </>
+  );
 };
 
 export default CardTemplate;

@@ -43,6 +43,7 @@ const gameModel = mongoose.Schema(
           ], //this.Game.players(n).id; this.Game.players(n).hand, this.Game.players(n).hand.splice(n, 1)
           black_card: Object, //this.Game.deck.black_cards.(splice(math.random, 1)) ()=> remove from black_cards array to prevent repeats
           winner: { player: String, cards: Array, played_card: [Object] }, // same as white_cards, except just an Object rather than an Array of Objects.
+          completed: [{ player_id: String }],
         },
       ],
       timerTrigger: Boolean, // Set and started by host, start is synced, finish is pushed by host's timer

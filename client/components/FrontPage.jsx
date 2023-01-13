@@ -28,7 +28,7 @@ function FrontPage() {
           x: -1300,
           opacity: 1,
           rotate: -120,
-          transition: { duration: 0.75 },
+          transition: { duration: 0.6 },
         }}
       >
         <Link href="./Home" className="linkElement">
