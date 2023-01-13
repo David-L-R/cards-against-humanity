@@ -6,18 +6,29 @@ import { parseCookies } from "nookies";
 //Join a game
 const JoinGame = ({ roomKey, playerName }) => {
   let [value, setValue] = useLocalStorage("name", "");
+  let [roomCode, setRoomeCode] = useState("");
   const cookies = parseCookies();
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // get values from form
-    const lobbyId = roomKey.current.value;
-    const newPlayerName = playerName.current.value;
-    const id = cookies.socketId;
+    if (roomCode) {
+      // get values from form
+      const lobbyId = roomCode;
+      const newPlayerName = playerName.current.value;
+      const id = cookies.socketId;
 
-    // request to server to find the game by the given id from form
-    socket.emit("findRoom", { lobbyId, newPlayerName, id });
+      // request to server to find the game by the given id from form
+      socket.emit("findRoom", { lobbyId, newPlayerName, id });
+    }
+  };
+
+  // pull code from URL
+  const displayRoomCode = (url) => {
+    const startIndex = url.indexOf("lobby") + 6;
+    const endIndex = url.indexOf("?");
+    const roomCode = url.slice(startIndex, endIndex);
+    setRoomeCode(roomCode);
   };
 
   useEffect(() => {
@@ -45,7 +56,9 @@ const JoinGame = ({ roomKey, playerName }) => {
           type="text"
           placeholder="code"
           required
+          value={roomCode}
           className="lobbyJoinInputField"
+          onChange={(e) => displayRoomCode(e.target.value)}
         />
         <div className="lobbyButtonWrapper">
           <button type="submit" className="lobbyButton">

@@ -60,7 +60,6 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", async (reason) => {
     const userId = socket.userId;
-
     setPlayerInactive({
       reason,
       userId,
