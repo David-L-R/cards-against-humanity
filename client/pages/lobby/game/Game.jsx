@@ -38,7 +38,10 @@ const Game = () => {
     //getting game infos and rejoin player to socket io
     socket.on("currentGame", ({ currentGame, err }) => {
       console.log("currentLobby", currentGame);
-      if (err || !currentGame) return setShowErrMessage(err);
+      if (err || !currentGame) {
+        setLoading(false);
+        return setShowErrMessage(err);
+      }
       const lastTurnIndex = currentGame.turns.length - 1;
       const lastTurn = currentGame.turns[lastTurnIndex];
       playedBlackFromCzar = lastTurn.black_card;
