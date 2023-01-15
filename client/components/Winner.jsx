@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import style from "../styles/cardTemplate.module.css";
 import { parseCookies } from "nookies";
+import BalloonContainer from "./FloatingBalloons";
 
 const Winner = ({ currentTurn, checkoutRound }) => {
   const playerList = currentTurn.white_cards;
@@ -49,6 +50,7 @@ const Winner = ({ currentTurn, checkoutRound }) => {
 
   return (
     <article className="winner-page-container">
+      {youWon ? <BalloonContainer /> : ""}
       {<h1>{youWon ? "You won!" : "Winning Cards"}</h1>}
       <ul className="winner-container">
         {winnerCards &&
@@ -59,14 +61,15 @@ const Winner = ({ currentTurn, checkoutRound }) => {
                   card?.pick
                     ? `${style.cardTemplateContainer} ${style.black}`
                     : `${style.cardTemplateContainer}`
-                }>
+                }
+              >
                 {card.text}
               </div>
             </li>
           ))}
       </ul>
       <li className="ready-button">
-        <button onClick={checkoutRound}>Ready</button>
+        <p onClick={checkoutRound}>Ready</p>
       </li>
       <ul className="player-container">
         {allPLayers &&

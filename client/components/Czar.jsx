@@ -86,7 +86,8 @@ const Czar = ({
                     : blackIndex === showBlackCards.length - 1
                     ? "highest"
                     : "lowest"
-                }>
+                }
+              >
                 {cardItem.index === activeIndex ? (
                   <m.div
                     key={cardItem.card.text + blackIndex}
@@ -105,13 +106,14 @@ const Czar = ({
                       left: "50%",
                       translateX: "-50%",
                       translateY: "-50%",
-                      zIndex: "500000",
+                      zIndex: "auto",
                       opacity: 1,
                       scale: 2,
                       rotate: 360,
                       position: "fixed",
                     }}
                     transition={{ duration: 0.3 }}
+                    /*
                     exit={{
                       top: "50%",
                       left: "50%",
@@ -124,6 +126,7 @@ const Czar = ({
                       position: "fixed",
                       transition: { duration: 5.75 },
                     }}
+                    */
                     className={` ${style.black} czarPicking`}
                     onClick={(e) => {
                       selectCard({
@@ -131,21 +134,25 @@ const Czar = ({
 
                         event: e,
                       });
-                    }}>
+                    }}
+                  >
                     {cardItem.card.text}
                   </m.div>
                 ) : (
-                  <div
-                    className={` ${style.black} czarPicking`}
-                    onClick={(e) => {
-                      selectCard({
-                        index: cardItem.index,
+                  <li>
+                    <div
+                      className={` ${style.black} czarPicking`}
+                      onClick={(e) => {
+                        selectCard({
+                          index: cardItem.index,
 
-                        event: e,
-                      });
-                    }}>
-                    {cardItem.card.text}
-                  </div>
+                          event: e,
+                        });
+                      }}
+                    >
+                      {cardItem.card.text}
+                    </div>
+                  </li>
                 )}
               </li>
             ))}
