@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import style from "../styles/cardTemplate.module.css";
 import { parseCookies } from "nookies";
 import BalloonContainer from "./FloatingBalloons";
+import ShitContainer from "./ShitContainer";
 
-const Winner = ({ currentTurn, checkoutRound }) => {
+const Winner = ({ currentTurn, checkoutRound, isCzar }) => {
   const playerList = currentTurn.white_cards;
   const wonPLayer = currentTurn.winner;
   const played_whites = [...wonPLayer.played_card];
@@ -50,8 +51,8 @@ const Winner = ({ currentTurn, checkoutRound }) => {
 
   return (
     <article className="winner-page-container">
-      {youWon ? <BalloonContainer /> : ""}
-      {<h1>{youWon ? "You won!" : "Winning Cards"}</h1>}
+      {youWon ? <BalloonContainer /> : isCzar ? "" : <ShitContainer />}
+      {<h1>{youWon ? "You won!" : isCzar ? "You were Czar" : "You Lost"}</h1>}
       <ul className="winner-container">
         {winnerCards &&
           winnerCards.map((card) => (

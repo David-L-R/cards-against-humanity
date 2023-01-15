@@ -246,7 +246,11 @@ const Game = () => {
             <br />
             Loadin:{loading ? "true" : "false"}
           </div>
-          <Winner currentTurn={currentTurn} checkoutRound={checkoutRound} />
+          <Winner
+            currentTurn={currentTurn}
+            checkoutRound={checkoutRound}
+            isCzar={isCzar}
+          />
         </>
       ) : (
         <>
@@ -289,7 +293,8 @@ const Game = () => {
               isCzar={isCzar}
               whiteCardChoosed={whiteCardChoosed}
               confirmed={confirmed}
-              stage={gameStage}>
+              stage={gameStage}
+            >
               {console.log("playedWhite", playedWhite)}
               {console.log("playedWhite", playedWhite && playedWhite.length)}
               {playedWhite && isCzar && (
@@ -298,14 +303,16 @@ const Game = () => {
                     <li
                       onMouseEnter={() => handleMouseOver(cards)}
                       onMouseLeave={() => handleMouseLeave(cards)}
-                      key={cards[index].text + cards[index].pack + index}>
+                      key={cards[index].text + cards[index].pack + index}
+                    >
                       {cards.map((card) => (
                         <PlayedWhite card={card} key={card.text} />
                       ))}
                       <h3
                         onClick={() => submitWinner(cards)}
                         className="choose-button"
-                        disabled={gameStage === "deciding" ? false : true}>
+                        disabled={gameStage === "deciding" ? false : true}
+                      >
                         Choose as the Winner
                       </h3>
                     </li>
