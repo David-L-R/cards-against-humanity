@@ -4,8 +4,13 @@ import { parseCookies } from "nookies";
 import BalloonContainer from "./FloatingBalloons";
 import ShitContainer from "./ShitContainer";
 
-const Winner = ({ currentTurn, checkoutRound, isCzar }) => {
-  const playerList = currentTurn.white_cards;
+const Winner = ({ currentTurn, checkoutRound, isCzar, amountOfPlayers }) => {
+  const playerList = currentTurn?.players || [];
+  //HERE
+  const [playersReady, setPlayersReady] = useState(0);
+
+  //TO HERE
+
   const wonPLayer = currentTurn.winner;
   const played_whites = [...wonPLayer.played_card];
   const { black_card } = currentTurn;
@@ -15,6 +20,9 @@ const Winner = ({ currentTurn, checkoutRound, isCzar }) => {
   );
   const cookies = parseCookies();
 
+  const handlePlayerReady = () => {
+    setPlayersReady(playersReady + 1);
+  };
   const addTextToBlack = (cards) => {
     //add text from thite cards to black cards
     if (cards) {
@@ -70,7 +78,17 @@ const Winner = ({ currentTurn, checkoutRound, isCzar }) => {
           ))}
       </ul>
       <li className="ready-button">
-        <p onClick={checkoutRound}>Ready</p>
+        <p
+          onClick={() => {
+            handlePlayerReady();
+            checkoutRound();
+          }}
+        >
+          Ready
+        </p>
+        <p>
+          {playersReady}/{amountOfPlayers} players are ready.
+        </p>
       </li>
       <ul className="player-container">
         {allPLayers &&

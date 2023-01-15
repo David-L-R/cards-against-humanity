@@ -187,6 +187,11 @@ const Game = () => {
     socket.emit("changeGame", { ...playerData });
   };
 
+  //Check the total amount of players
+  //const amountOfPlayers = currentLobby.players.length;
+
+  console.log("currentLobby test", currentLobby);
+
   //self update page after got redirected, use key from query as lobby id
   useEffect(() => {
     if (router.query.lobbyId && !loading) {
@@ -250,6 +255,7 @@ const Game = () => {
             currentTurn={currentTurn}
             checkoutRound={checkoutRound}
             isCzar={isCzar}
+            //amountOfPlayers={amountOfPlayers}
           />
         </>
       ) : (

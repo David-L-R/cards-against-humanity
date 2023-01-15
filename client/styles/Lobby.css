@@ -23,6 +23,7 @@
   padding: 0;
   z-index: 1;
   background: black;
+  margin: auto;
 }
 
 .waitingLobbyTextWrapper {
@@ -53,6 +54,9 @@
   font-size: 16px;
   cursor: pointer;
   z-index: 2;
+
+  width: 20px;
+  height: 20px;
 }
 .icon:hover {
   color: #a0d68a;
@@ -81,8 +85,8 @@
 }
 
 .lobbyIdCopyField {
-  border: 2px solid white;
   border-radius: 10px;
+  background-color: rgb(41, 40, 40);
   width: 210px;
   position: relative;
 }
@@ -91,6 +95,17 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
+  transition: 0.5s;
+  font-weight: bold;
+  border-radius: 10px;
+}
+.input-icon-wrapper:hover {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: rgb(175, 173, 173);
+  color: black;
+  transition: 0.5s;
 }
 
 .lobbyIdContainer p {
@@ -202,6 +217,20 @@
   bottom: 10%;
   left: 90%;
   transform: rotate(-13deg);
+}
+.changeNameButton {
+  width: 210px;
+  margin: auto;
+  height: 30px;
+  padding-left: 15px;
+  display: flex;
+  border-radius: 10px;
+  background-color: rgb(56, 54, 54);
+  color: white;
+}
+.changeNameButtonWrapper {
+  display: flex;
+  padding-top: 20px;
 }
 
 .inactive {
