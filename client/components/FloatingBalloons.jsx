@@ -4,28 +4,38 @@ function random(num) {
   return Math.floor(Math.random() * num);
 }
 
+let totalBaloon = 15; // specify number of balloon you want
+
 function getRandomStyles() {
-  let r = random(255);
-  let g = random(255);
-  let b = random(255);
   let mt = random(200);
   let ml = random(20);
-  let dur = random(8) + 5;
-  return {
-    //backgroundColor: `rgba(${r},${g},${b},0.7)`,
-    backgroundColor: `red`,
-    color: `rgba(${r},${g},${b},0.7)`,
-    boxShadow: `inset -7px -3px 10px rgba(255,255,255,0.7)`,
-    margin: `${mt}px 0 0 ${ml}px`,
-    animation: `float ${dur}s ease-in infinite`,
-  };
+  let dur = random(8) + 8;
+  let halfChance = random(2);
+  let delay = random(5);
+  if (halfChance === 0) {
+    return {
+      backgroundColor: `white`,
+      color: `white`,
+      boxShadow: `inset -7px -3px 10px #242424b2`,
+      margin: `${mt}px 0 0 ${ml}px`,
+      animation: `float ${dur}s linear  infinite`,
+    };
+  } else {
+    return {
+      backgroundColor: `red`,
+      color: `red`,
+      boxShadow: `inset -7px -3px 10px rgba(255,255,255,0.7)`,
+      margin: `${mt}px 0 0 ${ml}px`,
+      animation: `float ${dur}s linear infinite`,
+    };
+  }
 }
 
 function BalloonContainer() {
   const [balloons, setBalloons] = useState([]);
 
   useEffect(() => {
-    createBalloons(10);
+    createBalloons(totalBaloon);
   }, []);
 
   function createBalloons(num) {

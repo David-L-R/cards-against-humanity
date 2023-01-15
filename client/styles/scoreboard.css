@@ -2,7 +2,7 @@
   position: fixed;
   top: 5%;
   left: 2.5%;
-  width: 170px;
+  width: 300px;
   height: 8%;
   max-height: 60vh;
   overflow: hidden;
@@ -25,10 +25,11 @@
 }
 
 .scoreboard-container::after {
-  content: "SCOREBOARD";
+  content: "SCOREBOARD ▼";
   position: absolute;
   top: 50%;
   left: 50%;
+
   transform: translate(-50%, -50%);
   font-weight: 700;
   letter-spacing: 2px;
