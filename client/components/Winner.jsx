@@ -5,11 +5,9 @@ import BalloonContainer from "./FloatingBalloons";
 import ShitContainer from "./ShitContainer";
 
 const Winner = ({ currentTurn, checkoutRound, isCzar, amountOfPlayers }) => {
-  const playerList = currentTurn?.players || [];
-  //HERE
-  const [playersReady, setPlayersReady] = useState(0);
+  const playerList = currentTurn.white_cards;
 
-  //TO HERE
+  const [playersReady, setPlayersReady] = useState(0);
 
   const wonPLayer = currentTurn.winner;
   const played_whites = [...wonPLayer.played_card];

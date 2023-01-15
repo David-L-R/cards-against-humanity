@@ -107,6 +107,9 @@
   color: black;
   transition: 0.5s;
 }
+.input-icon-wrapper:active {
+  background-color: green;
+}
 
 .lobbyIdContainer p {
   font-size: 12px;
@@ -118,11 +121,13 @@
 .tempCopyText {
   position: absolute;
   color: #a0d68a;
-  top: -10px;
+  /*top: -10px;*/
   font-weight: 600;
   width: auto;
-  padding: 10px;
+  /*padding: 10px;*/
   margin: auto;
+
+  border-radius: 30px;
 }
 .hostCrown {
   display: flex;
@@ -221,11 +226,11 @@
 .changeNameButton {
   width: 210px;
   margin: auto;
-  height: 30px;
+  height: 35px;
   padding-left: 15px;
   display: flex;
   border-radius: 10px;
-  background-color: rgb(56, 54, 54);
+  background-color: rgb(41, 40, 40);
   color: white;
 }
 .changeNameButtonWrapper {

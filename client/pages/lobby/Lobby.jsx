@@ -168,20 +168,20 @@ const Lobby = () => {
                 </div>
               </div>
             )}
+            <div className="changeNameButtonWrapper">
+              <input
+                className="changeNameButton"
+                type="text"
+                onChange={(e) => changePLayerName(e.target.value)}
+                placeholder="Change name (Optional)"
+              />
+            </div>
             <div className="waitingLobbyButtonWrapper">
               {isHost && (
                 <button className="lobbyButton" onClick={handleGameCreation}>
                   <span>Ready</span>
                 </button>
               )}
-            </div>
-            <div className="changeNameButtonWrapper">
-              <input
-                className="changeNameButton"
-                type="text"
-                onChange={(e) => changePLayerName(e.target.value)}
-                placeholder="Change name"
-              />
             </div>
           </m.div>
           <ul className="dragContainer">
