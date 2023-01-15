@@ -44,7 +44,6 @@ const Lobby = () => {
   useEffect(() => {
     //listener to update page from server after DB entry changed
     socket.on("updateRoom", ({ currentLobby, err }) => {
-      console.log("currentLobby", currentLobby);
       if (!currentLobby || err) return setShowErrMessage(err);
       setIsloading(false);
       setCurrentLobby(currentLobby);
@@ -71,7 +70,8 @@ const Lobby = () => {
       if (lobbyId) {
         if (stage === "start") {
           let gamePath = {
-            pathname: `/lobby/game/${lobbyId}/${gameId}`,
+            pathname: `/lobby/game/${gameId}`,
+            query: { lobbyId: lobbyId },
           };
           router.push(gamePath);
         }

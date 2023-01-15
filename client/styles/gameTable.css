@@ -93,9 +93,8 @@
   position: absolute;
   bottom: 20%;
   left: 80%;
-  width: 220px;
+  width: max-content;
   border: 2px solid white;
-  margin: auto;
   text-align: center;
   border-radius: 30px;
   padding: 10px;
@@ -108,11 +107,19 @@
   background-color: black;
   letter-spacing: 1px;
   cursor: pointer;
+  transition: all 200ms;
 }
 
 .cardDisplay.playedWhite li:hover .choose-button {
   transform: translateX(-50%) translateY(0);
   opacity: 1;
+}
+
+.cardDisplay.playedWhite li:hover .choose-button:disabled {
+  background-color: rgba(26, 26, 26, 0.856);
+  border: 2px solid transparent;
+  padding: 5px;
+  color: rgba(245, 245, 245, 0.466);
 }
 
 .cardDisplay.confirmed li {

@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import style from "../styles/cardTemplate.module.css";
 import { parseCookies } from "nookies";
 
-const Winner = ({ currentTurn, checkoutRound }) => {
+const Winner = ({ currentTurn, checkoutRound, currentLobby }) => {
   const playerList = currentTurn.white_cards;
   const wonPLayer = currentTurn.winner;
   const played_whites = [...wonPLayer.played_card];
   const { black_card } = currentTurn;
-  const [youWon, setYouWon] = useState(false);
+  const [winningPlayer, setwinningPlayer] = useState(false);
   const allPLayers = playerList.filter(
     (player) => player.player !== wonPLayer.player
   );
@@ -43,13 +43,16 @@ const Winner = ({ currentTurn, checkoutRound }) => {
 
   useEffect(() => {
     addTextToBlack();
-
-    wonPLayer.player === cookies.socketId && setYouWon(true);
+    if (currentLobby && wonPLayer)
+      setwinningPlayer(
+        currentLobby.players.find((player) => player.id === wonPLayer.player)
+      );
   }, []);
 
   return (
     <article className="winner-page-container">
-      {<h1>{youWon ? "You won!" : "Winning Cards"}</h1>}
+      {console.log("currentTurn", currentTurn)}
+      {<h1>{`${winningPlayer && winningPlayer.name} won this round`}</h1>}
       <ul className="winner-container">
         {winnerCards &&
           winnerCards.map((card) => (

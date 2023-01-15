@@ -24,21 +24,20 @@ const Game = () => {
   const [playedWhite, setPlayedWhite] = useState(null);
   const [timerTrigger, setTimerTrigger] = useState(false);
   const [confirmed, setConfirmed] = useState();
-  let loading = false;
+  const [loading, setLoading] = useState(true);
   const [timer, setTimer] = useState(false);
   const [cardsOnTable, setCardsOnTable] = useState(false);
   let playedBlackFromCzar = null;
   const [isCzar, setIsCzar] = useState(false);
   const [currentTurn, setCurrentTurn] = useState(null);
   const [showErrMessage, setShowErrMessage] = useState(false);
-  const [currentLobby, setCurrentLobby] = useState(true);
-
+  const [currentLobby, setCurrentLobby] = useState(false);
   let gameIdentifier = null;
 
   useEffect(() => {
     //getting game infos and rejoin player to socket io
     socket.on("currentGame", ({ currentGame, err }) => {
-      console.log("currentGame", currentGame);
+      console.log("currentLobby", currentGame);
       if (err || !currentGame) return setShowErrMessage(err);
       const lastTurnIndex = currentGame.turns.length - 1;
       const lastTurn = currentGame.turns[lastTurnIndex];
@@ -49,9 +48,11 @@ const Game = () => {
       const currentPlayer = currentGame.players?.find(
         (player) => player.id === playerId
       );
-      const confirmedWhiteCards = lastTurn.white_cards?.find(
-        (player) => player.player === playerId
-      )?.played_card;
+      const confirmedWhiteCards =
+        currentCzarId !== cookies.socketId &&
+        lastTurn.white_cards.length > 0 &&
+        lastTurn.white_cards.find((player) => player.player === playerId)
+          .played_card;
       const currentTurnIndex = currentGame.turns.length - 1;
       const currentStageIndex =
         currentGame.turns[currentTurnIndex].stage.length - 1;
@@ -70,19 +71,22 @@ const Game = () => {
 
         //check is czar
         currentCzarId === cookies.socketId ? setIsCzar(true) : setIsCzar(false);
-        //if czar and white is is currently runnning, display white cards from users
+
+        //if czar and stage white is is currently runnning, display white cards from users
         if (
-          currentCzarId === cookies.socketId &&
-          (stage === "white" || stage === "deciding")
+          // currentCzarId === cookies.socketId &&
+          stage === "white" ||
+          stage === "deciding"
         ) {
-          const playerList = lastTurn.white_cards.map(
-            (player) => player.played_card
-          );
-          setPlayedWhite(playerList[0].length > 0 ? playerList : null);
+          const playerList = lastTurn.white_cards
+            .map((player) => player.played_card)
+            .filter((cards) => cards.length > 0);
+          setPlayedWhite(playerList.length > 0 ? playerList : null);
         }
 
-        if (confirmedWhiteCards && !isCzar) {
-          // setConfirmed(true);
+        // during white stage, only update players screen if incoming black card differs from current one or already white cards where submitted
+        if (confirmedWhiteCards.length > 0 && !isCzar) {
+          setConfirmed(true);
           setCardsOnTable({
             table: {
               label: "table",
@@ -92,7 +96,11 @@ const Game = () => {
             },
             player: { label: "player", cards: hand },
           });
-        } else {
+        } else if (
+          cardsOnTable?.table?.cards?.length < 1 ||
+          !cardsOnTable ||
+          cardsOnTable?.table?.cards[0]?.text !== playedBlackFromCzar?.text
+        ) {
           setCardsOnTable({
             table: {
               label: "table",
@@ -101,6 +109,7 @@ const Game = () => {
             player: { label: "player", cards: hand },
           });
         }
+
         setCurrentLobby(currentGame);
         setPlayerName(currentPlayer.name);
         setCurrentTurn(lastTurn);
@@ -109,14 +118,14 @@ const Game = () => {
         setGameId(currentGame.id);
         setTimerTrigger(currentGame.timerTrigger);
         setGameStage(stage);
-        loading = false;
+        setLoading(false);
       }
     });
 
     return () => {
       socket.removeAllListeners();
     };
-  }, [lobbyId]);
+  }, [lobbyId, gameStage]);
 
   const chooseBlackCard = (selected) => {
     const playerData = {
@@ -128,7 +137,6 @@ const Game = () => {
       gameId,
       lobbyId,
     };
-
     socket.emit("changeGame", playerData);
   };
 
@@ -142,7 +150,6 @@ const Game = () => {
       lobbyId,
       playedWhite: cards,
     };
-    console.log("playerData", playerData);
     socket.emit("changeGame", { ...playerData });
   };
 
@@ -189,15 +196,19 @@ const Game = () => {
 
   //self update page after got redirected, use key from query as lobby id
   useEffect(() => {
-    if (router.query.lobbyId && !loading) {
-      loading = true;
-      setLobbyId(router.query.lobbyId[0]);
+    if (lobbyId) {
+      setLobbyId(router.query.lobbyId);
       socket.emit("getUpdatedGame", {
-        lobbyId: router.query.lobbyId[0],
+        lobbyId: router.query.lobbyId,
         playerName,
         id: cookies.socketId,
       });
     }
+  }, [lobbyId]);
+
+  // setup lobbyID from router after router is ready
+  useEffect(() => {
+    setLobbyId(router.query.lobbyId);
   }, [router.isReady]);
 
   // if host start the game by send the server the current "starting" stage
@@ -222,10 +233,22 @@ const Game = () => {
         setTimer(10);
       }
 
-      if (gameStage !== "deciding") setConfirmed(false);
+      if (gameStage === "black") setConfirmed(false);
     }
     return setTimer(false);
   }, [gameStage]);
+
+  if (loading)
+    return (
+      <main>
+        <h1>Loading...</h1>
+        {currentLobby && (
+          <section className="scoreboard-container">
+            <Scoreboard currentLobby={currentLobby} />
+          </section>
+        )}
+      </main>
+    );
 
   return (
     <main className="game">
@@ -246,7 +269,16 @@ const Game = () => {
             <br />
             Loadin:{loading ? "true" : "false"}
           </div>
-          <Winner currentTurn={currentTurn} checkoutRound={checkoutRound} />
+          {currentLobby && (
+            <section className="scoreboard-container">
+              <Scoreboard currentLobby={currentLobby} />
+            </section>
+          )}
+          <Winner
+            currentTurn={currentTurn}
+            checkoutRound={checkoutRound}
+            currentLobby={currentLobby}
+          />
         </>
       ) : (
         <>
@@ -290,26 +322,29 @@ const Game = () => {
               whiteCardChoosed={whiteCardChoosed}
               confirmed={confirmed}
               stage={gameStage}>
-              {console.log("playedWhite", playedWhite)}
-              {console.log("playedWhite", playedWhite && playedWhite.length)}
               {playedWhite && isCzar && (
                 <ul className={"cardDisplay playedWhite"}>
-                  {playedWhite.map((cards, index) => (
-                    <li
-                      onMouseEnter={() => handleMouseOver(cards)}
-                      onMouseLeave={() => handleMouseLeave(cards)}
-                      key={cards[index].text + cards[index].pack + index}>
-                      {cards.map((card) => (
-                        <PlayedWhite card={card} key={card.text} />
-                      ))}
-                      <h3
-                        onClick={() => submitWinner(cards)}
-                        className="choose-button"
-                        disabled={gameStage === "deciding" ? false : true}>
-                        Choose as the Winner
-                      </h3>
-                    </li>
-                  ))}
+                  {playedWhite.map(
+                    (cards, index) =>
+                      cards.length > 0 && (
+                        <li
+                          onMouseEnter={() => handleMouseOver(cards)}
+                          onMouseLeave={() => handleMouseLeave(cards)}
+                          key={cards[0].text + cards[0].pack + index}>
+                          {cards.map((card) => (
+                            <PlayedWhite card={card} key={card.text} />
+                          ))}
+                          <button
+                            onClick={() => submitWinner(cards)}
+                            className="choose-button"
+                            disabled={gameStage === "deciding" ? false : true}>
+                            {gameStage === "deciding"
+                              ? "Choose as the Winner"
+                              : "wait for palyers...."}
+                          </button>
+                        </li>
+                      )
+                  )}
                 </ul>
               )}
             </DragAndDropContainer>

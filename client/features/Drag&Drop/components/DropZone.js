@@ -49,6 +49,7 @@ export function DropZone(props) {
   const addTextToBlack = () => {
     if (!blackText) return;
     //add text from thite cards to black cards
+    if (cards.length <= 0) return;
     const currentBlackText = cards[0].text.split(``);
     const textList = cards.slice(1).map((card) => card.text);
 
