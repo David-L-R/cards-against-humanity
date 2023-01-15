@@ -4,9 +4,11 @@ import { parseCookies } from "nookies";
 import BalloonContainer from "./FloatingBalloons";
 import ShitContainer from "./ShitContainer";
 
-const Winner = ({ currentTurn, checkoutRound, isCzar, amountOfPlayers }) => {
+const Winner = ({ currentTurn, checkoutRound, isCzar, currentLobby }) => {
+  const [noButtonAtAll, setNoButtonAtAll] = useState(true);
   const playerList = currentTurn.white_cards;
-
+  const andysShit =
+    currentLobby.turns[currentLobby.turns.length - 1].completed.length;
   const [playersReady, setPlayersReady] = useState(0);
 
   const wonPLayer = currentTurn.winner;
@@ -76,17 +78,20 @@ const Winner = ({ currentTurn, checkoutRound, isCzar, amountOfPlayers }) => {
           ))}
       </ul>
       <li className="ready-button">
-        <p
-          onClick={() => {
-            handlePlayerReady();
-            checkoutRound();
-          }}
-        >
-          Ready
-        </p>
-        <p>
-          {playersReady}/{amountOfPlayers} players are ready.
-        </p>
+        {noButtonAtAll ? (
+          <button
+            onClick={() => {
+              setNoButtonAtAll(false);
+              checkoutRound(cookies.socketId);
+            }}
+          >
+            Ready
+          </button>
+        ) : (
+          <p>
+            {andysShit}/{currentLobby.players.length} players are ready.
+          </p>
+        )}
       </li>
       <ul className="player-container">
         {allPLayers &&

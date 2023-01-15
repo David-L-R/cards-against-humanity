@@ -177,7 +177,13 @@ const Game = () => {
   };
 
   //finish the current round and start a new one
-  const checkoutRound = () => {
+  const checkoutRound = (id) => {
+    if (
+      currentLobby.turns[currentLobby.turns.length - 1].completed.find(
+        (player) => player.player_id === id
+      )
+    )
+      return;
     const playerData = {
       playerId: cookies.socketId,
       stage: "completed",
@@ -188,7 +194,6 @@ const Game = () => {
   };
 
   //Check the total amount of players
-  //const amountOfPlayers = currentLobby.players.length;
 
   console.log("currentLobby test", currentLobby);
 
@@ -255,7 +260,7 @@ const Game = () => {
             currentTurn={currentTurn}
             checkoutRound={checkoutRound}
             isCzar={isCzar}
-            //amountOfPlayers={amountOfPlayers}
+            currentLobby={currentLobby}
           />
         </>
       ) : (
@@ -309,7 +314,8 @@ const Game = () => {
                     <li
                       onMouseEnter={() => handleMouseOver(cards)}
                       onMouseLeave={() => handleMouseLeave(cards)}
-                      key={cards[index].text + cards[index].pack + index}
+                      //key={cards[index].text + cards[index].pack + index}
+                      key="bigblackdick"
                     >
                       {cards.map((card) => (
                         <PlayedWhite card={card} key={card.text} />

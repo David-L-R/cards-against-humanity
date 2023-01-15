@@ -61,7 +61,7 @@
   cursor: pointer;
   transition: 0.3s;
 }
-.ready-button p {
+.ready-button button {
   display: flex;
   justify-content: center;
   font-weight: bold;

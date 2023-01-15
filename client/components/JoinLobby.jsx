@@ -6,14 +6,18 @@ import { parseCookies } from "nookies";
 //Join a game
 const JoinGame = ({ roomKey, playerName }) => {
   let [value, setValue] = useLocalStorage("name", "");
+  let [noButtonAtAll, setNoButtonAtAll] = useState(true);
   let [roomCode, setRoomeCode] = useState("");
   const cookies = parseCookies();
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setTimeout(setNoButtonAtAll(true), 2500);
 
-    if (roomCode) {
+    if (roomCode && noButtonAtAll) {
       // get values from form
+      noButtonAtAll = false;
+
       const lobbyId = roomCode;
       const newPlayerName = playerName.current.value;
       const id = cookies.socketId;

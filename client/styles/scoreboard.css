@@ -9,7 +9,7 @@
   background-color: white;
   border: 1px solid white;
   border-radius: 1rem;
-  box-shadow: 0 1px 10px 0 white;
+  /*box-shadow: 0 1px 10px 0 white;*/
   display: flex;
   flex-direction: column;
   padding: 0 1rem;
@@ -34,7 +34,7 @@
   font-weight: 700;
   letter-spacing: 2px;
   font-size: 1.2rem;
-  transition: all 25ms 700ms;
+  transition: all 25ms;
 }
 
 .scoreboard-container:hover::after {
@@ -84,7 +84,7 @@
 
 .scoreboard-container .crown-background {
   position: absolute;
-  top: -3%;
+  top: 1%;
   left: 13%;
 }
 
@@ -104,7 +104,7 @@
   color: gold;
   height: 25px;
   width: auto;
-  transform: rotateZ(-40deg);
+  transform: rotateZ(-23deg);
 }
 
 .scoreboard-container .checkmark {
@@ -120,7 +120,7 @@
 }
 
 .scoreboard-container div img {
-  height: 90%;
+  height: 60%;
 }
 
 .scoreboard-container .player-name {
