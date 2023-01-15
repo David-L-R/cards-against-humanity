@@ -10,6 +10,7 @@ import randomInsult from "../../utils/randomInsult";
 import { Main } from "next/document";
 import Error from "../../components/Error";
 import Scoreboard from "../../components/Scoreboard";
+import { set } from "mongoose";
 
 const Lobby = () => {
   const router = useRouter();
@@ -28,6 +29,7 @@ const Lobby = () => {
   const [currentLobby, setCurrentLobby] = useState(null);
 
   const handleGameCreation = () => {
+    setIsloading(true);
     // const setRounds = amountOfRounds.current.value;
     // const maxHandSize = handSize.current.value;
     socket.emit("createGameObject", { lobbyId }); //setRounds, maxHandSize,
@@ -116,13 +118,6 @@ const Lobby = () => {
     }, 3000);
   };
 
-  if (isLoading)
-    return (
-      <main>
-        <h1>Loading...</h1>
-      </main>
-    );
-
   if (showErrMessage && !isHost)
     return (
       <main>
@@ -185,8 +180,14 @@ const Lobby = () => {
             )}
             <div className="waitingLobbyButtonWrapper">
               {isHost && (
-                <button className="lobbyButton" onClick={handleGameCreation}>
-                  <span>Ready</span>
+                <button
+                  className="lobbyButton"
+                  onClick={handleGameCreation}
+                  disabled={isLoading ? true : false}
+                  style={
+                    isLoading ? { transform: "scale(0.8)", width: "70%" } : null
+                  }>
+                  <span>{isLoading ? "Loading..." : "Ready"}</span>
                 </button>
               )}
             </div>

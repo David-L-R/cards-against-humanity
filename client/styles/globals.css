@@ -17,6 +17,11 @@
   padding: 0;
 }
 
+*:disabled {
+  border: none;
+  outline: none;
+}
+
 .debuggerMonitor {
   position: absolute;
   top: 1%;

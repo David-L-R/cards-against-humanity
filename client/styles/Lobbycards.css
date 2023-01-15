@@ -122,15 +122,11 @@
   transform: translate(-50%, -50%);
 }
 .lobbyButton {
-  padding: 0;
-  margin: 0;
   display: block;
   width: 200px;
   height: 45px;
-  line-height: 40px;
   font-size: 18px;
   font-weight: 600;
-  text-decoration: none;
   color: white;
   cursor: pointer;
   background: black;
@@ -152,7 +148,7 @@
   width: 0;
   height: 100%;
   background: white;
-  transition: all 0.35s;
+  transition: all 0.25s;
 }
 .lobbyButton:hover {
   color: black;
