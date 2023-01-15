@@ -185,12 +185,13 @@
   height: 50px;
   animation: errAnimation 0.7s;
   top: 0;
+  left: 0;
   align-items: center;
   justify-content: center;
   letter-spacing: 5px;
   display: flex;
   font-weight: 800;
-
+  z-index: 20;
   font-size: 18px;
 }
 @keyframes errAnimation {

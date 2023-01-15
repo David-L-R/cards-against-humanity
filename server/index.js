@@ -68,7 +68,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("createGameObject", ({ setRounds, maxHandSize, lobbyId }) => {
-    createGame({ setRounds, maxHandSize, lobbyId, io });
+    createGame({ setRounds, maxHandSize, lobbyId, io, socket });
   });
 
   socket.on("getUpdatedGame", ({ lobbyId, name, id }) =>

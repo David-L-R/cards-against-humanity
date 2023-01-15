@@ -15,7 +15,7 @@ const Lobby = () => {
   const router = useRouter();
   const { joinGame } = router.query;
   const [lobbyId, setLobbyId] = useState(null);
-  const [showErrMessage, setShowErrMessage] = useState(false);
+  const [showErrMessage, setShowErrMessage] = useState(null);
   const [players, setPlayers] = useState([]);
   const [copied, setCopied] = useState(false);
   const cookies = parseCookies();
@@ -25,7 +25,7 @@ const Lobby = () => {
   const handSize = useRef(null);
   const [linkInvation, setlinkInvation] = useState("");
   const [isLoading, setIsloading] = useState(true);
-  const [currentLobby, setCurrentLobby] = useState(true);
+  const [currentLobby, setCurrentLobby] = useState(null);
 
   const handleGameCreation = () => {
     // const setRounds = amountOfRounds.current.value;
@@ -44,7 +44,12 @@ const Lobby = () => {
   useEffect(() => {
     //listener to update page from server after DB entry changed
     socket.on("updateRoom", ({ currentLobby, err }) => {
-      if (!currentLobby || err) return setShowErrMessage(err);
+      if (!currentLobby || err) {
+        setIsloading(false);
+        return setShowErrMessage(
+          "Can not find Lobby, please check our invatation link"
+        );
+      }
       setIsloading(false);
       setCurrentLobby(currentLobby);
       const player = currentLobby.players.find(
@@ -64,7 +69,10 @@ const Lobby = () => {
 
     // creates new game if host and redirect everyone to game
     socket.on("newgame", ({ newGameData, err }) => {
-      if (!newGameData || err) return setShowErrMessage(err);
+      if (!newGameData || err) {
+        setIsloading(false);
+        return setShowErrMessage(err);
+      }
       const stage = newGameData.Game.turns[0].stage[0];
       const gameId = newGameData.Game.gameIdentifier;
       if (lobbyId) {
@@ -112,6 +120,12 @@ const Lobby = () => {
     return (
       <main>
         <h1>Loading...</h1>
+      </main>
+    );
+
+  if (showErrMessage && !isHost)
+    return (
+      <main>
         {showErrMessage && (
           <Error
             showErrMessage={showErrMessage}
@@ -120,6 +134,8 @@ const Lobby = () => {
         )}
       </main>
     );
+
+  if (!currentLobby) return <h1>No Lobby Found...</h1>;
 
   return (
     <>

@@ -5,7 +5,13 @@ import { addNewGameToLobby } from "../utils/addGameToLobby.js";
 import updateTurn from "../utils/updateTurn.js";
 import { update } from "react-spring";
 
-export const createGame = async ({ setRounds, maxHandSize, lobbyId, io }) => {
+export const createGame = async ({
+  setRounds,
+  maxHandSize,
+  lobbyId,
+  io,
+  socket,
+}) => {
   let amountOfRounds = parseInt(setRounds);
   let handSize = parseInt(maxHandSize);
 
@@ -35,6 +41,11 @@ export const createGame = async ({ setRounds, maxHandSize, lobbyId, io }) => {
         player.hand = [];
         player.bet = false;
         return player;
+      });
+
+    if (lobbyPLayers.length <= 1)
+      return io.to(socket.id).emit("newgame", {
+        err: "Please wait for at least 1 active Player",
       });
 
     const [black] = allCards.map((set) => set.black);

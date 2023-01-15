@@ -200,6 +200,7 @@ const Game = () => {
   //self update page after got redirected, use key from query as lobby id
   useEffect(() => {
     if (lobbyId) {
+      console.log("RUNN!");
       setLobbyId(router.query.lobbyId);
       socket.emit("getUpdatedGame", {
         lobbyId: router.query.lobbyId,
@@ -211,6 +212,7 @@ const Game = () => {
 
   // setup lobbyID from router after router is ready
   useEffect(() => {
+    console.log("router", router);
     setLobbyId(router.query.lobbyId);
   }, [router.isReady]);
 
