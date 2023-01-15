@@ -1,10 +1,10 @@
 import React from "react";
 import Game from "./Game.jsx";
 
-const index = () => {
+const index = (props) => {
   return (
     <>
-      <Game />
+      <Game {...props} />
     </>
   );
 };

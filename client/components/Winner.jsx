@@ -51,7 +51,6 @@ const Winner = ({ currentTurn, checkoutRound, currentLobby }) => {
 
   return (
     <article className="winner-page-container">
-      {console.log("currentTurn", currentTurn)}
       {<h1>{`${winningPlayer && winningPlayer.name} won this round`}</h1>}
       <ul className="winner-container">
         {winnerCards &&

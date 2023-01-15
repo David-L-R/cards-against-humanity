@@ -1,9 +1,8 @@
 import { parseCookies } from "nookies";
-import { socket } from "../pages/Home";
 import useLocalStorage from "./useLocalStorage";
 
 //Hosting a new game
-const HostGame = ({ playerName }) => {
+const HostGame = ({ playerName, socket }) => {
   let [value, setValue] = useLocalStorage("name", "");
   const cookies = parseCookies();
 

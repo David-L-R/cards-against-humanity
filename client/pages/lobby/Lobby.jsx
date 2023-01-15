@@ -4,15 +4,12 @@ import { BiCopy } from "react-icons/Bi";
 import { RiVipCrown2Fill } from "react-icons/Ri";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { parseCookies, setCookie } from "nookies";
-import { socket } from "../Home";
 import { motion as m } from "framer-motion";
 import randomInsult from "../../utils/randomInsult";
-import { Main } from "next/document";
 import Error from "../../components/Error";
 import Scoreboard from "../../components/Scoreboard";
-import { set } from "mongoose";
 
-const Lobby = () => {
+const Lobby = ({ socket }) => {
   const router = useRouter();
   const { joinGame } = router.query;
   const [lobbyId, setLobbyId] = useState(null);
@@ -130,7 +127,19 @@ const Lobby = () => {
       </main>
     );
 
-  if (!currentLobby) return <h1>No Lobby Found...</h1>;
+  if (isLoading && !currentLobby)
+    return (
+      <main>
+        <li>Loading...</li>
+      </main>
+    );
+
+  if (!currentLobby)
+    return (
+      <main>
+        <h1>No Lobby Found...</h1>
+      </main>
+    );
 
   return (
     <>

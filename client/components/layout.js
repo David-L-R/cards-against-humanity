@@ -2,14 +2,14 @@ import React from "react";
 import Navbar from "./Navbar";
 import Head from "next/Head";
 
-const Layout = ({ children }) => {
+const Layout = ({ children, socket }) => {
   return (
     <>
       <Head>
         <title>Card Game</title>
       </Head>
       <header>
-        <Navbar />
+        <Navbar socket={socket} />
       </header>
       {children}
     </>

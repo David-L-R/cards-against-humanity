@@ -1,19 +1,12 @@
-import { is } from "@react-spring/shared";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import { parseCookies, setCookie } from "nookies";
-import { io } from "socket.io-client";
 import { motion as m } from "framer-motion";
 import JoinGame from "../components/JoinLobby.jsx";
 import HostGame from "../components/HostGame.jsx";
 import Error from "../components/Error.jsx";
 
-export const socket = io("http://localhost:5555/", {
-  reconnection: true, // enable reconnection
-  reconnectionAttempts: 5, // try to reconnect 5 times
-  reconnectionDelay: 3000, // increase the delay between reconnection attempts to 3 seconds
-});
-const Home = () => {
+const Home = ({ socket }) => {
   const playerName = useRef("");
   const roomKey = useRef("");
   const cookies = parseCookies();
@@ -102,7 +95,7 @@ const Home = () => {
               <div className="lobbyBack">
                 <h2>I'm the Host but my Homies calls me</h2>
                 {hostOrJoin === "host" ? (
-                  <HostGame playerName={playerName} />
+                  <HostGame playerName={playerName} socket={socket} />
                 ) : null}
               </div>
             </div>

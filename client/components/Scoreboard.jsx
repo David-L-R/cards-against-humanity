@@ -25,7 +25,6 @@ const Scoreboard = ({ currentLobby }) => {
         const readyPlayer = currentTurn.completed.find(
           (player) => player.player_id === playerId
         );
-        console.log("readyPlayer", readyPlayer);
         if (readyPlayer) return true;
       }
     }

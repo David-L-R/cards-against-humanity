@@ -3,7 +3,6 @@ import { parseCookies } from "nookies";
 import { useEffect, useState } from "react";
 import CardTemplate from "../../../components/CardTemplate";
 import DragAndDropContainer from "../../../features/Drag&Drop";
-import { socket } from "../../Home";
 import Czar from "../../../components/Czar";
 import Countdown from "../../../components/Countdown";
 import PlayedWhite from "../../../components/PlayedWhite";
@@ -11,7 +10,7 @@ import Winner from "../../../components/Winner";
 import Error from "../../../components/Error";
 import Scoreboard from "../../../components/Scoreboard";
 
-const Game = () => {
+const Game = ({ socket }) => {
   const router = useRouter();
   const [lobbyId, setLobbyId] = useState(null);
   const cookies = parseCookies();
@@ -212,7 +211,6 @@ const Game = () => {
 
   // setup lobbyID from router after router is ready
   useEffect(() => {
-    console.log("router", router);
     setLobbyId(router.query.lobbyId);
   }, [router.isReady]);
 

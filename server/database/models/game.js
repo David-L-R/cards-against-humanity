@@ -44,6 +44,7 @@ const gameModel = mongoose.Schema(
               cards: Array,
               played_card: [Object],
               points: Number,
+              active: Boolean,
             },
           ], //this.Game.players(n).id; this.Game.players(n).hand, this.Game.players(n).hand.splice(n, 1)
           black_card: Object, //this.Game.deck.black_cards.(splice(math.random, 1)) ()=> remove from black_cards array to prevent repeats

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import style from "../styles/cardTemplate.module.css";
-import { AnimatePresence, motion as m } from "framer-motion";
-import { unmountComponentAtNode } from "react-dom";
+import { motion as m } from "framer-motion";
 
 const Czar = ({
   blackCards,
@@ -128,7 +127,6 @@ const Czar = ({
                     onClick={(e) => {
                       selectCard({
                         index: cardItem.index,
-
                         event: e,
                       });
                     }}>
@@ -140,7 +138,6 @@ const Czar = ({
                     onClick={(e) => {
                       selectCard({
                         index: cardItem.index,
-
                         event: e,
                       });
                     }}>

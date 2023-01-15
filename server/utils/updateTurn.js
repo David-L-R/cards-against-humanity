@@ -6,13 +6,29 @@ const updateTurn = ({
   blackCards,
   playedWhite,
   winningCards,
+  leavedGame,
 }) => {
+  const currentTurnIndex = currentGame.Game.turns.length - 1;
+  const currentTurn = currentGame.Game.turns[currentTurnIndex];
+
+  // set status to inactive if playver turns back to lobby
+  if (leavedGame) {
+    const currentPlayer = currentTurn.white_cards.find(
+      (curr) => curr.player === playerId
+    );
+
+    //if normal player leaves active, set inactive in white_cards
+    //TODO: also in game.player, check is czar is leaving and set new czar, reactivate player after rejoining
+    if (currentPlayer) {
+      currentPlayer.active = false;
+      currentGame.save();
+      return currentGame;
+    }
+  }
+
   // send every player the choosen black card
   if (stage === "black") {
     currentGame.Game.deck.black_cards = blackCards;
-
-    const currentTurnIndex = currentGame.Game.turns.length - 1;
-    const currentTurn = currentGame.Game.turns[currentTurnIndex];
     currentTurn.stage = [...currentTurn.stage, "white"];
     currentTurn.black_card = playedBlack;
     currentGame.save();
@@ -22,8 +38,6 @@ const updateTurn = ({
   //send czar choosed white cards from player
   if (stage === "white") {
     const { Game } = currentGame;
-    const currentTurnIndex = Game.turns.length - 1;
-    const currentTurn = Game.turns[currentTurnIndex];
     const currentPlayer = Game.players.find((curr) => curr.id === playerId);
     const updatedHand = currentPlayer.hand.filter(
       (card) => !playedWhite.find((whiteCard) => whiteCard.text === card.text)
@@ -36,6 +50,7 @@ const updateTurn = ({
       cards: updatedHand,
       played_card: playedWhite,
       points: 0,
+      active: true,
     };
 
     //update player in turns.white_cards
@@ -61,11 +76,10 @@ const updateTurn = ({
   //send winner to players
   if (stage === "winner") {
     const { Game } = currentGame;
-    const currentTurnIndex = Game.turns.length - 1;
-    const currentTurn = Game.turns[currentTurnIndex];
     const wonPlayer = currentTurn.white_cards.find(
       (player) => player.played_card[0].text === winningCards[0].text
     );
+
     //add points to turn
     console.log("wonPlayer", wonPlayer);
     wonPlayer.played_card.forEach((card) => (wonPlayer.points += 10));
@@ -83,8 +97,6 @@ const updateTurn = ({
 
   if (stage === "completed") {
     const { Game } = currentGame;
-    const currentTurnIndex = Game.turns.length - 1;
-    const currentTurn = Game.turns[currentTurnIndex];
 
     currentTurn.completed.push({ player_id: playerId });
     if (currentTurn.completed.length >= Game.players.length) {

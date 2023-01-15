@@ -135,6 +135,7 @@ export const changeGame = async (
     playedBlack,
     playedWhite,
     winningCards,
+    leavedGame,
   },
   io
 ) => {
@@ -181,6 +182,7 @@ export const changeGame = async (
               cards: player.hand,
               played_card: [],
               points: 0,
+              active: true,
             });
         });
       }
@@ -193,7 +195,6 @@ export const changeGame = async (
       io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });
       return;
     } catch (error) {
-      console.log("error", error);
       io.to(lobbyId).emit("currentGame", {
         err: "Can't create Game, please create a new one",
       });
@@ -212,6 +213,7 @@ export const changeGame = async (
       blackCards,
       playedWhite,
       winningCards,
+      leavedGame,
     });
     io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
   } catch (error) {

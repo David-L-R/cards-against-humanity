@@ -1,15 +1,46 @@
-import React from "react";
-import Link from "next/link";
-import { HiOutlineUser } from "react-icons/hi";
-
+import React, { useEffect, useState } from "react";
 import { signIn, signOut, getProviders, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import { parseCookies } from "nookies";
 
-function Navbar() {
+function Navbar({ socket }) {
   const { data: session } = useSession();
+  const router = useRouter();
+  const [lobbyId, setLobbyId] = useState(null);
+  const cookies = parseCookies();
+
+  const backToLobby = () => {
+    if (lobbyId) {
+      const playerData = {
+        playerId: cookies.socketId,
+
+        gameId: lobbyId,
+        leavedGame: true,
+      };
+      console.log("playerData", playerData);
+      socket.emit("changeGame", playerData);
+      router.push({
+        pathname: `/lobby/${lobbyId}`,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (router.query.lobbyId) {
+      if (Array.isArray(router.query.lobbyId))
+        return setLobbyId(router.query.lobbyId[0]);
+      setLobbyId(router.query.lobbyId);
+    }
+  }, [router.isReady, router]);
 
   return (
     <nav className="navContainer">
       <div className="dropdown">
+        {lobbyId && (
+          <h2>
+            <button onClick={backToLobby}>Back to Lobby</button>
+          </h2>
+        )}
         {session ? (
           <>
             <div className="dropdownIcon">
@@ -34,8 +65,7 @@ function Navbar() {
               height="75"
               viewBox="0 0 251 251"
               fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
+              xmlns="http://www.w3.org/2000/svg">
               <rect width="251" height="251" fill="#000000" />
               <circle cx="125.5" cy="130.5" r="110.5" fill="black" />
               <ellipse

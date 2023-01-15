@@ -1,10 +1,9 @@
-import { socket } from "../pages/Home";
 import useLocalStorage from "./useLocalStorage";
 import React, { useEffect, useRef, useState } from "react";
 import { parseCookies } from "nookies";
 
 //Join a game
-const JoinGame = ({ roomKey, playerName }) => {
+const JoinGame = ({ roomKey, playerName, socket }) => {
   let [value, setValue] = useLocalStorage("name", "");
   let [roomCode, setRoomeCode] = useState("");
   const cookies = parseCookies();
