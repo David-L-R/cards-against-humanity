@@ -5,7 +5,15 @@ const lobbyModel = mongoose.Schema(
   {
     // id: String,
     games: [],
-    players: [{ id: String, name: String, isHost: false, inactive: false }],
+    players: [
+      {
+        id: String,
+        name: String,
+        isHost: false,
+        inactive: false,
+        points: Number,
+      },
+    ],
     waiting: [{ id: String, name: String }],
   },
   {

@@ -9,7 +9,7 @@ export const createNewLobby = async ({ socket, data }) => {
   const lobby = {
     games: [],
     waiting: [],
-    players: [{ name: hostName, id, isHost: true, inactive: false }],
+    players: [{ name: hostName, id, isHost: true, inactive: false, points: 0 }],
   };
 
   try {
@@ -105,6 +105,7 @@ export const updateClient = async ({
         isHost: false,
         inactive: false,
         name: randomName(),
+        points: 0,
       };
       currentLobby.players.push(newPLayer);
     }

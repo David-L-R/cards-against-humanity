@@ -169,6 +169,7 @@ export const changeGame = async (
               player: player.id,
               cards: player.hand,
               played_card: [],
+              points: 0,
             });
         });
       }

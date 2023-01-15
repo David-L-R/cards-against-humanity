@@ -9,6 +9,7 @@ import { motion as m } from "framer-motion";
 import randomInsult from "../../utils/randomInsult";
 import { Main } from "next/document";
 import Error from "../../components/Error";
+import Scoreboard from "../../components/Scoreboard";
 
 const Lobby = () => {
   const router = useRouter();
@@ -24,6 +25,7 @@ const Lobby = () => {
   const handSize = useRef(null);
   const [linkInvation, setlinkInvation] = useState("");
   const [isLoading, setIsloading] = useState(true);
+  const [currentLobby, setCurrentLobby] = useState(true);
 
   const handleGameCreation = () => {
     // const setRounds = amountOfRounds.current.value;
@@ -44,6 +46,7 @@ const Lobby = () => {
     socket.on("updateRoom", ({ currentLobby, err }) => {
       if (!currentLobby || err) return setShowErrMessage(err);
       setIsloading(false);
+      setCurrentLobby(currentLobby);
       const player = currentLobby.players.find(
         (player) => player.id === cookies.socketId
       );
@@ -67,7 +70,8 @@ const Lobby = () => {
       if (lobbyId) {
         if (stage === "start") {
           let gamePath = {
-            pathname: `/lobby/game/${lobbyId}/${gameId}`,
+            pathname: `/lobby/game/${gameId}`,
+            query: { lobbyId: lobbyId },
           };
           router.push(gamePath);
         }
@@ -119,8 +123,13 @@ const Lobby = () => {
 
   return (
     <>
-      <div className="waitingLobbyContainer">
-        <div className="waitingLobbyCard">
+      <main className="waitingLobbyContainer">
+        {currentLobby && (
+          <section className="scoreboard-container">
+            <Scoreboard currentLobby={currentLobby} />
+          </section>
+        )}
+        <section className="waitingLobbyCard">
           <m.div
             className="framerContainer"
             initial={{ y: -500, rotate: -30 }}
@@ -171,34 +180,32 @@ const Lobby = () => {
               placeholder="Change name"
             />
           </m.div>
-          <div className="dragContainer">
-            <ul>
-              {players &&
-                players.map((player) => (
-                  <li
-                    key={player.name}
-                    className={player.inactive ? "inactive" : null}>
-                    <h2>{player.name.toUpperCase()}</h2>
-                    {player.inactive && (
-                      <p>is disconnected and {randomInsult()}</p>
-                    )}
-                    {player.isHost && (
-                      <div className="hostCrown">
-                        <RiVipCrown2Fill />
-                      </div>
-                    )}
-                  </li>
-                ))}
-            </ul>
-          </div>
-        </div>
+          <ul className="dragContainer">
+            {players &&
+              players.map((player) => (
+                <li
+                  key={player.name}
+                  className={player.inactive ? "inactive" : null}>
+                  <h2>{player.name.toUpperCase()}</h2>
+                  {player.inactive && (
+                    <p>is disconnected and {randomInsult()}</p>
+                  )}
+                  {player.isHost && (
+                    <div className="hostCrown">
+                      <RiVipCrown2Fill />
+                    </div>
+                  )}
+                </li>
+              ))}
+          </ul>
+        </section>
         {showErrMessage && (
           <Error
             showErrMessage={showErrMessage}
             setShowErrMessage={setShowErrMessage}
           />
         )}
-      </div>
+      </main>
     </>
   );
 };
