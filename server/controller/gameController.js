@@ -45,7 +45,7 @@ export const createGame = async ({
 
     if (lobbyPLayers.length <= 1)
       return io.to(socket.id).emit("newgame", {
-        err: "Please wait for at least 1 active Player",
+        err: "Please wait for at least one active Player",
       });
 
     const [black] = allCards.map((set) => set.black);

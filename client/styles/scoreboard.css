@@ -3,7 +3,8 @@
   top: 5%;
   left: 2.5%;
   width: 150px;
-  height: 5%;
+  height: 3%;
+  min-height: 25px;
   max-height: 60vh;
   overflow: hidden;
   background-color: white;

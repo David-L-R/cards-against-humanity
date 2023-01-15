@@ -70,7 +70,7 @@ const Home = () => {
 
   return (
     <>
-      <div className="lobbyCardsContainer">
+      <main className="lobbyCardsContainer">
         <m.div
           className="hostMotion"
           initial={{ y: -500, rotate: 30 }}
@@ -147,7 +147,7 @@ const Home = () => {
             </div>
           </div>
         </m.div>
-      </div>
+      </main>
 
       {showErrMessage && (
         <Error
