@@ -7,21 +7,21 @@ import ShitContainer from "./ShitContainer";
 const Winner = ({ currentTurn, checkoutRound, isCzar, currentLobby }) => {
   const [noButtonAtAll, setNoButtonAtAll] = useState(true);
   const playerList = currentTurn.white_cards;
-  const andysShit =
-    currentLobby.turns[currentLobby.turns.length - 1].completed.length;
+  const andysShit = currentLobby.turns[
+    currentLobby.turns.length - 1
+  ].completed.filter((player) => !player.inactive).length;
+
   const [playersReady, setPlayersReady] = useState(0);
   const wonPLayer = currentTurn.winner;
   const played_whites = [...wonPLayer.played_card];
   const { black_card } = currentTurn;
   const [winningPlayer, setwinningPlayer] = useState(false);
-  const allPLayers = playerList.filter(
+  const allPlayers = currentLobby.players.filter((player) => !player.inactive);
+  const loosingCards = playerList.filter(
     (player) => player.player !== wonPLayer.player
   );
   const cookies = parseCookies();
   const youWon = wonPLayer.player === cookies.socketId;
-
-  console.log("wonPLayer", wonPLayer);
-  console.log("cookies", cookies);
 
   const handlePlayerReady = () => {
     setPlayersReady(playersReady + 1);
@@ -92,13 +92,13 @@ const Winner = ({ currentTurn, checkoutRound, isCzar, currentLobby }) => {
           </button>
         ) : (
           <p>
-            {andysShit}/{currentLobby.players.length} players are ready.
+            {andysShit}/{allPlayers.length} players are ready.
           </p>
         )}
       </li>
       <ul className="player-container">
-        {allPLayers &&
-          allPLayers.map((player) => (
+        {loosingCards &&
+          loosingCards.map((player) => (
             <li key={player.played_card}>
               <div className={`${style.cardTemplateContainer} ${style.black}`}>
                 {addTextToBlack(player.played_card)}

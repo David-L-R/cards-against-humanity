@@ -202,14 +202,9 @@ const Game = ({ socket }) => {
     socket.emit("changeGame", { ...playerData });
   };
 
-  //Check the total amount of players
-
-  console.log("currentLobby test", currentLobby);
-
   //self update page after got redirected, use key from query as lobby id
   useEffect(() => {
     if (lobbyId) {
-      console.log("RUNN!");
       setLobbyId(router.query.lobbyId);
       socket.emit("getUpdatedGame", {
         lobbyId: router.query.lobbyId,
@@ -259,6 +254,22 @@ const Game = ({ socket }) => {
           <section className="scoreboard-container">
             <Scoreboard currentLobby={currentLobby} />
           </section>
+        )}
+      </main>
+    );
+
+  if (showErrMessage)
+    return (
+      <main>
+        <h1>An error ocurred</h1>
+        {setTimeout(() => {
+          router.push(`/lobby/${lobbyId}`);
+        }, 3500)}
+        {showErrMessage && (
+          <Error
+            showErrMessage={showErrMessage}
+            setShowErrMessage={setShowErrMessage}
+          />
         )}
       </main>
     );

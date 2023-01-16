@@ -13,7 +13,7 @@ function Navbar({ socket }) {
     if (lobbyId) {
       const playerData = {
         playerId: cookies.socketId,
-
+        lobbyId,
         gameId: lobbyId,
         leavedGame: true,
       };

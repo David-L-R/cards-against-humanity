@@ -28,24 +28,25 @@ export const createGame = async ({
     if (existingGames.length > 0)
       lastGame = existingGames[existingGames.length - 1].gameIdentifier + 1;
 
-    let lobbyPLayers = await LobbyCollection.findOne({ _id: lobbyId });
-    if (!lobbyPLayers)
-      return socket.to(lobbyId).emit("newgame", { err: "cant find lobby" });
+    const lobby = await LobbyCollection.findOne({ _id: lobbyId });
+    if (!lobby)
+      return socket.to(lobbyId).emit("newgame", { err: "Can not find lobby" });
 
     // add each ACTIVE players all necessary keys
-    lobbyPLayers = lobbyPLayers.players
+    const allPlayers = lobby.players
       .filter((player) => !player.inactive)
       .map((player) => {
-        player.active = true;
-        player.points = 0;
-        player.hand = [];
-        player.bet = false;
-        return player;
+        const newPLayer = { ...player };
+        newPLayer.points = 0;
+        newPLayer.hand = [];
+        newPLayer.bet = false;
+        newPLayer.inactive = false;
+        return newPLayer;
       });
 
-    if (lobbyPLayers.length <= 1)
+    if (allPlayers.length <= 1)
       return io.to(socket.id).emit("newgame", {
-        err: "Please wait for at least one active Player",
+        err: "Please wait for at least one more Player",
       });
 
     const [black] = allCards.map((set) => set.black);
@@ -57,7 +58,7 @@ export const createGame = async ({
       gameIdentifier: lastGame,
       handSize: handSize,
       concluded: false,
-      players: lobbyPLayers,
+      players: [...allPlayers],
       deck: {
         black_cards: [...black],
         white_cards: [...white],
@@ -116,7 +117,22 @@ export const sendCurrentGame = async ({ lobbyId, name, id, io, socket }) => {
       "Game.gameIdentifier": currentGameId,
     });
 
-    io.to(socket.id).emit("currentGame", { currentGame: currentGame.Game });
+    const foundPLayer = currentGame.Game.players.find(
+      (player) => player.id === id
+    );
+
+    //if no player leaves or joines, just update the current client/player
+    if (foundPLayer && foundPLayer.inactive === false) {
+      currentGame.save();
+      return io
+        .to(socket.id)
+        .emit("currentGame", { currentGame: currentGame.Game });
+    }
+
+    //if player rejoins, update everyone
+    foundPLayer.inactive = false;
+    currentGame.save();
+    io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });
   } catch (error) {
     io.to(socket.id).emit("currentGame", {
       err: "Wrong lobby ID, please check your room code",
@@ -215,6 +231,15 @@ export const changeGame = async (
       winningCards,
       leavedGame,
     });
+
+    //close game ifnot enought players
+    if (
+      updatedGame.Game.players.filter((player) => !player.inactive).length < 2
+    )
+      return io.to(lobbyId).emit("currentGame", {
+        err: "Not enough players to continue, redirecting you back",
+      });
+
     io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
   } catch (error) {
     console.log("error", error);
