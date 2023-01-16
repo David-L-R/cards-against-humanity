@@ -16,6 +16,7 @@ export function DropZone(props) {
   const [blackCard, setBlackCard] = useState(null);
   const [skelletons, setSkelletons] = useState(null);
   const [blackText, setBlackText] = useState(null);
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const { setNodeRef } = useDroppable({
     id: id,
@@ -168,18 +169,26 @@ export function DropZone(props) {
                 ))
               : null}
             {blackCard && cards.length === blackCard.pick + 1 && !isCzar && (
-              <li
-                onClick={() => {
-                  whiteCardChoosed([...cards.slice(1)]);
-                }}
-                className={
-                  !confirmed && !isCzar
-                    ? "selectButton active"
-                    : "selectButton "
-                }
-              >
-                <h3>Confirm</h3>
-              </li>
+              <>
+                <li
+                  onClick={() => {
+                    whiteCardChoosed([...cards.slice(1)]);
+                    setIsConfirmed(true);
+                  }}
+                  className={
+                    !confirmed && !isCzar
+                      ? "selectButton active"
+                      : "selectButton "
+                  }
+                >
+                  <h3>Confirm</h3>
+                </li>
+                {isConfirmed && (
+                  <h3 className="waitText">
+                    Please wait Czar will choose a winner shortly...
+                  </h3>
+                )}
+              </>
             )}
           </m.ul>
         </div>

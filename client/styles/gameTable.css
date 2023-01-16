@@ -216,6 +216,13 @@
   color: black;
   transition: 0.5s;
 }
+.waitText {
+  position: fixed;
+  top: 38%;
+
+  padding: 0;
+  margin: 0;
+}
 
 @keyframes slideIn {
   0% {
