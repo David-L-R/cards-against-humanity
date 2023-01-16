@@ -200,11 +200,18 @@ const Lobby = ({ socket }) => {
             <div className="waitingLobbyButtonWrapper">
               {isHost && (
                 <button
-                  className="lobbyButton"
+                  className={
+                    isLoading ? "lobbyButton isLoading" : "lobbyButton"
+                  }
                   onClick={handleGameCreation}
                   disabled={isLoading ? true : false}
                   style={
-                    isLoading ? { transform: "scale(0.8)", width: "70%" } : null
+                    isLoading
+                      ? {
+                          transform: "scale(1)",
+                          width: "inherit",
+                        }
+                      : null
                   }
                 >
                   <span>{isLoading ? "Loading..." : "Ready"}</span>

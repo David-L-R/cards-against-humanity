@@ -121,6 +121,18 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+.isLoading {
+  width: 200px;
+  background-color: black !important;
+}
+.isLoading:hover {
+  background-color: black !important;
+  color: white !important;
+}
+.isLoading:after {
+  background-color: black !important;
+  color: white !important;
+}
 .lobbyButton {
   display: block;
   width: 200px;
