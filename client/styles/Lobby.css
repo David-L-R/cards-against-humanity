@@ -160,9 +160,13 @@
   padding-left: 10px;
   padding-right: 10px;
 
-  word-break: break-all;
+  /*word-break: break-all;*/
   display: flex;
   justify-content: center;
+}
+.wrap-text {
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .dragContainer li:nth-child(1) {

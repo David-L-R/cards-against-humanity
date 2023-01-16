@@ -190,6 +190,7 @@ const Lobby = ({ socket }) => {
             )}
             <div className="changeNameButtonWrapper">
               <input
+                maxLength={15}
                 className="changeNameButton"
                 type="text"
                 onChange={(e) => changePLayerName(e.target.value)}
@@ -204,7 +205,8 @@ const Lobby = ({ socket }) => {
                   disabled={isLoading ? true : false}
                   style={
                     isLoading ? { transform: "scale(0.8)", width: "70%" } : null
-                  }>
+                  }
+                >
                   <span>{isLoading ? "Loading..." : "Ready"}</span>
                 </button>
               )}
@@ -217,7 +219,20 @@ const Lobby = ({ socket }) => {
                   key={player.name}
                   className={player.inactive ? "inactive" : null}
                 >
-                  <h2>{player.name.toUpperCase()}</h2>
+                  <h2
+                    className={player.name.length > 9 ? "wrap-text" : null}
+                    style={{
+                      fontSize:
+                        player.name.length < 7
+                          ? "smaller"
+                          : player.name.length > 12
+                          ? "11px"
+                          : "initial",
+                      whiteSpace: "pre-wrap",
+                    }}
+                  >
+                    {player.name.toUpperCase()}
+                  </h2>
                   {player.inactive && (
                     <p>is disconnected and {randomInsult()}</p>
                   )}

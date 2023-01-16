@@ -110,6 +110,7 @@
   z-index: 2;
   transition: all 250ms;
   opacity: 0;
+  display: none;
   color: white;
   background-color: black;
   letter-spacing: 1px;
