@@ -16,10 +16,10 @@
 }
 
 .winner-page-container h1 {
-  position: fixed;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
+  margin: auto;
+  padding-top: 10%;
+
   font-size: 50px;
   letter-spacing: 2px;
 }
@@ -49,25 +49,45 @@
 }
 
 .ready-button {
-  position: fixed;
-  top: 70%;
-  left: 50%;
-  height: 50px;
-  width: 200px;
+  position: relative;
+  margin: auto;
+  display: flex;
+
+  width: 220px;
   background-color: black;
-  transform: translate(-50%, -50%);
+
   z-index: 20;
-  border-radius: 30px;
-  cursor: pointer;
   transition: 0.3s;
+  border-radius: 30px;
 }
 .ready-button button {
+  border-radius: 30px;
+  padding: 15px 0 15px 0;
   display: flex;
+  cursor: pointer;
   justify-content: center;
+  align-items: center;
+  margin: auto;
+  width: 100%;
+  height: 100%;
   font-weight: bold;
   letter-spacing: 1px;
 }
-.ready-button:hover {
+.ready-button p {
+  display: flex;
+  padding: 15px;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  width: 100%;
+  height: 100%;
+  font-weight: bold;
+  letter-spacing: 1px;
+
+  pointer-events: none;
+}
+
+.ready-button button:hover {
   background-color: white;
   color: black;
   transition: 0.3s;

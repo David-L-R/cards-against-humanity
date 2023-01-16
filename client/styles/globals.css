@@ -29,8 +29,8 @@ button {
 }
 
 *:disabled {
-  border: none;
-  outline: none;
+  /*outline: none;*/
+  border-color: transparent;
 }
 
 .debuggerMonitor {

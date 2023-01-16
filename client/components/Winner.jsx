@@ -75,7 +75,8 @@ const Winner = ({ currentTurn, checkoutRound, isCzar, currentLobby }) => {
                   card?.pick
                     ? `${style.cardTemplateContainer} ${style.black}`
                     : `${style.cardTemplateContainer}`
-                }>
+                }
+              >
                 {card.text}
               </div>
             </li>
@@ -87,7 +88,8 @@ const Winner = ({ currentTurn, checkoutRound, isCzar, currentLobby }) => {
             onClick={() => {
               setNoButtonAtAll(false);
               checkoutRound(cookies.socketId);
-            }}>
+            }}
+          >
             Ready
           </button>
         ) : (
@@ -96,6 +98,7 @@ const Winner = ({ currentTurn, checkoutRound, isCzar, currentLobby }) => {
           </p>
         )}
       </li>
+
       <ul className="player-container">
         {allPLayers &&
           allPLayers.map((player) => (
