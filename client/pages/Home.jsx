@@ -134,7 +134,11 @@ const Home = ({ socket }) => {
 
               <div className="lobbyBack">
                 {hostOrJoin === "join" ? (
-                  <JoinGame roomKey={roomKey} playerName={playerName} />
+                  <JoinGame
+                    roomKey={roomKey}
+                    playerName={playerName}
+                    socket={socket}
+                  />
                 ) : null}
               </div>
             </div>
