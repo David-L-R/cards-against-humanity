@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
 import style from "../styles/cardTemplate.module.css";
 import { parseCookies } from "nookies";
+import BalloonContainer from "./FloatingBalloons";
+import ShitContainer from "./ShitContainer";
 
-const Winner = ({ currentTurn, checkoutRound, currentLobby }) => {
+const Winner = ({ currentTurn, checkoutRound, isCzar, currentLobby }) => {
+  const [noButtonAtAll, setNoButtonAtAll] = useState(true);
   const playerList = currentTurn.white_cards;
+  const andysShit =
+    currentLobby.turns[currentLobby.turns.length - 1].completed.length;
+  const [playersReady, setPlayersReady] = useState(0);
   const wonPLayer = currentTurn.winner;
   const played_whites = [...wonPLayer.played_card];
   const { black_card } = currentTurn;
@@ -12,7 +18,14 @@ const Winner = ({ currentTurn, checkoutRound, currentLobby }) => {
     (player) => player.player !== wonPLayer.player
   );
   const cookies = parseCookies();
+  const youWon = wonPLayer.player === cookies.socketId;
 
+  console.log("wonPLayer", wonPLayer);
+  console.log("cookies", cookies);
+
+  const handlePlayerReady = () => {
+    setPlayersReady(playersReady + 1);
+  };
   const addTextToBlack = (cards) => {
     //add text from thite cards to black cards
     if (cards) {
@@ -51,7 +64,8 @@ const Winner = ({ currentTurn, checkoutRound, currentLobby }) => {
 
   return (
     <article className="winner-page-container">
-      {<h1>{`${winningPlayer && winningPlayer.name} won this round`}</h1>}
+      {youWon ? <BalloonContainer /> : isCzar ? "" : <ShitContainer />}
+      {<h1>{youWon ? "You won!" : isCzar ? "You were Czar" : "You Lost"}</h1>}
       <ul className="winner-container">
         {winnerCards &&
           winnerCards.map((card) => (
@@ -68,7 +82,19 @@ const Winner = ({ currentTurn, checkoutRound, currentLobby }) => {
           ))}
       </ul>
       <li className="ready-button">
-        <button onClick={checkoutRound}>Ready</button>
+        {noButtonAtAll ? (
+          <button
+            onClick={() => {
+              setNoButtonAtAll(false);
+              checkoutRound(cookies.socketId);
+            }}>
+            Ready
+          </button>
+        ) : (
+          <p>
+            {andysShit}/{currentLobby.players.length} players are ready.
+          </p>
+        )}
       </li>
       <ul className="player-container">
         {allPLayers &&

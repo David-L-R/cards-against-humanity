@@ -1,6 +1,7 @@
 import React from "react";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { RiVipCrown2Fill } from "react-icons/Ri";
+import { useSession } from "next-auth/react";
 
 const Scoreboard = ({ currentLobby }) => {
   const { players, turns } = currentLobby;

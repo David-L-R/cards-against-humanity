@@ -158,7 +158,8 @@ const Lobby = ({ socket }) => {
               x: -1300,
               rotate: -120,
               transition: { duration: 0.75 },
-            }}>
+            }}
+          >
             <div className="waitingLobbyTextWrapper">
               <h1>
                 Waiting for players&nbsp;
@@ -187,6 +188,14 @@ const Lobby = ({ socket }) => {
                 </div>
               </div>
             )}
+            <div className="changeNameButtonWrapper">
+              <input
+                className="changeNameButton"
+                type="text"
+                onChange={(e) => changePLayerName(e.target.value)}
+                placeholder="Change name (Optional)"
+              />
+            </div>
             <div className="waitingLobbyButtonWrapper">
               {isHost && (
                 <button
@@ -200,18 +209,14 @@ const Lobby = ({ socket }) => {
                 </button>
               )}
             </div>
-            <input
-              type="text"
-              onChange={(e) => changePLayerName(e.target.value)}
-              placeholder="Change name"
-            />
           </m.div>
           <ul className="dragContainer">
             {players &&
               players.map((player) => (
                 <li
                   key={player.name}
-                  className={player.inactive ? "inactive" : null}>
+                  className={player.inactive ? "inactive" : null}
+                >
                   <h2>{player.name.toUpperCase()}</h2>
                   {player.inactive && (
                     <p>is disconnected and {randomInsult()}</p>

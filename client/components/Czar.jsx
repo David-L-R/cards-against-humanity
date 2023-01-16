@@ -104,13 +104,14 @@ const Czar = ({
                       left: "50%",
                       translateX: "-50%",
                       translateY: "-50%",
-                      zIndex: "500000",
+                      zIndex: "auto",
                       opacity: 1,
                       scale: 2,
                       rotate: 360,
                       position: "fixed",
                     }}
                     transition={{ duration: 0.3 }}
+                    /*
                     exit={{
                       top: "50%",
                       left: "50%",
@@ -123,6 +124,7 @@ const Czar = ({
                       position: "fixed",
                       transition: { duration: 5.75 },
                     }}
+                    */
                     className={` ${style.black} czarPicking`}
                     onClick={(e) => {
                       selectCard({
@@ -133,16 +135,19 @@ const Czar = ({
                     {cardItem.card.text}
                   </m.div>
                 ) : (
-                  <div
-                    className={` ${style.black} czarPicking`}
-                    onClick={(e) => {
-                      selectCard({
-                        index: cardItem.index,
-                        event: e,
-                      });
-                    }}>
-                    {cardItem.card.text}
-                  </div>
+                  <li>
+                    <div
+                      className={` ${style.black} czarPicking`}
+                      onClick={(e) => {
+                        selectCard({
+                          index: cardItem.index,
+
+                          event: e,
+                        });
+                      }}>
+                      {cardItem.card.text}
+                    </div>
+                  </li>
                 )}
               </li>
             ))}

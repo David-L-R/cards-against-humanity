@@ -186,7 +186,13 @@ const Game = ({ socket }) => {
   };
 
   //finish the current round and start a new one
-  const checkoutRound = () => {
+  const checkoutRound = (id) => {
+    if (
+      currentLobby.turns[currentLobby.turns.length - 1].completed.find(
+        (player) => player.player_id === id
+      )
+    )
+      return;
     const playerData = {
       playerId: cookies.socketId,
       stage: "completed",
@@ -195,6 +201,10 @@ const Game = ({ socket }) => {
     };
     socket.emit("changeGame", { ...playerData });
   };
+
+  //Check the total amount of players
+
+  console.log("currentLobby test", currentLobby);
 
   //self update page after got redirected, use key from query as lobby id
   useEffect(() => {
@@ -277,9 +287,11 @@ const Game = ({ socket }) => {
               <Scoreboard currentLobby={currentLobby} />
             </section>
           )}
+
           <Winner
             currentTurn={currentTurn}
             checkoutRound={checkoutRound}
+            isCzar={isCzar}
             currentLobby={currentLobby}
           />
         </>

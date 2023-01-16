@@ -2,15 +2,14 @@
   position: fixed;
   top: 5%;
   left: 2.5%;
-  width: 150px;
-  height: 3%;
-  min-height: 25px;
+  width: 300px;
+  height: 8%;
   max-height: 60vh;
   overflow: hidden;
   background-color: white;
   border: 1px solid white;
   border-radius: 1rem;
-  box-shadow: 0 1px 10px 0 white;
+  /*box-shadow: 0 1px 10px 0 white;*/
   display: flex;
   flex-direction: column;
   padding: 0 1rem;
@@ -21,20 +20,21 @@
 
 .scoreboard-container:hover {
   padding-top: 2rem;
-  height: 100%;
+  height: max-content;
   width: 300px;
 }
 
 .scoreboard-container::after {
-  content: "SCOREBOARD";
+  content: "SCOREBOARD ▼";
+  width: max-content;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   font-weight: 700;
-  letter-spacing: 1px;
-  font-size: 1rem;
-  transition: all 0ms 600ms, font-size 150ms 750ms;
+  letter-spacing: 2px;
+  font-size: 1.2rem;
+  transition: all 25ms;
 }
 
 .scoreboard-container:hover::after {
@@ -79,27 +79,27 @@
 
 .scoreboard-container .crown-background {
   position: absolute;
-  top: 11%;
-  left: -1%;
+  top: 1%;
+  left: 13%;
 }
 
 .scoreboard-container .crown-background::after {
   content: "";
   position: absolute;
-  height: 7px;
-  width: 7px;
+  height: 10px;
+  width: 10px;
   left: 30%;
   top: 30%;
   border-radius: 50%;
   z-index: -5;
-  background-color: black;
+  background-color: red;
 }
 
 .scoreboard-container .crown {
   color: gold;
   height: 25px;
   width: auto;
-  transform: rotateZ(-10deg);
+  transform: rotateZ(-23deg);
 }
 
 .scoreboard-container .checkmark {
@@ -115,7 +115,7 @@
 }
 
 .scoreboard-container .avatar {
-  height: 90%;
+  height: 60%;
 }
 
 .scoreboard-container .player-name {
