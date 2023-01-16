@@ -126,6 +126,7 @@ export const sendCurrentGame = async ({ lobbyId, name, id, io, socket }) => {
 
 export const changeGame = async (
   {
+    sendWhiteCards,
     blackCards,
     playerId,
     stage,
@@ -206,6 +207,7 @@ export const changeGame = async (
   try {
     const currentGame = await GameCollection.findOne({ "Game.id": gameId });
     const updatedGame = updateTurn({
+      sendWhiteCards,
       currentGame,
       playedBlack,
       stage,

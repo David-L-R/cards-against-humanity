@@ -110,10 +110,10 @@ export function DropZone(props) {
         }
       >
         {id === "table" && !isCzar && !blackCard && (
-          <>
-            <h1>Czar is Choosing</h1>
-            <br /> <p>Time to go take a shit</p>
-          </>
+          <div className="czarIsChoosing">
+            <h1>Czar is Choosing a Black Card</h1>
+            <p className="pleaseBePatient">Please be Patient</p>
+          </div>
         )}
         <div
           className={
@@ -147,11 +147,12 @@ export function DropZone(props) {
                     style={
                       (isCzar && id === "table" && index < 1) || !isCzar
                         ? null
-                        : { display: "none", position: "absolute" }
+                        : { opacity: "0", position: "absolute" }
                     }
                   />
                 );
               })}
+
             {skelletons && stage === "white" && !isCzar
               ? skelletons.map((skell, index) => (
                   <li
@@ -168,9 +169,13 @@ export function DropZone(props) {
               : null}
             {blackCard && cards.length === blackCard.pick + 1 && !isCzar && (
               <li
-                onClick={() => whiteCardChoosed([...cards.slice(1)])}
+                onClick={() => {
+                  whiteCardChoosed([...cards.slice(1)]);
+                }}
                 className={
-                  !confirmed && !isCzar ? "selectButton active" : "selectButton"
+                  !confirmed && !isCzar
+                    ? "selectButton active"
+                    : "selectButton "
                 }
               >
                 <h3>Confirm</h3>

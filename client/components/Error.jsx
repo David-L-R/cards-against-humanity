@@ -5,10 +5,8 @@ const Error = ({ showErrMessage, setShowErrMessage }) => {
 
   console.log("showErrMessage", showErrMessage);
   return (
-    <div className="errorBox">
-      <div className="errMessage">
-        {showErrMessage.length <= 0 ? "Something went wrong!" : showErrMessage}
-      </div>
+    <div className="errMessage">
+      {showErrMessage.length <= 0 ? "Something went wrong!" : showErrMessage}
     </div>
   );
 };

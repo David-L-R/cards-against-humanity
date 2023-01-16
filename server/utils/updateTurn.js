@@ -7,6 +7,7 @@ const updateTurn = ({
   playedWhite,
   winningCards,
   leavedGame,
+  sendWhiteCards,
 }) => {
   const currentTurnIndex = currentGame.Game.turns.length - 1;
   const currentTurn = currentGame.Game.turns[currentTurnIndex];
@@ -129,6 +130,13 @@ const updateTurn = ({
     currentGame.save();
     return currentGame;
   }
+  /*
+  if (sendWhiteCards) {
+    currentGame,
+    playerId,
+    white_cards
+  }
+  */
 };
 
 export default updateTurn;

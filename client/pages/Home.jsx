@@ -72,14 +72,16 @@ const Home = ({ socket }) => {
             x: -1300,
             rotate: -120,
             transition: { duration: 0.75 },
-          }}>
+          }}
+        >
           <div
             className={
               // i added a new class on the very parent elemt on each card, to change z-index and
               isHostActive // the perspective
                 ? "lobbyContainer lobbyContainer-active"
                 : " lobbyContainer "
-            }>
+            }
+          >
             <div
               id={isJoinActive ? "lobbyHidden" : "lobbyVisible"}
               className={
@@ -88,7 +90,8 @@ const Home = ({ socket }) => {
               onClick={() => {
                 setHostOrJoin("host");
                 handleHostClick();
-              }}>
+              }}
+            >
               <div className="lobbyFront">
                 <h2>Host a New Game.</h2>
               </div>
@@ -109,13 +112,15 @@ const Home = ({ socket }) => {
             y: 1000,
             rotate: 120,
             transition: { duration: 0.75 },
-          }}>
+          }}
+        >
           <div
             className={
               isJoinActive
                 ? "lobbyContainer  lobbyContainer-active " // also here
                 : " lobbyContainer"
-            }>
+            }
+          >
             <div
               id={isHostActive ? "lobbyHostHidden" : "lobbyHostVisible"}
               className={
@@ -124,17 +129,20 @@ const Home = ({ socket }) => {
               onClick={(e) => {
                 setHostOrJoin("join");
                 handleJoinClick();
-              }}>
+              }}
+            >
               <div
                 className={
                   isHostActive ? "lobbyFront lobbyjoinhidden" : "lobbyFront"
-                }>
+                }
+              >
                 <h2>Join a Game.</h2>
               </div>
 
               <div className="lobbyBack">
                 {hostOrJoin === "join" ? (
                   <JoinGame
+                    setShowErrMessage={setShowErrMessage}
                     roomKey={roomKey}
                     playerName={playerName}
                     socket={socket}

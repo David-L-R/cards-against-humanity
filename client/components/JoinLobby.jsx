@@ -1,11 +1,13 @@
 import useLocalStorage from "./useLocalStorage";
 import React, { useEffect, useRef, useState } from "react";
 import { parseCookies } from "nookies";
+import Error from "../components/Error.jsx";
 
 //Join a game
-const JoinGame = ({ roomKey, playerName, socket }) => {
+const JoinGame = ({ roomKey, playerName, socket, setShowErrMessage }) => {
   let [value, setValue] = useLocalStorage("name", "");
   let [noButtonAtAll, setNoButtonAtAll] = useState(true);
+
   let [roomCode, setRoomeCode] = useState("");
   const cookies = parseCookies();
 
@@ -31,7 +33,9 @@ const JoinGame = ({ roomKey, playerName, socket }) => {
     const startIndex = url.indexOf("lobby") + 6;
     const endIndex = url.indexOf("?");
     const roomCode = url.slice(startIndex, endIndex);
-    if (url.length <= 50) return setRoomeCode("Wrong code. Check your link");
+    if (url.length <= 50) {
+      return setShowErrMessage("Wrong code. Check your link");
+    }
 
     setRoomeCode(roomCode);
   };
@@ -65,6 +69,7 @@ const JoinGame = ({ roomKey, playerName, socket }) => {
           className="lobbyJoinInputField"
           onChange={(e) => displayRoomCode(e.target.value)}
         />
+
         <div className="lobbyButtonWrapper">
           <button type="submit" className="lobbyButton">
             <span>Join Game</span>

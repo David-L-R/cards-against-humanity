@@ -176,6 +176,7 @@
 .errMessage {
   position: fixed;
   width: 100%;
+
   color: white;
   background-color: #eb455f;
   height: 50px;

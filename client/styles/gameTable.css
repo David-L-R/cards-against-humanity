@@ -21,6 +21,13 @@
   align-items: center;
   padding: 0;
 }
+.czarIsChoosing {
+  margin: auto;
+  padding-top: 40px;
+  text-align: center;
+
+  position: relative;
+}
 
 .whiteCardTable ul {
   display: grid;
