@@ -1,27 +1,28 @@
 .scoreboard-container {
   position: fixed;
-  top: 5%;
-  left: 2.5%;
+  top: 9%;
+  left: 4%;
   width: 300px;
-  height: 8%;
+  height: 40px;
   max-height: 60vh;
   overflow: hidden;
   background-color: white;
   border: 1px solid white;
-  border-radius: 1rem;
-  /*box-shadow: 0 1px 10px 0 white;*/
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   padding: 0 1rem;
   color: black;
   transition: all 650ms;
   z-index: 10;
+  opacity: 0.7;
 }
 
 .scoreboard-container:hover {
   padding-top: 2rem;
   height: max-content;
   width: 300px;
+  opacity: 1;
 }
 
 .scoreboard-container::after {
@@ -38,11 +39,12 @@
 }
 
 .scoreboard-container:hover::after {
+  content: "SCOREBOARD ";
   top: 2.5%;
   left: 5%;
   transform: translate(0, 0);
   letter-spacing: 0.5px;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   transition: all 100ms;
 }
 
@@ -76,7 +78,7 @@
   justify-items: end;
   column-gap: 0.75rem;
   align-items: center;
-  height: 5rem;
+  height: 4rem;
   width: 100%;
   padding: 0.25rem 0;
 }

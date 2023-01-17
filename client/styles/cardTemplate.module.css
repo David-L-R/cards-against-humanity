@@ -24,7 +24,7 @@
   padding: 15px;
   color: white;
   transition: all 250ms;
-  z-index: 1;
+  z-index: 0;
 }
 
 .black:hover {

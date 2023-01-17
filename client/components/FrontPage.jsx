@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import Link from "next/link";
 import { motion as m } from "framer-motion";
 import { setCookie, parseCookies } from "nookies";
+import Loading from "./Loading";
 
 const calc = (x, y) => [
   -(y - window.innerHeight / 2) / 20,
@@ -22,6 +23,7 @@ function FrontPage() {
   return (
     <>
       <Navbar />
+
       <m.div
         className="pageTransition"
         exit={{

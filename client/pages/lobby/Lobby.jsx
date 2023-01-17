@@ -8,6 +8,7 @@ import randomInsult from "../../utils/randomInsult";
 import Error from "../../components/Error";
 import Scoreboard from "../../components/Scoreboard";
 import { parseCookies } from "nookies";
+import Loading from "../../components/Loading";
 
 const Lobby = ({ socket }) => {
   const router = useRouter();
@@ -128,7 +129,7 @@ const Lobby = ({ socket }) => {
   if (isLoading && !currentLobby)
     return (
       <main>
-        <li>Loading...</li>
+        <Loading />
       </main>
     );
 
@@ -187,6 +188,7 @@ const Lobby = ({ socket }) => {
             )}
             <div className="changeNameButtonWrapper">
               <input
+                maxLength={15}
                 className="changeNameButton"
                 type="text"
                 onChange={(e) => changePLayerName(e.target.value)}
@@ -196,11 +198,18 @@ const Lobby = ({ socket }) => {
             <div className="waitingLobbyButtonWrapper">
               {isHost && (
                 <button
-                  className="lobbyButton"
+                  className={
+                    isLoading ? "lobbyButton isLoading" : "lobbyButton"
+                  }
                   onClick={handleGameCreation}
                   disabled={isLoading ? true : false}
                   style={
-                    isLoading ? { transform: "scale(0.8)", width: "70%" } : null
+                    isLoading
+                      ? {
+                          transform: "scale(1)",
+                          width: "inherit",
+                        }
+                      : null
                   }>
                   <span>{isLoading ? "Loading..." : "Ready"}</span>
                 </button>
@@ -213,7 +222,19 @@ const Lobby = ({ socket }) => {
                 <li
                   key={player.name}
                   className={player.inactive ? "inactive" : null}>
-                  <h2>{player.name.toUpperCase()}</h2>
+                  <h2
+                    className={player.name.length > 9 ? "wrap-text" : null}
+                    style={{
+                      fontSize:
+                        player.name.length < 7
+                          ? "smaller"
+                          : player.name.length > 12
+                          ? "11px"
+                          : "initial",
+                      whiteSpace: "pre-wrap",
+                    }}>
+                    {player.name.toUpperCase()}
+                  </h2>
                   {player.inactive && (
                     <p>is disconnected and {randomInsult()}</p>
                   )}

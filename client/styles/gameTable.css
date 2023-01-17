@@ -107,7 +107,7 @@
   padding: 10px;
   font-size: 16px;
   transform: translateX(-50%) translateY(100%);
-  z-index: 2;
+  z-index: 5;
   transition: all 250ms;
   opacity: 0;
   color: white;
