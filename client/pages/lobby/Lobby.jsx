@@ -9,6 +9,7 @@ import Error from "../../components/Error";
 import Scoreboard from "../../components/Scoreboard";
 import { parseCookies } from "nookies";
 import Loading from "../../components/Loading";
+import PageNotFound from "../../components/PageNotFound";
 
 const Lobby = ({ socket }) => {
   const router = useRouter();
@@ -136,7 +137,7 @@ const Lobby = ({ socket }) => {
   if (!currentLobby)
     return (
       <main>
-        <h1>No Lobby Found...</h1>
+        <PageNotFound />
       </main>
     );
 
@@ -157,7 +158,8 @@ const Lobby = ({ socket }) => {
               x: -1300,
               rotate: -120,
               transition: { duration: 0.75 },
-            }}>
+            }}
+          >
             <div className="waitingLobbyTextWrapper">
               <h1>
                 Waiting for players&nbsp;
@@ -210,7 +212,8 @@ const Lobby = ({ socket }) => {
                           width: "inherit",
                         }
                       : null
-                  }>
+                  }
+                >
                   <span>{isLoading ? "Loading..." : "Ready"}</span>
                 </button>
               )}
@@ -221,7 +224,8 @@ const Lobby = ({ socket }) => {
               players.map((player) => (
                 <li
                   key={player.name}
-                  className={player.inactive ? "inactive" : null}>
+                  className={player.inactive ? "inactive" : null}
+                >
                   <h2
                     className={player.name.length > 9 ? "wrap-text" : null}
                     style={{
@@ -232,7 +236,8 @@ const Lobby = ({ socket }) => {
                           ? "11px"
                           : "initial",
                       whiteSpace: "pre-wrap",
-                    }}>
+                    }}
+                  >
                     {player.name.toUpperCase()}
                   </h2>
                   {player.inactive && (

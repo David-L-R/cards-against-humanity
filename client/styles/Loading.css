@@ -6,7 +6,8 @@
 }
 .loadingScreenContainer h2 {
   position: fixed;
-  top: 53%;
+  top: 80%;
+  letter-spacing: 2px;
 }
 .lds-roller {
   display: inline-block;
