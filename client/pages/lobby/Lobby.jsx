@@ -8,6 +8,7 @@ import { motion as m } from "framer-motion";
 import randomInsult from "../../utils/randomInsult";
 import Error from "../../components/Error";
 import Scoreboard from "../../components/Scoreboard";
+import Loading from "../../components/Loading";
 
 const Lobby = ({ socket }) => {
   const router = useRouter();
@@ -130,7 +131,7 @@ const Lobby = ({ socket }) => {
   if (isLoading && !currentLobby)
     return (
       <main>
-        <li>Loading...</li>
+        <Loading />
       </main>
     );
 

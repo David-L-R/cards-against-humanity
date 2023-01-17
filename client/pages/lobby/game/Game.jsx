@@ -9,6 +9,7 @@ import PlayedWhite from "../../../components/PlayedWhite";
 import Winner from "../../../components/Winner";
 import Error from "../../../components/Error";
 import Scoreboard from "../../../components/Scoreboard";
+import Loading from "../../../components/Loading";
 
 const Game = ({ socket }) => {
   const router = useRouter();
@@ -257,7 +258,7 @@ const Game = ({ socket }) => {
   if (loading)
     return (
       <main>
-        <h1>Loading...</h1>
+        <Loading />
         {currentLobby && (
           <section className="scoreboard-container">
             <Scoreboard currentLobby={currentLobby} />
