@@ -8,6 +8,8 @@ const updateTurn = ({
   winningCards,
   leavedGame,
   sendWhiteCards,
+  socket,
+  io,
 }) => {
   const currentTurnIndex = currentGame.Game.turns.length - 1;
   const currentTurn = currentGame.Game.turns[currentTurnIndex];
@@ -46,6 +48,23 @@ const updateTurn = ({
       currentGame.Game.concluded = true;
 
     currentGame.save();
+    return currentGame;
+  }
+
+  if (sendWhiteCards) {
+    const randomIndex =
+      Math.random() * (currentGame.Game.deck.white_cards.length - 1);
+    const [newWhite] = currentGame.Game.deck.white_cards.splice(randomIndex, 1);
+    currentTurn.white_cards = currentTurn.white_cards.map((player) => {
+      if (player.player === playerId) player.cards.push(newWhite);
+      return player;
+    });
+    currentGame.Game.players = currentGame.Game.players.map((player) => {
+      if (player.id === playerId) player.hand.push(newWhite);
+      return player;
+    });
+    currentGame.save();
+    io.to(socket.id).emit("newWhiteCard", { newWhite });
     return currentGame;
   }
 

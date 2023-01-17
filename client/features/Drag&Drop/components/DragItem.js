@@ -3,7 +3,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 export function DragItem(props) {
-  const { card, id, element, allCards, confirmed } = props;
+  const { card, id, element, allCards, confirmed, maxHandSize } = props;
   const CustomComponent = element;
   const isBlackCard = card.pick;
   const isSkelettonCard = card.text === "";
@@ -18,10 +18,11 @@ export function DragItem(props) {
     isDragging,
   } = useSortable({
     id: id,
-    disabled: isBlackCard || confirmed ? true : false,
     data: {
       cardProps: { ...card },
       allCards: [...allCards],
+      confirmed,
+      maxHandSize,
     },
   });
 

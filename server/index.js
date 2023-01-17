@@ -76,6 +76,6 @@ io.on("connection", (socket) => {
   );
 
   socket.on("changeGame", (data) => {
-    changeGame(data, io);
+    changeGame(data, io, socket);
   });
 });

@@ -33,6 +33,7 @@ const Game = ({ socket }) => {
   const [showErrMessage, setShowErrMessage] = useState(false);
   const [currentLobby, setCurrentLobby] = useState(false);
   const [gameIdentifier, setGameIdentifier] = useState(null);
+  const [maxHandSize, setMaxHandSize] = useState(null);
 
   useEffect(() => {
     //getting game infos and rejoin player to socket io
@@ -45,22 +46,22 @@ const Game = ({ socket }) => {
       }
 
       //abort game if not enough player
-      if (currentGame.players.filter((player) => !player.inactive).length < 2) {
-        setShowErrMessage(
-          "Not enough players left. Game closed and redirecting you back!"
-        );
-        setTimeout(() => {
-          router.push(`/lobby/${lobbyId}`);
-        }, 3000);
-      }
+      // if (currentGame.players.filter((player) => !player.inactive).length < 2) {
+      //   setShowErrMessage(
+      //     "Not enough players left. Game closed and redirecting you back!"
+      //   );
+      //   setTimeout(() => {
+      //     router.push(`/lobby/${lobbyId}`);
+      //   }, 3000);
+      // }
 
       //if game is concluded, redirect
-      if (currentGame.concluded) {
-        setShowErrMessage("This game goets closed, please create a new one");
-        setTimeout(() => {
-          router.push(`/lobby/${lobbyId}`);
-        }, 3000);
-      }
+      // if (currentGame.concluded) {
+      //   setShowErrMessage("This game goets closed, please create a new one");
+      //   setTimeout(() => {
+      //     router.push(`/lobby/${lobbyId}`);
+      //   }, 3000);
+      // }
 
       const lastTurnIndex = currentGame.turns.length - 1;
       const lastTurn = currentGame.turns[lastTurnIndex];
@@ -131,7 +132,7 @@ const Game = ({ socket }) => {
             player: { label: "player", cards: hand },
           });
         }
-
+        setMaxHandSize(currentGame.handSize);
         setCurrentLobby(currentGame);
         setPlayerName(currentPlayer.name);
         setCurrentTurn(lastTurn);
@@ -142,6 +143,15 @@ const Game = ({ socket }) => {
         setGameStage(stage);
         setLoading(false);
       }
+    });
+
+    socket.on("newWhiteCard", ({ newWhite }) => {
+      setCardsOnTable((prev) => {
+        return {
+          ...prev,
+          player: { label: "player", cards: [...prev.player.cards, newWhite] },
+        };
+      });
     });
 
     return () => {
@@ -227,9 +237,18 @@ const Game = ({ socket }) => {
   };
 
   //getting new white cards
-  function fetchMoreCards() {
-    socket.emit("changeGame", { sendWhiteCards: true });
-  }
+  const getNewWhiteCard = () => {
+    const playerData = {
+      playerId: cookies.socketId,
+      gameId,
+      lobbyId,
+      gameIdentifier,
+    };
+
+    if (cardsOnTable.player.cards.length < maxHandSize) {
+      socket.emit("changeGame", { ...playerData, sendWhiteCards: true });
+    }
+  };
 
   //self update page after got redirected, use key from query as lobby id
   useEffect(() => {
@@ -370,6 +389,7 @@ const Game = ({ socket }) => {
               setTimer={setTimer}
             />
           )}
+
           {(isCzar && gameStage !== "black") || !isCzar ? (
             <DragAndDropContainer
               data={cardsOnTable}
@@ -378,7 +398,8 @@ const Game = ({ socket }) => {
               isCzar={isCzar}
               whiteCardChoosed={whiteCardChoosed}
               confirmed={confirmed}
-              stage={gameStage}>
+              stage={gameStage}
+              maxHandSize={maxHandSize}>
               {playedWhite && isCzar && (
                 <ul className={"cardDisplay playedWhite"}>
                   {playedWhite.map(

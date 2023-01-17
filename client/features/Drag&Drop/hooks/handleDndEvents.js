@@ -20,6 +20,7 @@ export const handleDragEnd = ({ active, over }, setActiveId, setRaw) => {
     const overContainer = over.data.current?.sortable?.containerId;
     const activeIndex = active.data.current.sortable.index;
     const overIndex = over?.data?.current?.sortable.index;
+
     if (overIndex === 0 && overContainer === "table") return;
 
     if (activeContainer !== overContainer) return;
@@ -45,11 +46,17 @@ export const handleDragEnd = ({ active, over }, setActiveId, setRaw) => {
 };
 
 export const handleDragOver = ({ active, over }, setRaw) => {
+  if (over?.data?.current?.allCards.length >= over?.data?.current?.maxHandSize)
+    return;
+  if (active?.data?.current?.confirmed)
+    //stop drag and drop if already submitted  cards
+    return;
   if (active.id !== over?.id || over?.id) {
     const activeContainer = active?.data.current?.sortable?.containerId;
     const overContainer = over?.data?.current?.sortable?.containerId;
     const activeIndex = active?.data.current?.sortable?.index;
     const overIndex = over?.data?.current?.sortable?.index;
+
     if (overIndex === 0) return;
     if (activeContainer === overContainer || !over?.id) return;
 

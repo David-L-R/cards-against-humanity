@@ -150,7 +150,8 @@ export const changeGame = async (
     winningCards,
     leavedGame,
   },
-  io
+  io,
+  socket
 ) => {
   if (stage === "dealing") {
     try {
@@ -223,7 +224,6 @@ export const changeGame = async (
 
   //change current turn
   try {
-    console.log("gameIdentifier", gameIdentifier);
     const currentGame = await GameCollection.findOne({
       "Game.id": gameId,
       "Game.gameIdentifier": gameIdentifier,
@@ -238,6 +238,9 @@ export const changeGame = async (
       playedWhite,
       winningCards,
       leavedGame,
+      socket,
+      lobbyId,
+      io,
     });
     updateGameInLobby(updatedGame);
 
