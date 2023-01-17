@@ -65,33 +65,32 @@
   z-index: 1;
   font-size: 24px;
 }
-.czarPickingContainer {
+.czarPickingContainer ul {
   position: absolute;
   width: 100%;
   height: 100%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 0;
 }
 
 .lowest {
   position: fixed;
   top: 30%;
   left: 28%;
-  z-index: 0;
+  /*z-index: 90000 !important;*/
 }
 .middle {
   position: fixed;
   top: 30%;
   left: 43%;
-  z-index: 0;
+  /* z-index: 90000 !important;*/
 }
 .highest {
   position: fixed;
   top: 30%;
   left: 58%;
-  z-index: 0;
+  /*z-index: 90000 !important;*/
 }
 
 .czarPickingH1 {
