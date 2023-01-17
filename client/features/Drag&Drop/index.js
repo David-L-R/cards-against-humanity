@@ -23,7 +23,7 @@ import {
 import CardTemplate from "../../components/CardTemplate.jsx";
 
 function DragAndDropContainer(props) {
-  const { setData, data, children, element } = props;
+  const { setData, data, children, element, getNewWhiteCard } = props;
   const [activeId, setActiveId] = useState(null);
   const sensors = useSensors(
     useSensor(MouseSensor),
@@ -64,6 +64,7 @@ function DragAndDropContainer(props) {
                 element={element}
                 key={data[key].label}
                 activeId={activeId}
+                getNewWhiteCard={getNewWhiteCard}
                 {...props}
               />
             </div>
