@@ -19,7 +19,6 @@ function Navbar({ socket }) {
         leavedGame: true,
         gameIdentifier,
       };
-      console.log("playerData", playerData);
       socket.emit("changeGame", playerData);
       router.push({
         pathname: `/lobby/${lobbyId}`,

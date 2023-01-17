@@ -130,7 +130,7 @@ export const setPlayerInactive = async ({ reason, io, userId }) => {
     });
     const currentLobby = lobbyList[lobbyList.length - 1];
 
-    //set leaving player inactive if thei are in a running game
+    //set leaving player inactive if they are in a running game
     const currenGameIndex = currentLobby.games.length - 1;
     if (currenGameIndex >= 0) {
       const gameId = currentLobby._id.toString();
@@ -144,8 +144,9 @@ export const setPlayerInactive = async ({ reason, io, userId }) => {
         return player;
       });
 
-      //not enough players, close the game
-      if (currentGame.Game.players < 2) currentGame.Game.concluded = true;
+      //not enough players will close the game
+      if (currentGame.Game.players.filter((player) => !player.inactive) < 2)
+        currentGame.Game.concluded = true;
       currentGame.save();
       io.to(gameId).emit("currentGame", { currentGame: currentGame.Game });
     }
