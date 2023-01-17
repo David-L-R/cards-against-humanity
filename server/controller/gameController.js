@@ -1,7 +1,7 @@
 import GameCollection from "../database/models/game.js";
 import LobbyCollection from "../database/models/lobby.js";
 import allCards from "../data/allCards.json" assert { type: "json" };
-import { addNewGameToLobby } from "../utils/addGameToLobby.js";
+import { updateGameInLobby } from "../utils/addGameToLobby.js";
 import updateTurn from "../utils/updateTurn.js";
 import { update } from "react-spring";
 
@@ -21,14 +21,9 @@ export const createGame = async ({
 
   try {
     //if alreday games where played, increase to game indentifiyer
-    let existingGames = GameCollection.find({ id: lobbyId });
+    const lobby = await LobbyCollection.findById(lobbyId);
+    let currentGameIndex = lobby.games.length;
 
-    let lastGame = 0;
-
-    if (existingGames.length > 0)
-      lastGame = existingGames[existingGames.length - 1].gameIdentifier + 1;
-
-    const lobby = await LobbyCollection.findOne({ _id: lobbyId });
     if (!lobby)
       return socket.to(lobbyId).emit("newgame", { err: "Can not find lobby" });
 
@@ -46,7 +41,7 @@ export const createGame = async ({
 
     if (allPlayers.length <= 1)
       return io.to(socket.id).emit("newgame", {
-        err: "Please wait for at least one more Player",
+        err: "Please wait for at least one more  Player",
       });
 
     const [black] = allCards.map((set) => set.black);
@@ -55,7 +50,7 @@ export const createGame = async ({
     const gamedata = {
       id: lobbyId,
       setRounds: amountOfRounds,
-      gameIdentifier: lastGame,
+      gameIdentifier: currentGameIndex,
       handSize: handSize,
       concluded: false,
       players: [...allPlayers],
@@ -78,8 +73,7 @@ export const createGame = async ({
     };
 
     const newGameData = await GameCollection.create({ Game: gamedata });
-    await addNewGameToLobby(newGameData);
-
+    updateGameInLobby(newGameData);
     io.to(lobbyId).emit("newgame", { newGameData });
   } catch (error) {
     io.to(lobbyId).emit("newgame", {
@@ -88,7 +82,14 @@ export const createGame = async ({
   }
 };
 
-export const sendCurrentGame = async ({ lobbyId, name, id, io, socket }) => {
+export const sendCurrentGame = async ({
+  gameIdentifier,
+  lobbyId,
+  name,
+  id,
+  io,
+  socket,
+}) => {
   if (!lobbyId || !id)
     return io.to(socket.id).emit("currentGame", { err: "Missing Lobby ID " });
 
@@ -96,26 +97,17 @@ export const sendCurrentGame = async ({ lobbyId, name, id, io, socket }) => {
   //jopin socket after disconnect
   socket.join(lobbyId);
   try {
-    //find the gameIdentifiyer from Lobby
-    const currentLobby = await LobbyCollection.findById(lobbyId);
-
-    //if cant find loby, send error back
-    if (!currentLobby)
-      return io.to(lobbyId).emit("currentGame", { err: "Can not find Lobby" });
-
-    const currentGameIndex = currentLobby.games.length - 1;
-    const currentGameId =
-      currentLobby.games[currentGameIndex].Game.gameIdentifier;
-
-    // if no game is stored in lobby send error
-    if (currentGameIndex < 0)
-      io.to(lobbyId).emit("currentGame", { err: "Cant find a running game" });
-
-    // find current game by lobby id and gameidentifyer from lobby games array
     const currentGame = await GameCollection.findOne({
       "Game.id": lobbyId,
-      "Game.gameIdentifier": currentGameId,
+      "Game.gameIdentifier": gameIdentifier,
     });
+
+    //if cant find loby, send error back
+    if (!currentGame)
+      return io
+        .to(socket.id)
+        .emit("currentGame", { err: "Cant find a running game" });
+    // find current game by lobby id and gameidentifyer from lobby games array
 
     const foundPLayer = currentGame.Game.players.find(
       (player) => player.id === id
@@ -130,7 +122,11 @@ export const sendCurrentGame = async ({ lobbyId, name, id, io, socket }) => {
     }
 
     //if player rejoins, update everyone
-    foundPLayer.inactive = false;
+    currentGame.Game.players = currentGame.Game.players.map((player) => {
+      if (player.id === id) player.inactive = false;
+      return player;
+    });
+
     currentGame.save();
     io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });
   } catch (error) {
@@ -157,11 +153,16 @@ export const changeGame = async (
 ) => {
   if (stage === "dealing") {
     try {
-      const currentGame = await GameCollection.findOne({ "Game.id": gameId });
+      console.log("gameIdentifier", gameIdentifier);
+      const currentGame = await GameCollection.findOne({
+        "Game.id": gameId,
+        "Game.gameIdentifier": gameIdentifier,
+      });
       if (currentGame.Game.turns[0].stage.includes("dealing")) return;
 
       //deal random white cards to players
       const { Game } = currentGame;
+      console.log("Game", Game);
       currentGame.Game.players = currentGame.Game.players.map((player) => {
         const playerhand = [];
         const handsize = currentGame.Game.handSize;
@@ -211,8 +212,9 @@ export const changeGame = async (
       io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });
       return;
     } catch (error) {
+      console.log("error", error);
       io.to(lobbyId).emit("currentGame", {
-        err: "Can't create Game, please create a new one",
+        err: "Can't update Game, please create a new one",
       });
       return;
     }
@@ -220,7 +222,11 @@ export const changeGame = async (
 
   //change current turn
   try {
-    const currentGame = await GameCollection.findOne({ "Game.id": gameId });
+    console.log("gameIdentifier", gameIdentifier);
+    const currentGame = await GameCollection.findOne({
+      "Game.id": gameId,
+      "Game.gameIdentifier": gameIdentifier,
+    });
     const updatedGame = updateTurn({
       currentGame,
       playedBlack,
@@ -231,14 +237,7 @@ export const changeGame = async (
       winningCards,
       leavedGame,
     });
-
-    //close game ifnot enought players
-    if (
-      updatedGame.Game.players.filter((player) => !player.inactive).length < 2
-    )
-      return io.to(lobbyId).emit("currentGame", {
-        err: "Not enough players to continue, redirecting you back",
-      });
+    updateGameInLobby(updatedGame);
 
     io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
   } catch (error) {

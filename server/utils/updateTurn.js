@@ -39,6 +39,11 @@ const updateTurn = ({
         (player) => player.player !== newCzar.id
       );
     }
+
+    //if not enough players, close game
+    if (currentGame.Game.players.filter((player) => !player.inactive < 2))
+      currentGame.Game.concluded = true;
+
     currentGame.save();
     return currentGame;
   }
@@ -134,7 +139,7 @@ const updateTurn = ({
         czar: nextCzar,
         stage: "black",
         white_cards: Game.players
-          .filter((player) => player.id !== nextCzar.id && player.active)
+          .filter((player) => player.id !== nextCzar.id && !player.inactive)
           .map((player) => {
             return { player: player.id, cards: player.hand, played_card: [] };
           }),

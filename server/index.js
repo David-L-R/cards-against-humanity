@@ -71,8 +71,8 @@ io.on("connection", (socket) => {
     createGame({ setRounds, maxHandSize, lobbyId, io, socket });
   });
 
-  socket.on("getUpdatedGame", ({ lobbyId, name, id }) =>
-    sendCurrentGame({ lobbyId, name, id, io, socket })
+  socket.on("getUpdatedGame", ({ lobbyId, name, id, gameIdentifier }) =>
+    sendCurrentGame({ lobbyId, name, id, io, socket, gameIdentifier })
   );
 
   socket.on("changeGame", (data) => {

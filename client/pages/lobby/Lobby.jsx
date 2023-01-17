@@ -68,6 +68,7 @@ const Lobby = ({ socket }) => {
 
     // creates new game if host and redirect everyone to game
     socket.on("newgame", ({ newGameData, err }) => {
+      console.log("newGameData", newGameData);
       if (!newGameData || err) {
         setIsloading(false);
         return setShowErrMessage(err);

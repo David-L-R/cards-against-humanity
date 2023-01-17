@@ -1,10 +1,16 @@
 import LobbyCollection from "../database/models/lobby.js";
 
-export const addNewGameToLobby = async (game) => {
+export const updateGameInLobby = async (game) => {
   const currentLobbyId = game.Game.id;
   const lobby = await LobbyCollection.findById(currentLobbyId);
+  let currentGameIndex = lobby.games.length - 1;
 
-  lobby.games.push(game);
-  const response = await lobby.save();
-  return response;
+  if (currentGameIndex < 0) currentGameIndex = 0;
+
+  if (lobby.games[currentGameIndex]?.Game.concluded) {
+    lobby.games.push(game);
+    return lobby.save();
+  }
+  lobby.games[currentGameIndex] = game;
+  return lobby.save();
 };

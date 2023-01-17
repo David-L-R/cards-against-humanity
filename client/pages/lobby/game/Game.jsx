@@ -31,22 +31,41 @@ const Game = ({ socket }) => {
   const [currentTurn, setCurrentTurn] = useState(null);
   const [showErrMessage, setShowErrMessage] = useState(false);
   const [currentLobby, setCurrentLobby] = useState(false);
-  let gameIdentifier = null;
+  const [gameIdentifier, setGameIdentifier] = useState(null);
 
   useEffect(() => {
     //getting game infos and rejoin player to socket io
     socket.on("currentGame", ({ currentGame, err }) => {
       console.log("currentLobby", currentGame);
+      //if error ocurred
       if (err || !currentGame) {
         setLoading(false);
         return setShowErrMessage(err);
       }
+
+      //abort game if not enough player
+      if (currentGame.players.filter((player) => !player.inactive).length < 2) {
+        setShowErrMessage(
+          "Not enough players left. Game closed and redirecting you back!"
+        );
+        setTimeout(() => {
+          router.push(`/lobby/${lobbyId}`);
+        }, 3000);
+      }
+
+      //if game is concluded, redirect
+      if (currentGame.concluded) {
+        setShowErrMessage("This game goets closed, please create a new one");
+        setTimeout(() => {
+          router.push(`/lobby/${lobbyId}`);
+        }, 3000);
+      }
+
       const lastTurnIndex = currentGame.turns.length - 1;
       const lastTurn = currentGame.turns[lastTurnIndex];
       playedBlackFromCzar = lastTurn.black_card;
       const currentCzarId = lastTurn?.czar?.id;
       const playerId = cookies.socketId;
-      gameIdentifier = currentGame?.gameIdentifier;
       const currentPlayer = currentGame.players?.find(
         (player) => player.id === playerId
       );
@@ -127,7 +146,7 @@ const Game = ({ socket }) => {
     return () => {
       socket.removeAllListeners();
     };
-  }, [lobbyId, gameStage]);
+  }, [lobbyId, gameStage, gameIdentifier]);
 
   const chooseBlackCard = (selected) => {
     const playerData = {
@@ -138,6 +157,7 @@ const Game = ({ socket }) => {
       blackCards,
       gameId,
       lobbyId,
+      gameIdentifier,
     };
     socket.emit("changeGame", playerData);
   };
@@ -151,6 +171,7 @@ const Game = ({ socket }) => {
       gameId,
       lobbyId,
       playedWhite: cards,
+      gameIdentifier,
     };
     socket.emit("changeGame", { ...playerData });
   };
@@ -181,6 +202,7 @@ const Game = ({ socket }) => {
       gameId,
       lobbyId,
       winningCards: cards,
+      gameIdentifier,
     };
     socket.emit("changeGame", { ...playerData });
   };
@@ -198,6 +220,7 @@ const Game = ({ socket }) => {
       stage: "completed",
       gameId,
       lobbyId,
+      gameIdentifier,
     };
     socket.emit("changeGame", { ...playerData });
   };
@@ -210,13 +233,17 @@ const Game = ({ socket }) => {
         lobbyId: router.query.lobbyId,
         playerName,
         id: cookies.socketId,
+        gameIdentifier,
       });
     }
   }, [lobbyId]);
 
   // setup lobbyID from router after router is ready
   useEffect(() => {
-    setLobbyId(router.query.lobbyId);
+    if (router.query.gameId && router.query.lobbyId) {
+      setGameIdentifier(router.query.gameId[0]);
+      setLobbyId(router.query.lobbyId);
+    }
   }, [router.isReady]);
 
   // if host start the game by send the server the current "starting" stage
@@ -262,9 +289,7 @@ const Game = ({ socket }) => {
     return (
       <main>
         <h1>An error ocurred</h1>
-        {setTimeout(() => {
-          router.push(`/lobby/${lobbyId}`);
-        }, 3500)}
+
         {showErrMessage && (
           <Error
             showErrMessage={showErrMessage}
