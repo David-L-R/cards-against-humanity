@@ -25,6 +25,7 @@ import CardTemplate from "../../components/CardTemplate.jsx";
 function DragAndDropContainer(props) {
   const { setData, data, children, element, getNewWhiteCard } = props;
   const [activeId, setActiveId] = useState(null);
+  //const [rotation, setRotation] = useState(0);
   const sensors = useSensors(
     useSensor(MouseSensor),
     useSensor(TouchSensor),
@@ -32,6 +33,14 @@ function DragAndDropContainer(props) {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
+
+  function randomTilt() {
+    const randomRotation = Math.random() * 8 - 4;
+    return {
+      scale: "1.1",
+      rotate: `${randomRotation}deg`,
+    };
+  }
 
   return (
     <DndContext
@@ -72,7 +81,7 @@ function DragAndDropContainer(props) {
         })}
       </div>
 
-      <DragOverlay>
+      <DragOverlay style={randomTilt()}>
         {activeId ? <CardTemplate id={activeId} /> : null}
       </DragOverlay>
     </DndContext>

@@ -7,7 +7,7 @@
   color: black;
   perspective: 1000px;
   font-size: 18px;
-  animation: wiggle 2s 2s linear infinite;
+  animation: wiggle 3s 2s linear infinite;
   transition: 0.5s;
   z-index: 20;
 }

@@ -30,6 +30,7 @@ export function DragItem(props) {
     transform: CSS.Transform.toString(transform),
     listStyle: "none",
     transition,
+
     opacity: isDragging ? 0.5 : 1,
     ...props.style,
   };
@@ -39,7 +40,8 @@ export function DragItem(props) {
       ref={setNodeRef}
       style={isBlackCard || isSkelettonCard ? null : style}
       {...listeners}
-      {...attributes}>
+      {...attributes}
+    >
       {element ? (
         <CustomComponent
           {...props}
