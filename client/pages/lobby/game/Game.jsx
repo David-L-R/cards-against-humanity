@@ -31,22 +31,41 @@ const Game = ({ socket }) => {
   const [currentTurn, setCurrentTurn] = useState(null);
   const [showErrMessage, setShowErrMessage] = useState(false);
   const [currentLobby, setCurrentLobby] = useState(false);
-  let gameIdentifier = null;
+  const [gameIdentifier, setGameIdentifier] = useState(null);
 
   useEffect(() => {
     //getting game infos and rejoin player to socket io
     socket.on("currentGame", ({ currentGame, err }) => {
       console.log("currentLobby", currentGame);
+      //if error ocurred
       if (err || !currentGame) {
         setLoading(false);
         return setShowErrMessage(err);
       }
+
+      //abort game if not enough player
+      if (currentGame.players.filter((player) => !player.inactive).length < 2) {
+        setShowErrMessage(
+          "Not enough players left. Game closed and redirecting you back!"
+        );
+        setTimeout(() => {
+          router.push(`/lobby/${lobbyId}`);
+        }, 3000);
+      }
+
+      //if game is concluded, redirect
+      if (currentGame.concluded) {
+        setShowErrMessage("This game goets closed, please create a new one");
+        setTimeout(() => {
+          router.push(`/lobby/${lobbyId}`);
+        }, 3000);
+      }
+
       const lastTurnIndex = currentGame.turns.length - 1;
       const lastTurn = currentGame.turns[lastTurnIndex];
       playedBlackFromCzar = lastTurn.black_card;
       const currentCzarId = lastTurn?.czar?.id;
       const playerId = cookies.socketId;
-      gameIdentifier = currentGame?.gameIdentifier;
       const currentPlayer = currentGame.players?.find(
         (player) => player.id === playerId
       );
@@ -127,7 +146,7 @@ const Game = ({ socket }) => {
     return () => {
       socket.removeAllListeners();
     };
-  }, [lobbyId, gameStage]);
+  }, [lobbyId, gameStage, gameIdentifier]);
 
   const chooseBlackCard = (selected) => {
     const playerData = {
@@ -138,6 +157,7 @@ const Game = ({ socket }) => {
       blackCards,
       gameId,
       lobbyId,
+      gameIdentifier,
     };
     socket.emit("changeGame", playerData);
   };
@@ -151,6 +171,7 @@ const Game = ({ socket }) => {
       gameId,
       lobbyId,
       playedWhite: cards,
+      gameIdentifier,
     };
     socket.emit("changeGame", { ...playerData });
   };
@@ -181,6 +202,7 @@ const Game = ({ socket }) => {
       gameId,
       lobbyId,
       winningCards: cards,
+      gameIdentifier,
     };
     socket.emit("changeGame", { ...playerData });
   };
@@ -198,33 +220,35 @@ const Game = ({ socket }) => {
       stage: "completed",
       gameId,
       lobbyId,
+      gameIdentifier,
     };
     socket.emit("changeGame", { ...playerData });
   };
 
-  //HERE
+  //getting new white cards
   function fetchMoreCards() {
     socket.emit("changeGame", { sendWhiteCards: true });
   }
 
-  //TO HERE
-
   //self update page after got redirected, use key from query as lobby id
   useEffect(() => {
     if (lobbyId) {
-      console.log("RUNN!");
       setLobbyId(router.query.lobbyId);
       socket.emit("getUpdatedGame", {
         lobbyId: router.query.lobbyId,
         playerName,
         id: cookies.socketId,
+        gameIdentifier,
       });
     }
   }, [lobbyId]);
 
   // setup lobbyID from router after router is ready
   useEffect(() => {
-    setLobbyId(router.query.lobbyId);
+    if (router.query.gameId && router.query.lobbyId) {
+      setGameIdentifier(router.query.gameId[0]);
+      setLobbyId(router.query.lobbyId);
+    }
   }, [router.isReady]);
 
   // if host start the game by send the server the current "starting" stage
@@ -262,6 +286,20 @@ const Game = ({ socket }) => {
           <section className="scoreboard-container">
             <Scoreboard currentLobby={currentLobby} />
           </section>
+        )}
+      </main>
+    );
+
+  if (showErrMessage)
+    return (
+      <main>
+        <h1>An error ocurred</h1>
+
+        {showErrMessage && (
+          <Error
+            showErrMessage={showErrMessage}
+            setShowErrMessage={setShowErrMessage}
+          />
         )}
       </main>
     );
@@ -339,8 +377,7 @@ const Game = ({ socket }) => {
               isCzar={isCzar}
               whiteCardChoosed={whiteCardChoosed}
               confirmed={confirmed}
-              stage={gameStage}
-            >
+              stage={gameStage}>
               {playedWhite && isCzar && (
                 <ul className={"cardDisplay playedWhite"}>
                   {playedWhite.map(
@@ -349,16 +386,14 @@ const Game = ({ socket }) => {
                         <li
                           onMouseEnter={() => handleMouseOver(cards)}
                           onMouseLeave={() => handleMouseLeave(cards)}
-                          key={cards[0].text + cards[0].pack + index}
-                        >
+                          key={cards[0].text + cards[0].pack + index}>
                           {cards.map((card) => (
                             <PlayedWhite card={card} key={card.text} />
                           ))}
                           <button
                             onClick={() => submitWinner(cards)}
                             className="choose-button"
-                            disabled={gameStage === "deciding" ? false : true}
-                          >
+                            disabled={gameStage === "deciding" ? false : true}>
                             {gameStage === "deciding"
                               ? "Choose as the Winner"
                               : "wait for palyers...."}

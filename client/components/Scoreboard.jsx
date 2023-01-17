@@ -1,5 +1,6 @@
 import React from "react";
 import { AiOutlineCheckCircle } from "react-icons/ai";
+import { VscDebugDisconnect } from "react-icons/vsc";
 import { RiVipCrown2Fill } from "react-icons/Ri";
 import { useSession } from "next-auth/react";
 
@@ -37,20 +38,26 @@ const Scoreboard = ({ currentLobby }) => {
       <ul>
         {players &&
           players.map((player) => (
-            <li key={player.id}>
+            <li
+              key={player.id}
+              className={player.inactive ? "inactive-player" : null}>
               <div>
                 {czar && czar.id === player.id && (
                   <div className={"crown-background"}>
                     <RiVipCrown2Fill className="crown" />
                   </div>
                 )}
-                <AiOutlineCheckCircle
-                  className={
-                    !submittedWhiteCards(player.id)
-                      ? "checkmark"
-                      : "checkmark active"
-                  }
-                />
+                {!player.inactive ? (
+                  <AiOutlineCheckCircle
+                    className={
+                      !submittedWhiteCards(player.id)
+                        ? "checkmark"
+                        : "checkmark active"
+                    }
+                  />
+                ) : (
+                  <VscDebugDisconnect className="disconnect-icon" />
+                )}
                 <img className="avatar" src="/favicon.ico" alt="" />
                 <span className="player-name">{player.name}</span>
                 <span className="player-points">{player.points}</span>

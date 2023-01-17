@@ -125,11 +125,33 @@ export const updateClient = async ({
 export const setPlayerInactive = async ({ reason, io, userId }) => {
   //set player inactive on disconnect
   try {
-    const currentLobby = await LobbyCollection.findOne({
+    const lobbyList = await LobbyCollection.find({
       "players.id": userId,
     });
+    const currentLobby = lobbyList[lobbyList.length - 1];
 
-    //search for player that needs to be deletet from lobby
+    //set leaving player inactive if they are in a running game
+    const currenGameIndex = currentLobby.games.length - 1;
+    if (currenGameIndex >= 0) {
+      const gameId = currentLobby._id.toString();
+      const currentGame = await GameCollection.findOne({
+        "Game.id": gameId,
+        "Game.gameIdentifier": currenGameIndex,
+      });
+
+      currentGame.Game.players = currentGame.Game.players.map((player) => {
+        if (player.id === userId) player.inactive = true;
+        return player;
+      });
+
+      //not enough players will close the game
+      if (currentGame.Game.players.filter((player) => !player.inactive) < 2)
+        currentGame.Game.concluded = true;
+      currentGame.save();
+      io.to(gameId).emit("currentGame", { currentGame: currentGame.Game });
+    }
+
+    //search for player that needs to be set inactive from lobby
     currentLobby.players = currentLobby.players.map((player) => {
       if (player.id === userId) player.inactive = true;
       if (player.isHost) player.isHost = false;

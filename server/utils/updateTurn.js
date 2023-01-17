@@ -14,17 +14,39 @@ const updateTurn = ({
 
   // set status to inactive if playver turns back to lobby
   if (leavedGame) {
-    const currentPlayer = currentTurn.white_cards.find(
-      (curr) => curr.player === playerId
+    const currentPlayer = currentGame.Game.players.find(
+      (curr) => curr.id === playerId
     );
+    const currentCzar = currentTurn.czar;
 
     //if normal player leaves active, set inactive in white_cards
-    //TODO: also in game.player, check is czar is leaving and set new czar, reactivate player after rejoining
     if (currentPlayer) {
-      currentPlayer.active = false;
-      currentGame.save();
-      return currentGame;
+      currentPlayer.inactive = true;
     }
+
+    //if czar leaves, asign a new czar
+    if (currentCzar.id === currentPlayer.id) {
+      const activePlayers = currentGame.Game.players.filter(
+        (player) => !player.inactive
+      );
+      const randomIndex = Math.random() * (activePlayers.length - 1);
+      const newCzar = activePlayers[randomIndex];
+
+      //asign new czar
+      currentTurn.czar = newCzar;
+
+      //remove czar from white_cards
+      currentTurn.white_cards = currentTurn.white_cards.filter(
+        (player) => player.player !== newCzar.id
+      );
+    }
+
+    //if not enough players, close game
+    if (currentGame.Game.players.filter((player) => !player.inactive < 2))
+      currentGame.Game.concluded = true;
+
+    currentGame.save();
+    return currentGame;
   }
 
   // send every player the choosen black card
@@ -82,7 +104,6 @@ const updateTurn = ({
     );
 
     //add points to turn
-    console.log("wonPlayer", wonPlayer);
     wonPlayer.played_card.forEach((card) => (wonPlayer.points += 10));
     currentTurn.winner = wonPlayer;
     //add points to global players
@@ -99,7 +120,9 @@ const updateTurn = ({
   if (stage === "completed") {
     const { Game } = currentGame;
 
-    currentTurn.completed.push({ player_id: playerId });
+    currentTurn.completed.push(
+      Game.players.find((player) => player.id === playerId)
+    );
     if (currentTurn.completed.length >= Game.players.length) {
       const currCzarIndex = Game.players.indexOf(
         Game.players.find((player) => player.id === currentTurn.czar.id)
@@ -117,7 +140,7 @@ const updateTurn = ({
         czar: nextCzar,
         stage: "black",
         white_cards: Game.players
-          .filter((player) => player.id !== nextCzar.id)
+          .filter((player) => player.id !== nextCzar.id && !player.inactive)
           .map((player) => {
             return { player: player.id, cards: player.hand, played_card: [] };
           }),

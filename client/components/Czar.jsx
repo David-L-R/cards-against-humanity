@@ -135,19 +135,17 @@ const Czar = ({
                     {cardItem.card.text}
                   </m.div>
                 ) : (
-                  <li>
-                    <div
-                      className={` ${style.black} czarPicking`}
-                      onClick={(e) => {
-                        selectCard({
-                          index: cardItem.index,
+                  <div
+                    className={` ${style.black} czarPicking`}
+                    onClick={(e) => {
+                      selectCard({
+                        index: cardItem.index,
 
-                          event: e,
-                        });
-                      }}>
-                      {cardItem.card.text}
-                    </div>
-                  </li>
+                        event: e,
+                      });
+                    }}>
+                    {cardItem.card.text}
+                  </div>
                 )}
               </li>
             ))}

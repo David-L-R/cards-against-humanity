@@ -14,7 +14,7 @@ const gameModel = mongoose.Schema(
           id: String, // this.Lobby.player[n].id
           name: String,
           bet: Boolean, // default false. FEATURE!
-          active: Boolean, // whenever timer runs out and player hasn't made their move, this will turn true, until cancelled
+          inactive: Boolean, // whenever timer runs out and player hasn't made their move, this will turn true, until cancelled
           points: Number, //default zero, every round won adds a point.
           hand: Array, //just white Cards
           isHost: Boolean,
@@ -44,7 +44,6 @@ const gameModel = mongoose.Schema(
               cards: Array,
               played_card: [Object],
               points: Number,
-              active: Boolean,
             },
           ], //this.Game.players(n).id; this.Game.players(n).hand, this.Game.players(n).hand.splice(n, 1)
           black_card: Object, //this.Game.deck.black_cards.(splice(math.random, 1)) ()=> remove from black_cards array to prevent repeats
@@ -54,7 +53,7 @@ const gameModel = mongoose.Schema(
             played_card: [Object],
             points: Number,
           }, // same as white_cards, except just an Object rather than an Array of Objects.
-          completed: [{ player_id: String }],
+          completed: [Object],
         },
       ],
       timerTrigger: Boolean, // Set and started by host, start is synced, finish is pushed by host's timer

@@ -8,16 +8,17 @@ function Navbar({ socket }) {
   const router = useRouter();
   const [lobbyId, setLobbyId] = useState(null);
   const cookies = parseCookies();
+  const [gameIdentifier, setGameIdentifier] = useState(null);
 
   const backToLobby = () => {
     if (lobbyId) {
       const playerData = {
         playerId: cookies.socketId,
-
+        lobbyId,
         gameId: lobbyId,
         leavedGame: true,
+        gameIdentifier,
       };
-      console.log("playerData", playerData);
       socket.emit("changeGame", playerData);
       router.push({
         pathname: `/lobby/${lobbyId}`,
@@ -26,7 +27,8 @@ function Navbar({ socket }) {
   };
 
   useEffect(() => {
-    if (router.query.lobbyId) {
+    if (router.query.lobbyId && router.query.gameId) {
+      setGameIdentifier(router.query.gameId[0]);
       if (Array.isArray(router.query.lobbyId))
         return setLobbyId(router.query.lobbyId[0]);
       setLobbyId(router.query.lobbyId);

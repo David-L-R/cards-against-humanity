@@ -3,20 +3,20 @@ import React, { useEffect, useRef, useState } from "react";
 import { BiCopy } from "react-icons/Bi";
 import { RiVipCrown2Fill } from "react-icons/Ri";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { parseCookies, setCookie } from "nookies";
 import { motion as m } from "framer-motion";
 import randomInsult from "../../utils/randomInsult";
 import Error from "../../components/Error";
 import Scoreboard from "../../components/Scoreboard";
+import { parseCookies } from "nookies";
 
 const Lobby = ({ socket }) => {
   const router = useRouter();
   const { joinGame } = router.query;
+  const cookies = parseCookies();
   const [lobbyId, setLobbyId] = useState(null);
   const [showErrMessage, setShowErrMessage] = useState(null);
   const [players, setPlayers] = useState([]);
   const [copied, setCopied] = useState(false);
-  const cookies = parseCookies();
   const [isHost, setHost] = useState(false);
   const [inactive, setInactive] = useState(false);
   const amountOfRounds = useRef(null);
@@ -68,6 +68,7 @@ const Lobby = ({ socket }) => {
 
     // creates new game if host and redirect everyone to game
     socket.on("newgame", ({ newGameData, err }) => {
+      console.log("newGameData", newGameData);
       if (!newGameData || err) {
         setIsloading(false);
         return setShowErrMessage(err);
@@ -85,9 +86,6 @@ const Lobby = ({ socket }) => {
       }
     });
 
-    if (!cookies.socketId)
-      setCookie(null, "socketId", socket.id, { path: "/" });
-
     return () => {
       socket.removeAllListeners();
     };
@@ -95,7 +93,7 @@ const Lobby = ({ socket }) => {
 
   useEffect(() => {
     //self update page after got redirected, use key from query as lobby id
-    if (lobbyId && cookies.socketId) {
+    if (lobbyId) {
       socket.emit("updateLobby", { lobbyId, id: cookies.socketId, joinGame });
     }
   }, [lobbyId]);
@@ -158,8 +156,7 @@ const Lobby = ({ socket }) => {
               x: -1300,
               rotate: -120,
               transition: { duration: 0.75 },
-            }}
-          >
+            }}>
             <div className="waitingLobbyTextWrapper">
               <h1>
                 Waiting for players&nbsp;
@@ -215,8 +212,7 @@ const Lobby = ({ socket }) => {
               players.map((player) => (
                 <li
                   key={player.name}
-                  className={player.inactive ? "inactive" : null}
-                >
+                  className={player.inactive ? "inactive" : null}>
                   <h2>{player.name.toUpperCase()}</h2>
                   {player.inactive && (
                     <p>is disconnected and {randomInsult()}</p>
