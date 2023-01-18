@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { motion as m } from "framer-motion";
 
 function WhiteCard({ getNewWhiteCard }) {
   const [isActive, setIsActive] = useState(false);

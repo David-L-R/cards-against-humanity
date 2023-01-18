@@ -70,7 +70,6 @@ const Lobby = ({ socket }) => {
 
     // creates new game if host and redirect everyone to game
     socket.on("newgame", ({ newGameData, err }) => {
-      console.log("newGameData", newGameData);
       if (!newGameData || err) {
         setIsloading(false);
         return setShowErrMessage(err);
@@ -114,7 +113,7 @@ const Lobby = ({ socket }) => {
       setCopied(false);
     }, 3000);
   };
-
+  /*
   if (showErrMessage && !isHost)
     return (
       <main>
@@ -126,7 +125,7 @@ const Lobby = ({ socket }) => {
         )}
       </main>
     );
-
+*/
   if (isLoading && !currentLobby)
     return (
       <main>
@@ -137,6 +136,12 @@ const Lobby = ({ socket }) => {
   if (!currentLobby)
     return (
       <main>
+        {showErrMessage && (
+          <Error
+            showErrMessage={showErrMessage}
+            setShowErrMessage={setShowErrMessage}
+          />
+        )}
         <PageNotFound />
       </main>
     );
