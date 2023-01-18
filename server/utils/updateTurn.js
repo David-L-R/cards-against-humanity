@@ -99,7 +99,7 @@ const updateTurn = ({
       return player;
     });
 
-    //check if everyone submitted their cards by lookin into white_cards/played_cards
+    //check if every active player submitted their cards by lookin into white_cards/played_cards
     const currentCzarId = currentTurn.czar.id;
     const activePlayers = currentGame.Game.players.filter(
       (player) => !player.inactive && player.id !== currentCzarId
@@ -113,10 +113,6 @@ const updateTurn = ({
             )?.id && player.played_card.length > 0
       )
       .map((player) => player.played_card);
-
-    console.log("currentCzarId", currentCzarId);
-    console.log("activePlayers", activePlayers);
-    console.log("allPlayedCards", allPlayedCards);
 
     if (allPlayedCards.length === activePlayers.length)
       currentTurn.stage.push("deciding");
