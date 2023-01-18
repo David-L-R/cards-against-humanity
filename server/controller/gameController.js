@@ -137,23 +137,21 @@ export const sendCurrentGame = async ({
   }
 };
 
-export const changeGame = async (
-  {
-    sendWhiteCards,
-    blackCards,
-    playerId,
-    stage,
-    gameId,
-    gameIdentifier,
-    lobbyId,
-    playedBlack,
-    playedWhite,
-    winningCards,
-    leavedGame,
-  },
+export const changeGame = async ({
+  sendWhiteCards,
+  blackCards,
+  playerId,
+  stage,
+  gameId,
+  gameIdentifier,
+  lobbyId,
+  playedBlack,
+  playedWhite,
+  winningCards,
+  leavedGame,
   io,
-  socket
-) => {
+  socket,
+}) => {
   if (stage === "dealing") {
     try {
       const currentGame = await GameCollection.findOne({
