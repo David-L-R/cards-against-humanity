@@ -4,6 +4,7 @@ import allCards from "../data/allCards.json" assert { type: "json" };
 import { updateGameInLobby } from "../utils/addGameToLobby.js";
 import updateTurn from "../utils/updateTurn.js";
 import { update } from "react-spring";
+import dealCards from "../utils/dealCardsToPlayers.js";
 
 export const createGame = async ({
   setRounds,
@@ -155,63 +156,15 @@ export const changeGame = async (
 ) => {
   if (stage === "dealing") {
     try {
-      console.log("gameIdentifier", gameIdentifier);
       const currentGame = await GameCollection.findOne({
         "Game.id": gameId,
         "Game.gameIdentifier": gameIdentifier,
       });
-      if (currentGame.Game.turns[0].stage.includes("dealing")) return;
 
-      //deal random white cards to players
-      const { Game } = currentGame;
-      console.log("Game", Game);
-      currentGame.Game.players = currentGame.Game.players.map((player) => {
-        const playerhand = [];
-        const handsize = currentGame.Game.handSize;
+      const updatedGame = dealCards({ currentGame, playerId });
 
-        for (let counter = handsize; counter > 0; counter--) {
-          const deckLength = currentGame.Game.deck.white_cards.length - 1;
-          const randomIndex = Math.floor(Math.random() * deckLength);
-          const [randomCard] = currentGame.Game.deck.white_cards.splice(
-            randomIndex,
-            1
-          );
-          playerhand.push(randomCard);
-        }
-        player.hand = playerhand;
-        return player;
-      });
-
-      //setup the first random czar
-      const randomIndex = Math.floor(
-        Math.random() * (currentGame.Game.players.length - 1)
-      );
-      const randomPlayer = currentGame.Game.players[randomIndex];
-      currentGame.Game.turns[0].czar = randomPlayer;
-
-      //add player to turn
-      const foundPlayer = Game.turns[0].white_cards.find(
-        (player) => player.player === playerId
-      );
-      if (!foundPlayer) {
-        Game.players.forEach((player) => {
-          if (player.id !== randomPlayer.id)
-            currentGame.Game.turns[0].white_cards.push({
-              player: player.id,
-              cards: player.hand,
-              played_card: [],
-              points: 0,
-              active: true,
-            });
-        });
-      }
-      //activate timer trigger
-      Game.timerTrigger = true;
-
-      let currentStage = currentGame.Game.turns[0].stage;
-      currentGame.Game.turns[0].stage = [...currentStage, "dealing", "black"];
-      currentGame.save();
-      io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });
+      updatedGame.save();
+      io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
       return;
     } catch (error) {
       console.log("error", error);
@@ -243,6 +196,7 @@ export const changeGame = async (
       io,
     });
     updateGameInLobby(updatedGame);
+    updatedGame.save();
 
     io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
   } catch (error) {

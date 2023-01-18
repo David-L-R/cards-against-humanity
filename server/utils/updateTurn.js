@@ -47,7 +47,6 @@ const updateTurn = ({
     if (currentGame.Game.players.filter((player) => !player.inactive < 2))
       currentGame.Game.concluded = true;
 
-    currentGame.save();
     return currentGame;
   }
 
@@ -63,7 +62,6 @@ const updateTurn = ({
       if (player.id === playerId) player.hand.push(newWhite);
       return player;
     });
-    currentGame.save();
     io.to(socket.id).emit("newWhiteCard", { newWhite });
     return currentGame;
   }
@@ -73,7 +71,6 @@ const updateTurn = ({
     currentGame.Game.deck.black_cards = blackCards;
     currentTurn.stage = [...currentTurn.stage, "white"];
     currentTurn.black_card = playedBlack;
-    currentGame.save();
     return currentGame;
   }
 
@@ -111,7 +108,6 @@ const updateTurn = ({
 
     currentGame.Game = Game;
 
-    currentGame.save();
     return currentGame;
   }
 
@@ -132,7 +128,6 @@ const updateTurn = ({
     });
     currentTurn.stage.push("winner");
     currentGame.Game = Game;
-    currentGame.save();
     return currentGame;
   }
 
@@ -169,16 +164,8 @@ const updateTurn = ({
       };
       currentGame.Game.turns.push(newTurn);
     }
-    currentGame.save();
     return currentGame;
   }
-  /*
-  if (sendWhiteCards) {
-    currentGame,
-    playerId,
-    white_cards
-  }
-  */
 };
 
 export default updateTurn;
