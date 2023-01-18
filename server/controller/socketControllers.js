@@ -136,15 +136,30 @@ export const setPlayerInactive = async ({ reason, io, userId }) => {
         "Game.id": gameId,
         "Game.gameIdentifier": currenGameIndex,
       });
-
+      const currentTurn =
+        currentGame.Game.turns[currentGame.Game.turns.length - 1];
+      const currenCzar = currentTurn?.czar;
       currentGame.Game.players = currentGame.Game.players.map((player) => {
         if (player.id === userId) player.inactive = true;
         return player;
       });
 
       //not enough players will close the game
-      if (currentGame.Game.players.filter((player) => !player.inactive) < 2)
-        currentGame.Game.concluded = true;
+      // if (currentGame.Game.players.filter((player) => !player.inactive) < 2)
+      //   currentGame.Game.concluded = true;
+      // if czar leaves, assign a new one
+      if (currenCzar.id === userId) {
+        currentTurn.czar = currentGame.Game.players.find(
+          (player) => !player.inactive
+        );
+        //reset the current turn and start with a new czar
+        currentTurn.stage = ["start", "dealing", "black"];
+        currentTurn.white_cards = currentTurn.white_cards.map((player) => ({
+          ...player,
+          played_card: [],
+        }));
+        currentTurn.black_card = null;
+      }
       currentGame.save();
       io.to(gameId).emit("currentGame", { currentGame: currentGame.Game });
     }

@@ -215,6 +215,7 @@ const Game = ({ socket }) => {
       winningCards: cards,
       gameIdentifier,
     };
+    console.log("playerData", playerData);
     socket.emit("changeGame", { ...playerData });
   };
 

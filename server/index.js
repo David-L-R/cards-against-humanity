@@ -75,7 +75,7 @@ io.on("connection", (socket) => {
     sendCurrentGame({ lobbyId, name, id, io, socket, gameIdentifier })
   );
 
-  socket.on("changeGame", (data) => {
-    changeGame({ ...data, io, socket });
+  socket.on("changeGame", async (data) => {
+    await changeGame({ ...data, io, socket });
   });
 });

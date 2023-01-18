@@ -194,9 +194,9 @@ export const changeGame = async ({
       io,
     });
     updateGameInLobby(updatedGame);
-    updatedGame.save();
 
     io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
+    await updatedGame.save();
   } catch (error) {
     console.log("error", error);
     io.to(lobbyId).emit("currentGame", {

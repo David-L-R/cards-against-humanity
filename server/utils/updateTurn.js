@@ -50,6 +50,7 @@ const updateTurn = ({
     return currentGame;
   }
 
+  // if user requests for a new white card
   if (sendWhiteCards) {
     const randomIndex =
       Math.random() * (currentGame.Game.deck.white_cards.length - 1);
@@ -99,11 +100,25 @@ const updateTurn = ({
     });
 
     //check if everyone submitted their cards by lookin into white_cards/played_cards
-    const allPLayedCards = currentTurn.white_cards
-      .map((player) => player.played_card)
-      .filter((cards) => cards.length > 0);
+    const currentCzarId = currentTurn.czar.id;
+    const activePlayers = currentGame.Game.players.filter(
+      (player) => !player.inactive && player.id !== currentCzarId
+    );
+    const allPlayedCards = currentTurn.white_cards
+      .filter(
+        (player) =>
+          player.player ===
+            activePlayers.find(
+              (foundPlayer) => foundPlayer.id === player.player
+            )?.id && player.played_card.length > 0
+      )
+      .map((player) => player.played_card);
 
-    if (allPLayedCards.length === currentTurn.white_cards.length)
+    console.log("currentCzarId", currentCzarId);
+    console.log("activePlayers", activePlayers);
+    console.log("allPlayedCards", allPlayedCards);
+
+    if (allPlayedCards.length === activePlayers.length)
       currentTurn.stage.push("deciding");
 
     currentGame.Game = Game;
@@ -114,9 +129,9 @@ const updateTurn = ({
   //send winner to players
   if (stage === "winner") {
     const { Game } = currentGame;
-    const wonPlayer = currentTurn.white_cards.find(
-      (player) => player.played_card[0].text === winningCards[0].text
-    );
+    const wonPlayer = currentTurn.white_cards
+      .filter((player) => player.played_card.length > 0)
+      .find((player) => player.played_card[0].text === winningCards[0].text);
 
     //add points to turn
     wonPlayer.played_card.forEach((card) => (wonPlayer.points += 10));
@@ -137,14 +152,21 @@ const updateTurn = ({
     currentTurn.completed.push(
       Game.players.find((player) => player.id === playerId)
     );
-    if (currentTurn.completed.length >= Game.players.length) {
-      const currCzarIndex = Game.players.indexOf(
-        Game.players.find((player) => player.id === currentTurn.czar.id)
-      );
-      const lastPlayer = Game.players.length - 1;
+    //if every active player is ready, creat new turn
+    if (
+      currentTurn.completed.length >=
+      Game.players.filter((player) => !player.inactive).length
+    ) {
+      const currCzarIndex = Game.players
+        .filter((player) => !player.inactive)
+        .indexOf(
+          Game.players.find((player) => player.id === currentTurn.czar.id)
+        );
+      const lastPlayerIndex =
+        Game.players.filter((player) => !player.inactive).length - 1;
       //if cazr is last palyer in array, take the first player
       const nextCzar =
-        currCzarIndex === lastPlayer
+        currCzarIndex === lastPlayerIndex
           ? Game.players[0]
           : Game.players[currCzarIndex + 1];
       // create new turn
@@ -154,7 +176,7 @@ const updateTurn = ({
         czar: nextCzar,
         stage: "black",
         white_cards: Game.players
-          .filter((player) => player.id !== nextCzar.id && !player.inactive)
+          // .filter((player) => player.id !== nextCzar.id && !player.inactive)
           .map((player) => {
             return { player: player.id, cards: player.hand, played_card: [] };
           }),
