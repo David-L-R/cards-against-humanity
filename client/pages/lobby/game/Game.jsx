@@ -38,11 +38,22 @@ const Game = ({ socket }) => {
   useEffect(() => {
     //getting game infos and rejoin player to socket io
     socket.on("currentGame", ({ currentGame, err }) => {
-      console.log("currentLobby", currentGame);
+      console.log("currentGame", currentGame);
+      setLoading(false);
       //if error ocurred
       if (err || !currentGame) {
-        setLoading(false);
         return setShowErrMessage(err);
+      }
+      // if players cokkie is not stored inside game Object = player is not part of the game, redirect to hompage
+      if (
+        !currentGame.players.find((player) => player.id === cookies.socketId)
+      ) {
+        setShowErrMessage(
+          "Your are not part of this round, redirecting you back"
+        );
+        return setTimeout(() => {
+          router.push("/");
+        }, 3000);
       }
 
       //abort game if not enough player
@@ -215,7 +226,6 @@ const Game = ({ socket }) => {
       winningCards: cards,
       gameIdentifier,
     };
-    console.log("playerData", playerData);
     socket.emit("changeGame", { ...playerData });
   };
 
