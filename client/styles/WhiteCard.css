@@ -1,0 +1,132 @@
+.whiteCardContainer {
+  /*margin: auto;*/
+  display: flex;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  color: black;
+  perspective: 1000px;
+  font-size: 18px;
+  animation: wiggle 3s 2s linear infinite;
+  transition: 0.5s;
+  z-index: 20;
+}
+.whiteCardContainer:hover {
+  scale: 1.2;
+  transition: 0.5s;
+  box-shadow: -27px -19px 11px -3px rgba(125, 125, 125, 0.28);
+  animation: none;
+}
+.linkElement {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.whiteCard {
+  width: 100%;
+  height: 100%;
+  transition: transform 1s;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  position: relative;
+}
+
+.whiteCard.whiteIsFlipped {
+  transform: rotateY(180deg);
+}
+
+.whiteCardFace {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 1px solid black;
+  background: white;
+  /*box-shadow: 0 0px 18px 0px rgba(255, 255, 255, 0.2);*/
+}
+.whiteCardFace--front {
+  display: flex;
+  align-items: center;
+}
+.whiteCardFace--front h2 {
+  margin: 0;
+  display: flex;
+  text-align: left;
+  font-size: 24px;
+  width: 70%;
+  height: 100%;
+  padding: 10px;
+}
+.whiteCardFaceButton {
+  position: absolute;
+  width: max-content;
+  bottom: 5%;
+  left: 50%;
+  transform: translate(-50%);
+  font-weight: bold;
+  /*letter-spacing: 1px;*/
+}
+.whiteCardFace--front h3 {
+  color: white;
+  letter-spacing: 2px;
+}
+
+.whiteCardFace--back {
+  transform: rotateY(180deg);
+}
+.whiteCardHeader {
+  position: relative;
+  padding: 30px 30px 40px;
+  cursor: default;
+}
+.whiteCardHeader:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+  border-radius: 0 0 50% 0;
+}
+
+@keyframes wiggle {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  60% {
+    transform: rotate(0deg);
+  }
+  65% {
+    transform: rotate(0deg);
+  }
+  70% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(3deg);
+  }
+  80% {
+    transform: rotate(-3deg);
+  }
+  85% {
+    transform: rotate(3deg);
+  }
+  95% {
+    transform: rotate(-3deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}

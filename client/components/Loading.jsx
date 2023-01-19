@@ -3,7 +3,7 @@ import React from "react";
 function Loading() {
   return (
     <div className="loadingScreenContainer">
-      <div class="lds-roller">
+      <div className="lds-roller">
         <div></div>
         <div></div>
         <div></div>

@@ -39,7 +39,7 @@ function BalloonContainer() {
   }, []);
 
   function createBalloons(num) {
-    for (var i = num; i > 0; i--) {
+    for (let i = num; i > 0; i--) {
       setBalloons((prevBalloons) => [
         ...prevBalloons,
         <div className="balloon" style={getRandomStyles()} />,
@@ -47,15 +47,7 @@ function BalloonContainer() {
     }
   }
 
-  function removeBalloons() {
-    setBalloons([]);
-  }
-
-  return (
-    <div id="balloon-container" onClick={removeBalloons}>
-      {balloons}
-    </div>
-  );
+  return <div id="balloon-container">{balloons}</div>;
 }
 
 export default BalloonContainer;
