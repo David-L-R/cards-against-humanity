@@ -1,0 +1,11 @@
+.kick-container {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: auto;
+}
+
+.kick-container .kick-icon {
+  width: 20px;
+  height: auto;
+}

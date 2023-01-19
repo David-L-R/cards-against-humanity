@@ -3,6 +3,7 @@ import { AiOutlineCheckCircle } from "react-icons/ai";
 import { VscDebugDisconnect } from "react-icons/vsc";
 import { RiVipCrown2Fill } from "react-icons/Ri";
 import { useSession } from "next-auth/react";
+import KickButton from "./KickButton";
 
 const Scoreboard = ({ currentLobby }) => {
   const { players, turns } = currentLobby;
