@@ -33,7 +33,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   font-size: 1.2rem;
   transition: all 25ms;
 }
@@ -41,11 +41,11 @@
 .scoreboard-container:hover::after {
   content: "SCOREBOARD ";
   top: 2.5%;
-  left: 5%;
-  transform: translate(0, 0);
-  letter-spacing: 0.5px;
-  font-size: 0.9rem;
-  transition: all 100ms;
+  left: 50%;
+  transform: translate(-50%, 0);
+  letter-spacing: 1px;
+  font-size: 1.2rem;
+  /*transition: all 100ms;*/
 }
 
 .scoreboard-container ul {
@@ -144,4 +144,12 @@
   margin-left: auto;
   font-weight: 900;
   font-size: 1.2rem;
+}
+
+.fuckingClass {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding-left: 20px;
+  margin: 0;
+  border-bottom: 2px solid rgb(87, 87, 87);
 }
