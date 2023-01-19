@@ -4,16 +4,18 @@ import { VscDebugDisconnect } from "react-icons/vsc";
 import { RiVipCrown2Fill } from "react-icons/Ri";
 import { CgCloseO } from "react-icons/Cg";
 import { useSession } from "next-auth/react";
+import { useAppContext } from "../context";
 import KickButton from "./KickButton";
 
 const Scoreboard = ({ currentLobby }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showKick, setShowKick] = useState(false);
   const { players, turns } = currentLobby;
   const currentTurn = turns && turns[turns.length - 1];
   const { stage, white_cards, czar } = currentTurn
     ? currentTurn
     : { stage: null, white_cards: null };
-
+  const { storeData } = useAppContext();
   const submittedWhiteCards = (playerId) => {
     if (white_cards && currentLobby) {
       const player = white_cards.find((player) => player.player === playerId);
@@ -49,16 +51,14 @@ const Scoreboard = ({ currentLobby }) => {
           boxShadow: isOpen
             ? "20px 2px 31px 4px rgba(135,129,129,0.52)"
             : "none",
-        }}
-      >
+        }}>
         <div
           className="scoreButton"
           onClick={openMenu}
           style={{
             opacity: isOpen ? "0" : "1",
             cursor: isOpen ? "default" : "pointer",
-          }}
-        >
+          }}>
           <p>SCORES</p>
         </div>
         <button onClick={openMenu}>
@@ -77,9 +77,12 @@ const Scoreboard = ({ currentLobby }) => {
               <li
                 key={player.id}
                 className={player.inactive ? "inactive-player" : null}
-              >
+                onMouseEnter={() => setShowKick(true)}
+                onMouseLeave={() => setShowKick(false)}>
                 <div>
-                  {!player.inactive ? (
+                  {storeData.isHost && showKick ? (
+                    <KickButton playerId={player.id} />
+                  ) : !player.inactive ? (
                     <AiOutlineCheckCircle
                       className={
                         !submittedWhiteCards(player.id)
@@ -91,7 +94,6 @@ const Scoreboard = ({ currentLobby }) => {
                     <VscDebugDisconnect className="disconnect-icon" />
                   )}
                 </div>
-                <div>kick</div>
                 <div className="profileContainer">
                   {czar && czar.id === player.id && (
                     <div className={"crown-background"}>
