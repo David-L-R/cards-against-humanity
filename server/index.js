@@ -11,12 +11,8 @@ import {
   findRoomToJoin,
   updateClient,
 } from "./controller/socketControllers.js";
-import {
-  changeGame,
-  createGame,
-  sendCurrentGame,
-} from "./controller/gameController.js";
-import GameCollection from "./database/models/game.js";
+import { createGame, sendCurrentGame } from "./controller/gameController.js";
+import processQueue from "./utils/processQueue.js";
 
 dotenv.config();
 connectDB();
@@ -43,6 +39,8 @@ const io = new Server(server, {
 server.listen(PORT, async (req, res) => {
   console.log(`Server running under ${PORT}`);
 });
+
+const queue = {}; // {lobby: lobbyId, loading:Boolean, data:[{data to precess}]}
 
 //Socket.io
 io.on("connection", (socket) => {
@@ -76,6 +74,16 @@ io.on("connection", (socket) => {
   );
 
   socket.on("changeGame", async (data) => {
-    await changeGame({ ...data, io, socket });
+    const { lobbyId } = data;
+    // add request object to queue
+    queue[lobbyId] = {
+      lobby: lobbyId,
+      data: queue[lobbyId]?.data ? [...queue[lobbyId].data, data] : [data],
+      loading: queue[lobbyId]?.loading ? queue[lobbyId].loading : false,
+    };
+    if (!queue[lobbyId].loading) {
+      queue[lobbyId].loading = true;
+      processQueue({ lobbyId, io, socket, queue });
+    }
   });
 });
