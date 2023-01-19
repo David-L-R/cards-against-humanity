@@ -1,11 +1,24 @@
 .kick-container {
-  position: absolute;
+  position: relative;
   right: 0;
   top: 0;
-  height: auto;
 }
 
 .kick-container .kick-icon {
-  width: 20px;
-  height: auto;
+  width: 40px;
+  cursor: pointer;
+}
+
+.kick-container button {
+  position: absolute;
+  font-size: 1.1rem;
+  font-weight: 600;
+  width: max-content;
+  top: -25%;
+  left: 50%;
+  background-color: black;
+  border-radius: 1rem;
+  color: white;
+  padding: 0.5rem 1rem;
+  box-shadow: 0 3px 6px 0px rgb(82, 82, 82);
 }
