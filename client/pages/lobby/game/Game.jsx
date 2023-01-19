@@ -10,6 +10,7 @@ import Winner from "../../../components/Winner";
 import Error from "../../../components/Error";
 import Scoreboard from "../../../components/Scoreboard";
 import Loading from "../../../components/Loading";
+import { useAppContext } from "../../../context";
 
 const Game = ({ socket }) => {
   const router = useRouter();
@@ -35,6 +36,7 @@ const Game = ({ socket }) => {
   const [gameIdentifier, setGameIdentifier] = useState(null);
   const [maxHandSize, setMaxHandSize] = useState(null);
   const [closingGame, setClosingGame] = useState(false);
+  const { storeData, setStoreData } = useAppContext();
 
   useEffect(() => {
     //getting game infos and rejoin player to socket io
@@ -92,7 +94,7 @@ const Game = ({ socket }) => {
         currentCzarId !== cookies.socketId &&
         lastTurn.white_cards.length > 0 &&
         lastTurn.white_cards.find((player) => player.player === playerId)
-          .played_card;
+          ?.played_card;
       const currentTurnIndex = currentGame.turns.length - 1;
       const currentStageIndex =
         currentGame.turns[currentTurnIndex].stage.length - 1;
@@ -104,7 +106,8 @@ const Game = ({ socket }) => {
         const { black_cards } = currentGame.deck;
 
         //check if the host
-        if (isHost) setHost(true);
+        if (isHost)
+          setHost(true), setStoreData((prev) => ({ ...prev, isHost: true }));
 
         //skipp dealing phase because of rerender
         if (stage === "dealing") return setGameStage(stage);
@@ -125,7 +128,7 @@ const Game = ({ socket }) => {
         }
 
         // during white stage, only update players screen if incoming black card differs from current one or already white cards where submitted
-        if (confirmedWhiteCards.length > 0 && !isCzar) {
+        if (confirmedWhiteCards?.length > 0 && !isCzar) {
           setConfirmed(true);
           setCardsOnTable({
             table: {
@@ -290,7 +293,7 @@ const Game = ({ socket }) => {
   //self update page after got redirected, use key from query as lobby id
   useEffect(() => {
     if (lobbyId) {
-      setLobbyId(router.query.lobbyId);
+      // setLobbyId(router.query.lobbyId);
       socket.emit("getUpdatedGame", {
         lobbyId: router.query.lobbyId,
         playerName,
@@ -305,6 +308,11 @@ const Game = ({ socket }) => {
     if (router.query.gameId && router.query.lobbyId) {
       setGameIdentifier(router.query.gameId[0]);
       setLobbyId(router.query.lobbyId);
+      setStoreData((prev) => ({
+        ...prev,
+        lobbyId: router.query.lobbyId,
+        gameIdentifier: router.query.gameId[0],
+      }));
     }
   }, [router.isReady]);
 
@@ -341,7 +349,7 @@ const Game = ({ socket }) => {
         <Loading />
         {currentLobby && (
           <section className="scoreboard-container">
-            <Scoreboard currentLobby={currentLobby} />
+            <Scoreboard currentLobby={currentLobby} socket={socket} />
           </section>
         )}
       </main>
@@ -380,7 +388,6 @@ const Game = ({ socket }) => {
 
   return (
     <main className="game">
-      {console.log("closingGame", closingGame)}
       {gameStage === "winner" ? (
         <>
           <div className="debuggerMonitor">
@@ -456,8 +463,7 @@ const Game = ({ socket }) => {
               loading={loading}
               confirmed={confirmed}
               stage={gameStage}
-              maxHandSize={maxHandSize}
-            >
+              maxHandSize={maxHandSize}>
               {playedWhite && isCzar && (
                 <ul className={"cardDisplay playedWhite"}>
                   {playedWhite.map(
@@ -466,16 +472,14 @@ const Game = ({ socket }) => {
                         <li
                           onMouseEnter={() => handleMouseOver(cards)}
                           onMouseLeave={() => handleMouseLeave(cards)}
-                          key={cards[0].text + cards[0].pack + index}
-                        >
+                          key={cards[0].text + cards[0].pack + index}>
                           {cards.map((card) => (
                             <PlayedWhite card={card} key={card.text} />
                           ))}
                           <button
                             onClick={() => submitWinner(cards)}
                             className="choose-button"
-                            disabled={gameStage === "deciding" ? false : true}
-                          >
+                            disabled={gameStage === "deciding" ? false : true}>
                             {gameStage === "deciding"
                               ? "Choose as the Winner"
                               : "wait for palyers...."}

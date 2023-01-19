@@ -6,10 +6,12 @@ import { CgCloseO } from "react-icons/Cg";
 import { useSession } from "next-auth/react";
 import { useAppContext } from "../context";
 import KickButton from "./KickButton";
+import { parseCookies } from "nookies";
 
-const Scoreboard = ({ currentLobby }) => {
+const Scoreboard = ({ currentLobby, socket }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showKick, setShowKick] = useState(false);
+  const cookies = parseCookies();
   const { players, turns } = currentLobby;
   const currentTurn = turns && turns[turns.length - 1];
   const { stage, white_cards, czar } = currentTurn
@@ -77,11 +79,14 @@ const Scoreboard = ({ currentLobby }) => {
               <li
                 key={player.id}
                 className={player.inactive ? "inactive-player" : null}
-                onMouseEnter={() => setShowKick(true)}
-                onMouseLeave={() => setShowKick(false)}>
+                onMouseEnter={(e) => setShowKick(e.target.dataset.id)}
+                onMouseLeave={() => setShowKick(false)}
+                data-id={player.id}>
                 <div>
-                  {storeData.isHost && showKick ? (
-                    <KickButton playerId={player.id} />
+                  {storeData.isHost &&
+                  showKick === player.id &&
+                  player.id !== cookies.socketId ? (
+                    <KickButton playerId={player.id} socket={socket} />
                   ) : !player.inactive ? (
                     <AiOutlineCheckCircle
                       className={

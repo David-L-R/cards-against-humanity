@@ -1,4 +1,6 @@
-const updateTurn = ({
+import LobbyCollection from "../database/models/lobby.js";
+
+const updateTurn = async ({
   currentGame,
   playedBlack,
   stage,
@@ -11,9 +13,46 @@ const updateTurn = ({
   socket,
   io,
   closeGame,
+  kickPlayer,
+  lobbyId,
 }) => {
-  const currentTurnIndex = currentGame.Game.turns.length - 1;
-  const currentTurn = currentGame.Game.turns[currentTurnIndex];
+  const currentTurnIndex = currentGame?.Game?.turns?.length - 1;
+  const currentTurn = currentGame?.Game?.turns[currentTurnIndex];
+
+  //kick player
+  if (kickPlayer) {
+    //kick player from Lobby
+    const currentLobby = await LobbyCollection.findById(lobbyId);
+    console.log("currentLobby", currentLobby);
+    currentLobby.players = currentLobby.players.filter(
+      (player) => player.id !== playerId
+    );
+    await currentLobby.save();
+    io.to(lobbyId).emit("updateRoom", { currentLobby, kicked: true });
+
+    //kick player from game if played one
+    if (currentGame?.Game) {
+      currentGame.Game.players = currentGame.Game.players.filter(
+        (player) => player.id !== playerId
+      );
+      //if czar was kicked assign a new one
+      const czar = currentTurn.czar;
+      if (czar.id === playerId) {
+        currentTurn.czar = currentGame.Game.players.find(
+          (player) => !player.inactive
+        );
+        currentTurn.stage = ["start", "dealing", "black"];
+        currentTurn.black_card = null;
+        return currentGame;
+      }
+
+      currentTurn.white_cards = currentTurn.white_cards.filter(
+        (player) => player.player !== playerId
+      );
+      return currentGame;
+    }
+    return "kicked";
+  }
 
   //if player closes the game
   if (closeGame) {

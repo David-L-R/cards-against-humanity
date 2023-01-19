@@ -111,7 +111,7 @@ export const updateClient = async ({
     currentLobby.save();
 
     io.to(lobbyId).emit("updateRoom", {
-      currentLobby: currentLobby,
+      currentLobby,
     });
   } catch (err) {
     socket.emit("updateRoom", {

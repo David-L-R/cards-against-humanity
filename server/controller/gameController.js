@@ -103,6 +103,18 @@ export const sendCurrentGame = async ({
       "Game.gameIdentifier": gameIdentifier,
     });
 
+    const czar = currentGame.Game.turns[currentGame.Game.turns.length - 1].czar;
+    //if no czar, asign new one
+    if (!czar) {
+      const currentTurn =
+        currentGame.Game.turns[currentGame.Game.turns.length - 1];
+      const newCzar = currentGame.Game.players.find(
+        (player) => !player.inactive
+      );
+      currentTurn.czar = newCzar;
+      currentTurn.white_cards.filter((player) => player.player !== newCzar.id);
+    }
+
     //if cant find loby, send error back
     if (!currentGame)
       return io
@@ -125,6 +137,7 @@ export const sendCurrentGame = async ({
     //if player rejoins, update everyone
     currentGame.Game.players = currentGame.Game.players.map((player) => {
       if (player.id === id) player.inactive = false;
+
       return player;
     });
 
@@ -154,6 +167,7 @@ export const changeGame = async (states) => {
     io,
     socket,
   } = states;
+
   if (stage === "dealing") {
     try {
       const currentGame = await GameCollection.findOne({
@@ -181,9 +195,13 @@ export const changeGame = async (states) => {
       "Game.id": gameId,
       "Game.gameIdentifier": gameIdentifier,
     });
-    const updatedGame = updateTurn({ ...states, currentGame });
-    updateGameInLobby(updatedGame);
 
+    const updatedGame = await updateTurn({ ...states, currentGame });
+
+    if (!updatedGame) throw new Error("Server error, no game found");
+    if (updatedGame === "kicked") return;
+
+    updateGameInLobby(updatedGame);
     io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
     await updatedGame.save();
   } catch (error) {

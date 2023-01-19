@@ -48,18 +48,31 @@ const Lobby = (props) => {
 
   useEffect(() => {
     //listener to update page from server after DB entry changed
-    socket.on("updateRoom", ({ currentLobby, err }) => {
+    socket.on("updateRoom", ({ currentLobby, err, kicked }) => {
+      console.log("currentLobby", currentLobby);
+      console.log("err", err);
+      console.log("kicked", kicked);
       if (!currentLobby || err) {
         setIsloading(false);
         return setShowErrMessage(
           "Can not find Lobby, please check our invatation link"
         );
       }
-      setIsloading(false);
-      setCurrentLobby(currentLobby);
       const player = currentLobby.players.find(
         (player) => player.id === cookies.socketId
       );
+      //if player got kicket
+      if (kicked && !player)
+        return (
+          setShowErrMessage("You got kicked! Redirecting you back"),
+          setTimeout(() => {
+            router.push("/");
+          }, 3500)
+        );
+
+      setIsloading(false);
+      setCurrentLobby(currentLobby);
+
       if (!player) return setShowErrMessage("Player not found");
       const { players } = currentLobby;
       const { id, name, isHost, inactive } = player;
@@ -109,6 +122,7 @@ const Lobby = (props) => {
     if (router.query.lobbyId) {
       setlinkInvation(`${window?.location.href}?joinGame=true`);
       setLobbyId(router.query.lobbyId[0]);
+      setStoreData((prev) => ({ ...prev, lobbyId: router.query.lobbyId[0] }));
     }
   }, [router.isReady]);
 
@@ -157,7 +171,7 @@ const Lobby = (props) => {
       <main className="waitingLobbyContainer">
         {currentLobby && (
           <section className="scoreboard-container">
-            <Scoreboard currentLobby={currentLobby} />
+            <Scoreboard currentLobby={currentLobby} socket={socket} />
           </section>
         )}
         <section className="waitingLobbyCard">
