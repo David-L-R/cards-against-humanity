@@ -10,8 +10,10 @@ import Scoreboard from "../../components/Scoreboard";
 import { parseCookies } from "nookies";
 import Loading from "../../components/Loading";
 import PageNotFound from "../../components/PageNotFound";
+import { useAppContext } from "../../context";
 
-const Lobby = ({ socket }) => {
+const Lobby = (props) => {
+  const { socket, handSize, amountOfRounds } = props;
   const router = useRouter();
   const { joinGame } = router.query;
   const cookies = parseCookies();
@@ -21,17 +23,19 @@ const Lobby = ({ socket }) => {
   const [copied, setCopied] = useState(false);
   const [isHost, setHost] = useState(false);
   const [inactive, setInactive] = useState(false);
-  const amountOfRounds = useRef(null);
-  const handSize = useRef(null);
   const [linkInvation, setlinkInvation] = useState("");
   const [isLoading, setIsloading] = useState(true);
   const [currentLobby, setCurrentLobby] = useState(null);
+  const { setStoreData } = useAppContext();
 
   const handleGameCreation = () => {
     setIsloading(true);
-    // const setRounds = amountOfRounds.current.value;
-    // const maxHandSize = handSize.current.value;
-    socket.emit("createGameObject", { lobbyId }); //setRounds, maxHandSize,
+
+    socket.emit("createGameObject", {
+      lobbyId,
+      setRounds: amountOfRounds,
+      maxHandSize: handSize,
+    }); //setRounds, maxHandSize,
   };
 
   const changePLayerName = (newPLayerName) => {
@@ -60,7 +64,9 @@ const Lobby = ({ socket }) => {
       const { players } = currentLobby;
       const { id, name, isHost, inactive } = player;
       //check if the host
-      isHost ? setHost(true) : setHost(false);
+      isHost
+        ? (setHost(true), setStoreData((prev) => ({ ...prev, isHost: true })))
+        : setHost(false);
       inactive ? setInactive(true) : setInactive(false);
 
       if (err) return console.warn(err);
@@ -163,8 +169,7 @@ const Lobby = ({ socket }) => {
               x: -1300,
               rotate: -120,
               transition: { duration: 0.75 },
-            }}
-          >
+            }}>
             <div className="waitingLobbyTextWrapper">
               <h1>
                 Waiting for players&nbsp;
@@ -217,8 +222,7 @@ const Lobby = ({ socket }) => {
                           width: "inherit",
                         }
                       : null
-                  }
-                >
+                  }>
                   <span>{isLoading ? "Loading..." : "Ready"}</span>
                 </button>
               )}
@@ -229,8 +233,7 @@ const Lobby = ({ socket }) => {
               players.map((player) => (
                 <li
                   key={player.name}
-                  className={player.inactive ? "inactive" : null}
-                >
+                  className={player.inactive ? "inactive" : null}>
                   <h2
                     className={player.name.length > 9 ? "wrap-text" : null}
                     style={{
@@ -241,8 +244,7 @@ const Lobby = ({ socket }) => {
                           ? "11px"
                           : "initial",
                       whiteSpace: "pre-wrap",
-                    }}
-                  >
+                    }}>
                     {player.name.toUpperCase()}
                   </h2>
                   {player.inactive && (
