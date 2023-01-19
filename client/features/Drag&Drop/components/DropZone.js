@@ -72,7 +72,7 @@ export function DropZone(props) {
           const [sentance] = textList
             .splice(0, 1)
             .map((text) => text.replaceAll(".", ""));
-          if (!sentance) return letter;
+          if (!sentance) return "_____";
           return <span className="white-in-black">{sentance}</span>;
         }
         return letter;
@@ -108,7 +108,8 @@ export function DropZone(props) {
     <SortableContext
       id={id}
       items={cards.map((card) => card && card.text)}
-      strategy={horizontalListSortingStrategy}>
+      strategy={horizontalListSortingStrategy}
+    >
       <article
         className={
           isCzar && blackCard
@@ -118,7 +119,8 @@ export function DropZone(props) {
             : isCzar && !blackCard
             ? "czarSelecteWhites whiteHandOut"
             : null
-        }>
+        }
+      >
         {id === "table" && !isCzar && !blackCard && (
           <div className="czarIsChoosing">
             <h1>Czar is Choosing a Black Card</h1>
@@ -128,7 +130,8 @@ export function DropZone(props) {
         <div
           className={
             blackCard ? "onTable black-on-table" : "onTable whiteCardTable"
-          }>
+          }
+        >
           <m.ul
             className={
               confirmed && blackCard ? "cardDisplay confirmed" : "cardDisplay"
@@ -140,7 +143,8 @@ export function DropZone(props) {
               y: 1300,
 
               transition: { duration: 0.5 },
-            }}>
+            }}
+          >
             {cards &&
               cards.map((card, index) => {
                 return (
@@ -175,7 +179,8 @@ export function DropZone(props) {
                       !skell.show
                         ? `hide-skell skeleton${index}`
                         : `skeleton${index}`
-                    }>
+                    }
+                  >
                     <CardTemplate card={skell} index={index} />
                   </li>
                 ))
@@ -191,7 +196,8 @@ export function DropZone(props) {
                     !confirmed && !isCzar
                       ? "selectButton active"
                       : "selectButton "
-                  }>
+                  }
+                >
                   <h3>Confirm</h3>
                 </li>
                 {isConfirmed && (
