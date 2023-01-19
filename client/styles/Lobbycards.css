@@ -70,9 +70,11 @@
   font-size: 30px;
   width: 200px;
   padding-left: 30px;
+  padding-top: 30px;
 }
 .lobbyBack h2 {
   cursor: default;
+  padding-top: 30px;
 }
 
 .lobbyBack {

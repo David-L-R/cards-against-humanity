@@ -169,9 +169,10 @@ const Lobby = (props) => {
               x: -1300,
               rotate: -120,
               transition: { duration: 0.75 },
-            }}>
+            }}
+          >
             <div className="waitingLobbyTextWrapper">
-              <h1>
+              <h1 style={{ paddingTop: "20px" }}>
                 Waiting for players&nbsp;
                 <span className="loadingContainer">
                   <div className="loader">
@@ -184,7 +185,9 @@ const Lobby = (props) => {
             </div>
             {isHost && (
               <div className="lobbyIdContainer">
-                <h3>Invite your Friends: </h3>
+                <h3 style={{ paddingTop: "40px", paddingBottom: "8px" }}>
+                  Invite your Friends:{" "}
+                </h3>
                 <div className="lobbyIdCopyField">
                   {copied ? (
                     <p className="tempCopyText">Copied to clipboard!</p>
@@ -222,7 +225,8 @@ const Lobby = (props) => {
                           width: "inherit",
                         }
                       : null
-                  }>
+                  }
+                >
                   <span>{isLoading ? "Loading..." : "Ready"}</span>
                 </button>
               )}
@@ -233,18 +237,23 @@ const Lobby = (props) => {
               players.map((player) => (
                 <li
                   key={player.name}
-                  className={player.inactive ? "inactive" : null}>
+                  className={player.inactive ? "inactive" : null}
+                >
                   <h2
                     className={player.name.length > 9 ? "wrap-text" : null}
                     style={{
                       fontSize:
-                        player.name.length < 7
-                          ? "smaller"
+                        player.name.length < 6
+                          ? "20px"
+                          : player.name.length < 10
+                          ? "16px"
                           : player.name.length > 12
-                          ? "11px"
-                          : "initial",
+                          ? "14px"
+                          : "20px",
                       whiteSpace: "pre-wrap",
-                    }}>
+                      padding: "15px",
+                    }}
+                  >
                     {player.name.toUpperCase()}
                   </h2>
                   {player.inactive && (
