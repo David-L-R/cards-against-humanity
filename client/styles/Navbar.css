@@ -8,8 +8,9 @@
   right: 0;
   z-index: 20;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  padding-top: 1rem;
 }
 .dropdownIcon {
   align-items: center;
@@ -18,11 +19,15 @@
 .greetingText {
   padding-right: 15px;
 }
-.dropdown {
+.fuckitDannisadvice {
   position: relative;
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  column-gap: 0.5rem;
+  margin-top: auto;
 }
-.dropdown:hover .dropdown-content {
+.dropdownContainer:hover .dropdown-content {
   display: block;
 }
 .dropdown-content {

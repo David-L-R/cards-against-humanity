@@ -3,8 +3,9 @@ import "../styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import Layout from "../components/layout";
 import { io } from "socket.io-client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { parseCookies, setCookie } from "nookies";
+import { ContextWrapper } from "../context";
 
 const socket = io("http://localhost:5555/", {
   reconnection: true, // enable reconnection
@@ -15,19 +16,36 @@ const socket = io("http://localhost:5555/", {
 function MyApp({ Component, router, pageProps: { session, ...pageProps } }) {
   const cookies = parseCookies();
 
+  const [amountOfRounds, setAmountOfRounds] = useState(10);
+  const [handSize, setHandSize] = useState(10);
+
   useEffect(() => {
     if (socket.id && !cookies.socketId)
       setCookie(null, "socketId", socket.id, { path: "/" });
   }, [socket.id]);
 
   return (
-    <SessionProvider session={session}>
-      <Layout socket={socket}>
-        <AnimatePresence mode="wait" initial={false}>
-          <Component key={router.pathname} {...pageProps} socket={socket} />;
-        </AnimatePresence>
-      </Layout>
-    </SessionProvider>
+    <ContextWrapper>
+      <SessionProvider session={session}>
+        <Layout
+          socket={socket}
+          setHandSize={setHandSize}
+          setAmountOfRounds={setAmountOfRounds}
+          handSize={handSize}
+          amountOfRounds={amountOfRounds}>
+          <AnimatePresence mode="wait" initial={false}>
+            <Component
+              key={router.pathname}
+              {...pageProps}
+              handSize={handSize}
+              amountOfRounds={amountOfRounds}
+              socket={socket}
+            />
+            ;
+          </AnimatePresence>
+        </Layout>
+      </SessionProvider>
+    </ContextWrapper>
   );
 }
 
