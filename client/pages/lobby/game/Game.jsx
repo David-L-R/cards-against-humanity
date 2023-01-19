@@ -34,6 +34,7 @@ const Game = ({ socket }) => {
   const [currentLobby, setCurrentLobby] = useState(false);
   const [gameIdentifier, setGameIdentifier] = useState(null);
   const [maxHandSize, setMaxHandSize] = useState(null);
+  const [closingGame, setClosingGame] = useState(false);
 
   useEffect(() => {
     //getting game infos and rejoin player to socket io
@@ -44,6 +45,11 @@ const Game = ({ socket }) => {
       if (err || !currentGame) {
         return setShowErrMessage(err);
       }
+
+      //if less then 3 players, let host decide to close the game
+      // if (currentGame.players.filter((player) => !player.inactive).length < 3)
+      //   setClosingGame(true);
+
       // if players cokkie is not stored inside game Object = player is not part of the game, redirect to hompage
       if (
         !currentGame.players.find((player) => player.id === cookies.socketId)
@@ -257,13 +263,28 @@ const Game = ({ socket }) => {
     };
 
     if (cardsOnTable.player.cards.length < maxHandSize && !loading) {
-      loading = true;
-      setLoading(true);
-      socket.emit("changeGame", {
-        ...playerData,
-        sendWhiteCards: true,
-      });
+      if (!loading) {
+        loading = true;
+        setLoading(true);
+        socket.emit("changeGame", {
+          ...playerData,
+          sendWhiteCards: true,
+        });
+      }
+      return loading;
     }
+  };
+
+  const handleClosingGame = () => {
+    const playerData = {
+      playerId: cookies.socketId,
+      gameId,
+      lobbyId,
+      gameIdentifier,
+      closeGame: true,
+    };
+    socket.emit("changeGame", { ...playerData });
+    router.push("/");
   };
 
   //self update page after got redirected, use key from query as lobby id
@@ -340,8 +361,26 @@ const Game = ({ socket }) => {
       </main>
     );
 
+  if (closingGame && isHost)
+    return (
+      <main>
+        <h1>Not enough Players left, you wanne continue?</h1>
+        <ul>
+          <li>
+            <button onClick={() => setClosingGame(false)}>Continue</button>
+          </li>
+          <li>
+            <button onClick={handleClosingGame}>
+              Close game and back to lobby
+            </button>
+          </li>
+        </ul>
+      </main>
+    );
+
   return (
     <main className="game">
+      {console.log("closingGame", closingGame)}
       {gameStage === "winner" ? (
         <>
           <div className="debuggerMonitor">
@@ -414,10 +453,10 @@ const Game = ({ socket }) => {
               isCzar={isCzar}
               whiteCardChoosed={whiteCardChoosed}
               getNewWhiteCard={getNewWhiteCard}
+              loading={loading}
               confirmed={confirmed}
               stage={gameStage}
-              maxHandSize={maxHandSize}
-            >
+              maxHandSize={maxHandSize}>
               {playedWhite && isCzar && (
                 <ul className={"cardDisplay playedWhite"}>
                   {playedWhite.map(
@@ -426,16 +465,14 @@ const Game = ({ socket }) => {
                         <li
                           onMouseEnter={() => handleMouseOver(cards)}
                           onMouseLeave={() => handleMouseLeave(cards)}
-                          key={cards[0].text + cards[0].pack + index}
-                        >
+                          key={cards[0].text + cards[0].pack + index}>
                           {cards.map((card) => (
                             <PlayedWhite card={card} key={card.text} />
                           ))}
                           <button
                             onClick={() => submitWinner(cards)}
                             className="choose-button"
-                            disabled={gameStage === "deciding" ? false : true}
-                          >
+                            disabled={gameStage === "deciding" ? false : true}>
                             {gameStage === "deciding"
                               ? "Choose as the Winner"
                               : "wait for palyers...."}

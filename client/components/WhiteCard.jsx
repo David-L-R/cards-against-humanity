@@ -1,29 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { motion as m } from "framer-motion";
 
-function WhiteCard({ getNewWhiteCard }) {
+function WhiteCard({ getNewWhiteCard, loading }) {
   const [isActive, setIsActive] = useState(false);
   const [cardId, setCardId] = useState(0);
 
   const handleClick = (event) => {
-    setIsActive((current) => !current);
-    getNewWhiteCard();
+    setIsActive(getNewWhiteCard());
   };
 
   useEffect(() => {
     setCardId(Math.random());
-  }, [getNewWhiteCard]);
+  }, [isActive]);
 
   useEffect(() => {
-    setIsActive(false);
-  }, [cardId]);
+    !loading && setIsActive(false);
+  }, [loading]);
 
   return (
     <m.div className="whiteCardContainer">
       <div
         className={isActive ? "whiteCard whiteIsFlipped" : "whiteCard"}
-        onClick={handleClick}
-      >
+        onClick={handleClick}>
         <div className="whiteCardFace whiteCardFace--front">
           <h2>Cards Against Humanity.</h2>
 

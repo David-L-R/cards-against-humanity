@@ -144,9 +144,6 @@ export const setPlayerInactive = async ({ reason, io, userId }) => {
         return player;
       });
 
-      //not enough players will close the game
-      // if (currentGame.Game.players.filter((player) => !player.inactive) < 2)
-      //   currentGame.Game.concluded = true;
       // if czar leaves, assign a new one
       if (currenCzar.id === userId) {
         currentTurn.czar = currentGame.Game.players.find(

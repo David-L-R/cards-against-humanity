@@ -16,7 +16,7 @@
   animation: whiteSlideIn 1s 0.5s linear forwards;
 }
 .whiteCardContainer:hover {
-  scale: 1.2;
+  scale: 1.05;
   transition: 0.5s;
   box-shadow: -27px -19px 11px -3px rgba(125, 125, 125, 0.28);
   animation: none;

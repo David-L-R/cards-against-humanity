@@ -137,21 +137,23 @@ export const sendCurrentGame = async ({
   }
 };
 
-export const changeGame = async ({
-  sendWhiteCards,
-  blackCards,
-  playerId,
-  stage,
-  gameId,
-  gameIdentifier,
-  lobbyId,
-  playedBlack,
-  playedWhite,
-  winningCards,
-  leavedGame,
-  io,
-  socket,
-}) => {
+export const changeGame = async (states) => {
+  const {
+    sendWhiteCards,
+    blackCards,
+    playerId,
+    stage,
+    gameId,
+    gameIdentifier,
+    lobbyId,
+    playedBlack,
+    playedWhite,
+    winningCards,
+    leavedGame,
+    closeGame,
+    io,
+    socket,
+  } = states;
   if (stage === "dealing") {
     try {
       const currentGame = await GameCollection.findOne({
@@ -179,20 +181,7 @@ export const changeGame = async ({
       "Game.id": gameId,
       "Game.gameIdentifier": gameIdentifier,
     });
-    const updatedGame = updateTurn({
-      sendWhiteCards,
-      currentGame,
-      playedBlack,
-      stage,
-      playerId,
-      blackCards,
-      playedWhite,
-      winningCards,
-      leavedGame,
-      socket,
-      lobbyId,
-      io,
-    });
+    const updatedGame = updateTurn({ ...states, currentGame });
     updateGameInLobby(updatedGame);
 
     io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });

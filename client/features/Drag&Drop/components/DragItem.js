@@ -1,12 +1,14 @@
-import React, { Children, cloneelement } from "react";
+import React, { Children, cloneelement, useState } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 export function DragItem(props) {
-  const { card, id, element, allCards, confirmed, maxHandSize } = props;
+  const { card, id, element, allCards, confirmed, maxHandSize, index, table } =
+    props;
   const CustomComponent = element;
   const isBlackCard = card.pick;
   const isSkelettonCard = card.text === "";
+  const [className, setClassName] = useState("lastWhiteCard");
 
   const {
     attributes,
@@ -35,13 +37,27 @@ export function DragItem(props) {
     ...props.style,
   };
 
+  const deleteClass = (elem) => {
+    elem.classList.remove("lastWhiteCard");
+    console.log("elem", elem);
+  };
+
   return (
     <li
       ref={setNodeRef}
       style={isBlackCard || isSkelettonCard ? null : style}
       {...listeners}
       {...attributes}
-    >
+      className={
+        index === allCards.length - 1 && table === "player" ? className : null
+      }
+      onMouseLeave={
+        index === allCards.length - 1 && table === "player"
+          ? () => {
+              setClassName("");
+            }
+          : null
+      }>
       {element ? (
         <CustomComponent
           {...props}

@@ -10,9 +10,16 @@ const updateTurn = ({
   sendWhiteCards,
   socket,
   io,
+  closeGame,
 }) => {
   const currentTurnIndex = currentGame.Game.turns.length - 1;
   const currentTurn = currentGame.Game.turns[currentTurnIndex];
+
+  //if player closes the game
+  if (closeGame) {
+    currentGame.Game.concluded = true;
+    return currentGame;
+  }
 
   // set status to inactive if playver turns back to lobby
   if (leavedGame) {
