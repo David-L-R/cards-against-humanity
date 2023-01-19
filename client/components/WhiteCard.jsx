@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { motion as m } from "framer-motion";
 
 function WhiteCard({ getNewWhiteCard }) {
   const [isActive, setIsActive] = useState(false);
@@ -18,7 +19,7 @@ function WhiteCard({ getNewWhiteCard }) {
   }, [cardId]);
 
   return (
-    <div className="whiteCardContainer">
+    <m.div className="whiteCardContainer">
       <div
         className={isActive ? "whiteCard whiteIsFlipped" : "whiteCard"}
         onClick={handleClick}
@@ -36,7 +37,7 @@ function WhiteCard({ getNewWhiteCard }) {
           </div>
         </div>
       </div>
-    </div>
+    </m.div>
   );
 }
 

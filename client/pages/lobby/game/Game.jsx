@@ -24,7 +24,7 @@ const Game = ({ socket }) => {
   const [playedWhite, setPlayedWhite] = useState(null);
   const [timerTrigger, setTimerTrigger] = useState(false);
   const [confirmed, setConfirmed] = useState();
-  const [loading, setLoading] = useState(true);
+  let [loading, setLoading] = useState(true);
   const [timer, setTimer] = useState(false);
   const [cardsOnTable, setCardsOnTable] = useState(false);
   let playedBlackFromCzar = null;
@@ -256,8 +256,13 @@ const Game = ({ socket }) => {
       gameIdentifier,
     };
 
-    if (cardsOnTable.player.cards.length < maxHandSize) {
-      socket.emit("changeGame", { ...playerData, sendWhiteCards: true });
+    if (cardsOnTable.player.cards.length < maxHandSize && !loading) {
+      loading = true;
+      setLoading(true);
+      socket.emit("changeGame", {
+        ...playerData,
+        sendWhiteCards: true,
+      });
     }
   };
 
@@ -309,7 +314,7 @@ const Game = ({ socket }) => {
     return setTimer(false);
   }, [gameStage]);
 
-  if (loading)
+  if (loading && !currentLobby)
     return (
       <main>
         <Loading />

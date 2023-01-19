@@ -8,8 +8,12 @@
   perspective: 1000px;
   font-size: 18px;
   animation: wiggle 3s 2s linear infinite;
+
   transition: 0.5s;
   z-index: 20;
+}
+.whiteCardSlideIn {
+  animation: whiteSlideIn 1s 0.5s linear forwards;
 }
 .whiteCardContainer:hover {
   scale: 1.2;
@@ -128,5 +132,14 @@
   }
   100% {
     transform: rotate(0deg);
+  }
+}
+
+@keyframes whiteSlideIn {
+  from {
+    transform: translateY(50%);
+  }
+  to {
+    transform: translateY(0);
   }
 }
