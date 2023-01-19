@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { VscDebugDisconnect } from "react-icons/vsc";
 import { RiVipCrown2Fill } from "react-icons/Ri";
+import { CgCloseO } from "react-icons/Cg";
 import { useSession } from "next-auth/react";
 import KickButton from "./KickButton";
 
 const Scoreboard = ({ currentLobby }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const { players, turns } = currentLobby;
   const currentTurn = turns && turns[turns.length - 1];
   const { stage, white_cards, czar } = currentTurn
@@ -34,15 +36,108 @@ const Scoreboard = ({ currentLobby }) => {
     return false;
   };
 
+  const openMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <>
-      <ul>
-        <div className="fuckingClass">
-          <h4>
-            turn: {turns.length}/{currentLobby.setRounds}
-          </h4>
-          <h4>Players: {players.length}</h4>
+      <div
+        className="sideMenu"
+        style={{
+          marginLeft: isOpen ? "0" : "-350px",
+          boxShadow: isOpen
+            ? "20px 2px 31px 4px rgba(135,129,129,0.52)"
+            : "none",
+        }}
+      >
+        <div
+          className="scoreButton"
+          onClick={openMenu}
+          style={{
+            opacity: isOpen ? "0" : "1",
+            cursor: isOpen ? "default" : "pointer",
+          }}
+        >
+          <p>SCORES</p>
         </div>
+        <button onClick={openMenu}>
+          <CgCloseO />
+        </button>
+        <ul>
+          <h1>SCOREBOARD</h1>
+
+          <li className="scoreboardTitles">
+            <div>Status</div>
+            <div>Name</div>
+            <div>Score</div>
+          </li>
+          {players &&
+            players.map((player) => (
+              <li
+                key={player.id}
+                className={player.inactive ? "inactive-player" : null}
+              >
+                <div>
+                  {!player.inactive ? (
+                    <AiOutlineCheckCircle
+                      className={
+                        !submittedWhiteCards(player.id)
+                          ? "checkmark"
+                          : "checkmark active"
+                      }
+                    />
+                  ) : (
+                    <VscDebugDisconnect className="disconnect-icon" />
+                  )}
+                </div>
+                <div>kick</div>
+                <div className="profileContainer">
+                  {czar && czar.id === player.id && (
+                    <div className={"crown-background"}>
+                      <RiVipCrown2Fill className="crown" />
+                    </div>
+                  )}
+                  <img className="avatar" src="/favicon.ico" alt="" />
+
+                  <span className="player-name">{player.name}</span>
+                </div>
+                <div>
+                  <span className="player-points">{player.points}</span>
+                </div>
+              </li>
+            ))}
+        </ul>
+        {turns?.length > 0 && (
+          <div className="scoreStats">
+            <div className="fuckingClass">
+              <h4>
+                turn: {turns.length}/{currentLobby.setRounds}
+              </h4>
+            </div>
+            <div>
+              <h4>Players: {players.length}</h4>
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
+};
+
+export default Scoreboard;
+/*
+ return (
+    <>
+      <ul>
+        {turns?.length > 0 && (
+          <div className="fuckingClass">
+            <h4>
+              turn: {turns.length}/{currentLobby.setRounds}
+            </h4>
+            <h4>Players: {players.length}</h4>
+          </div>
+        )}
         {players &&
           players.map((player) => (
             <li
@@ -75,6 +170,4 @@ const Scoreboard = ({ currentLobby }) => {
       </ul>
     </>
   );
-};
-
-export default Scoreboard;
+  */
