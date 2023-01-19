@@ -1,5 +1,4 @@
 .whiteCardContainer {
-  /*margin: auto;*/
   display: flex;
   width: 100%;
   height: 100%;
@@ -8,8 +7,8 @@
   perspective: 1000px;
   font-size: 18px;
   animation: wiggle 3s 2s linear infinite;
-
   transition: 0.5s;
+
   z-index: 20;
 }
 .whiteCardSlideIn {
@@ -81,6 +80,7 @@
 
 .whiteCardFace--back {
   transform: rotateY(180deg);
+  background-color: hidden;
 }
 .whiteCardHeader {
   position: relative;
