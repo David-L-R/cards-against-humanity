@@ -18,6 +18,7 @@ const gameModel = mongoose.Schema(
           points: Number, //default zero, every round won adds a point.
           hand: Array, //just white Cards
           isHost: Boolean,
+          avatar: Object,
         },
       ],
       deck: {

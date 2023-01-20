@@ -151,22 +151,7 @@ export const sendCurrentGame = async ({
 };
 
 export const changeGame = async (states) => {
-  const {
-    sendWhiteCards,
-    blackCards,
-    playerId,
-    stage,
-    gameId,
-    gameIdentifier,
-    lobbyId,
-    playedBlack,
-    playedWhite,
-    winningCards,
-    leavedGame,
-    closeGame,
-    io,
-    socket,
-  } = states;
+  const { playerId, stage, gameId, gameIdentifier, lobbyId, io } = states;
 
   if (stage === "dealing") {
     try {

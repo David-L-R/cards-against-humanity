@@ -15,9 +15,20 @@ const updateTurn = async ({
   closeGame,
   kickPlayer,
   lobbyId,
+  changeAvatar,
+  avatar,
 }) => {
   const currentTurnIndex = currentGame?.Game?.turns?.length - 1;
   const currentTurn = currentGame?.Game?.turns[currentTurnIndex];
+
+  //if just avatar gotes changed
+  if (changeAvatar) {
+    currentGame.Game.players = currentGame.Game.players.map((player) => {
+      if (player.id === playerId) player.avatar = avatar;
+      return player;
+    });
+    return currentGame;
+  }
 
   //kick player
   if (kickPlayer) {

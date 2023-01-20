@@ -84,6 +84,7 @@
   position: relative;
 }
 .profileContainer {
+  position: relative;
   display: grid;
   grid-template-columns: 0.4fr 1.1fr;
   align-items: center;
@@ -180,15 +181,7 @@
   font-size: 18px;
 }
 
-.sideMenu button {
-  position: absolute;
-  top: 1%;
-  right: 5%;
-  width: 40px;
-  height: 40px;
-  font-size: 40px;
-}
-.sideMenu button {
+.sideMenu > button {
   position: absolute;
   top: 1%;
   right: 5%;
@@ -200,10 +193,10 @@
   margin: auto;
   display: flex;
   justify-content: center;
+  background-color: transparent;
   padding: 0;
 }
-.sideMenu button:hover {
-  background-color: rgb(227, 227, 227);
+.sideMenu button:hover svg {
   color: #eb455f;
   transform: rotate(360deg);
   transition: 0.3s;

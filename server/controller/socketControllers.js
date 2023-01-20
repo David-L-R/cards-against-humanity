@@ -1,7 +1,5 @@
 import LobbyCollection from "../database/models/lobby.js";
 import GameCollection from "../database/models/game.js";
-import consoleSuccess from "../utils/consoleSuccess.js";
-import cardDecksData from "../data/allCards.json" assert { type: "json" };
 import randomName from "../utils/randomName.js";
 
 export const createNewLobby = async ({ socket, data }) => {
@@ -68,6 +66,7 @@ export const updateClient = async ({
   id,
   io,
   newPLayerName,
+  avatar,
 }) => {
   socket.userId = id;
   if (!lobbyId || !id)
@@ -83,6 +82,7 @@ export const updateClient = async ({
 
     if (foundPLayer) {
       foundPLayer.inactive = false;
+      foundPLayer.avatar = avatar && avatar;
       const playerIndex = currentLobby.players.findIndex(
         (player) => player.id === id
       );
