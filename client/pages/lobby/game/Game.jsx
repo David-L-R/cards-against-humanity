@@ -52,6 +52,17 @@ const Game = ({ socket }) => {
       // if (currentGame.players.filter((player) => !player.inactive).length < 3)
       //   setClosingGame(true);
 
+      //if less then 2 players, close the game
+      if (currentGame.players.filter((player) => !player.inactive).length < 2) {
+        setClosingGame(
+          currentGame.players.filter((player) => !player.inactive).length
+        );
+
+        setTimeout(() => {
+          handleClosingGame();
+        }, 3500);
+      }
+
       // if players cokkie is not stored inside game Object = player is not part of the game, redirect to hompage
       if (
         !currentGame.players.find((player) => player.id === cookies.socketId)
@@ -60,7 +71,7 @@ const Game = ({ socket }) => {
           "Your are not part of this round, redirecting you back"
         );
         return setTimeout(() => {
-          router.push("/");
+          router.push(`/`);
         }, 3000);
       }
 
@@ -74,13 +85,13 @@ const Game = ({ socket }) => {
       //   }, 3000);
       // }
 
-      //if game is concluded, redirect
-      // if (currentGame.concluded) {
-      //   setShowErrMessage("This game goets closed, please create a new one");
-      //   setTimeout(() => {
-      //     router.push(`/lobby/${lobbyId}`);
-      //   }, 3000);
-      // }
+      // if game is concluded, redirect
+      if (currentGame.concluded) {
+        setShowErrMessage("This game goets closed, please create a new one");
+        setTimeout(() => {
+          router.push(`/lobby/${lobbyId}`);
+        }, 3000);
+      }
 
       const lastTurnIndex = currentGame.turns.length - 1;
       const lastTurn = currentGame.turns[lastTurnIndex];
@@ -287,7 +298,7 @@ const Game = ({ socket }) => {
       closeGame: true,
     };
     socket.emit("changeGame", { ...playerData });
-    router.push("/");
+    router.push(`/lobby/${lobbyId}`);
   };
 
   //self update page after got redirected, use key from query as lobby id
@@ -369,20 +380,27 @@ const Game = ({ socket }) => {
       </main>
     );
 
-  if (closingGame && isHost)
+  if (closingGame)
     return (
       <main>
-        <h1>Not enough Players left, you wanne continue?</h1>
-        <ul>
-          <li>
-            <button onClick={() => setClosingGame(false)}>Continue</button>
-          </li>
-          <li>
-            <button onClick={handleClosingGame}>
-              Close game and back to lobby
-            </button>
-          </li>
-        </ul>
+        {console.log("closingGame", closingGame)}
+        <h1>
+          {closingGame < 2
+            ? "Less then 2 players, game will be closed"
+            : "To less players, continue with game anyway?"}
+        </h1>
+        {isHost && (
+          <ul>
+            <li>
+              <button onClick={() => setClosingGame(false)}>Continue</button>
+            </li>
+            <li>
+              <button onClick={handleClosingGame}>
+                Close and back to lobby
+              </button>
+            </li>
+          </ul>
+        )}
       </main>
     );
 
