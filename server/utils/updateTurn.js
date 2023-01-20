@@ -210,6 +210,12 @@ const updateTurn = async ({
       currentTurn.completed.length >=
       Game.players.filter((player) => !player.inactive).length
     ) {
+      //if max rounds reached, close game
+      if (currentGame.Game.turns.length === currentGame.Game.setRounds) {
+        currentGame.Game.concluded = true;
+        return currentGame;
+      }
+
       const currCzarIndex = Game.players
         .filter((player) => !player.inactive)
         .indexOf(

@@ -11,6 +11,7 @@ import Error from "../../../components/Error";
 import Scoreboard from "../../../components/Scoreboard";
 import Loading from "../../../components/Loading";
 import { useAppContext } from "../../../context";
+import GameEnd from "../../../components/GameEnd";
 
 const Game = ({ socket }) => {
   const router = useRouter();
@@ -36,6 +37,7 @@ const Game = ({ socket }) => {
   const [gameIdentifier, setGameIdentifier] = useState(null);
   const [maxHandSize, setMaxHandSize] = useState(null);
   const [closingGame, setClosingGame] = useState(false);
+  const [gameEnds, setGameEnds] = useState(false);
   const { storeData, setStoreData } = useAppContext();
 
   useEffect(() => {
@@ -63,7 +65,7 @@ const Game = ({ socket }) => {
         }, 3500);
       }
 
-      // if players cokkie is not stored inside game Object = player is not part of the game, redirect to hompage
+      // if players cookie is not stored inside game Object = player is not part of the game, redirect to hompage
       if (
         !currentGame.players.find((player) => player.id === cookies.socketId)
       ) {
@@ -75,6 +77,7 @@ const Game = ({ socket }) => {
         }, 3000);
       }
 
+      //TODO!!! close and redirect oder show statistik page if not enough players??
       //abort game if not enough player
       // if (currentGame.players.filter((player) => !player.inactive).length < 2) {
       //   setShowErrMessage(
@@ -85,13 +88,19 @@ const Game = ({ socket }) => {
       //   }, 3000);
       // }
 
-      // if game is concluded, redirect
+      //if max rounds reached = games finished = show statistik page
       if (currentGame.concluded) {
-        setShowErrMessage("This game goets closed, please create a new one");
-        setTimeout(() => {
-          router.push(`/lobby/${lobbyId}`);
-        }, 3000);
+        setGameEnds(true);
       }
+
+      //TODO!!! push players to lobby or show statistik page??
+      // if game is concluded, redirect
+      // if (currentGame.concluded && currentGame.turns.length !== currentGame.setRounds) {
+      //   setShowErrMessage("This game goets closed, please create a new one");
+      //   setTimeout(() => {
+      //     router.push(`/lobby/${lobbyId}`);
+      //   }, 3000);
+      // }
 
       const lastTurnIndex = currentGame.turns.length - 1;
       const lastTurn = currentGame.turns[lastTurnIndex];
@@ -290,15 +299,17 @@ const Game = ({ socket }) => {
   };
 
   const handleClosingGame = () => {
-    const playerData = {
-      playerId: cookies.socketId,
-      gameId,
-      lobbyId,
-      gameIdentifier,
-      closeGame: true,
-    };
-    socket.emit("changeGame", { ...playerData });
-    router.push(`/lobby/${lobbyId}`);
+    if (isHost) {
+      const playerData = {
+        playerId: cookies.socketId,
+        gameId,
+        lobbyId,
+        gameIdentifier,
+        closeGame: true,
+      };
+      socket.emit("changeGame", { ...playerData });
+    }
+    // router.push(`/lobby/${lobbyId}`);
   };
 
   //self update page after got redirected, use key from query as lobby id
@@ -327,7 +338,7 @@ const Game = ({ socket }) => {
     }
   }, [router.isReady]);
 
-  // if host start the game by send the server the current "starting" stage
+  // start dealing phase automalicly after game starts
   useEffect(() => {
     if (lobbyId) {
       if (gameStage === "start" && isHost && !loading) {
@@ -403,6 +414,8 @@ const Game = ({ socket }) => {
         )}
       </main>
     );
+
+  if (gameEnds) return <GameEnd currentGame={currentLobby} />;
 
   return (
     <main className="game">
@@ -527,6 +540,11 @@ const Game = ({ socket }) => {
           )}
         </>
       )}
+      <button
+        style={{ color: "red", textDecoration: "underline" }}
+        onClick={() => handleClosingGame()}>
+        <h1>CLOSE GAME TO CHECK "GAME END" PAGE</h1>
+      </button>
     </main>
   );
 };
