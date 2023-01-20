@@ -25,8 +25,7 @@ function Countdown({ timer, setTimer }) {
         duration={timer}
         colors={["#fff", "#EB455F", "#EB455F"]}
         colorsTime={[10, 5, 0]}
-        onComplete={() => ({ shouldRepeat: false, delay: 1 })}
-      >
+        onComplete={() => ({ shouldRepeat: false, delay: 1 })}>
         {renderTime}
       </CountdownCircleTimer>
     </div>

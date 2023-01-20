@@ -55,7 +55,7 @@ function GameEnd({ currentGame }) {
           ))}
       </ul>
 
-      <button>
+      <button style={{ color: "red" }}>
         <h3 onClick={() => router.push(`/lobby/${storeData.lobbyId}`)}>
           Back to Lobby!!!!!
         </h3>

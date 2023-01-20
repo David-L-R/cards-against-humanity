@@ -50,6 +50,10 @@ const Game = ({ socket }) => {
         return setShowErrMessage(err);
       }
 
+      if (currentGame.concluded) {
+        setGameEnds(true);
+      }
+
       //if less then 3 players, let host decide to close the game
       // if (currentGame.players.filter((player) => !player.inactive).length < 3)
       //   setClosingGame(true);
@@ -89,9 +93,6 @@ const Game = ({ socket }) => {
       // }
 
       //if max rounds reached = games finished = show statistik page
-      if (currentGame.concluded) {
-        setGameEnds(true);
-      }
 
       //TODO!!! push players to lobby or show statistik page??
       // if game is concluded, redirect
@@ -214,7 +215,17 @@ const Game = ({ socket }) => {
   };
 
   const whiteCardChoosed = (cards) => {
+    //is timer is up, submit white cards based on black cards pick
+    if (!cards) {
+      cards = [];
+
+      const pick = cardsOnTable.table.cards[0].pick;
+      cards.push(...cardsOnTable.player.cards.splice(0, pick));
+
+      setCardsOnTable((prev) => ({ ...cardsOnTable }));
+    }
     setConfirmed(true);
+    console.log("cards", cards);
     const playerData = {
       playerId: cookies.socketId,
       stage: "white",
@@ -224,6 +235,7 @@ const Game = ({ socket }) => {
       playedWhite: cards,
       gameIdentifier,
     };
+    console.log("first", playerData);
     socket.emit("changeGame", { ...playerData });
   };
 
@@ -357,13 +369,18 @@ const Game = ({ socket }) => {
       }
 
       if (gameStage === "white" && timerTrigger) {
-        setTimer(20);
+        setTimer(10);
       }
 
       if (gameStage === "black") setConfirmed(false);
     }
-    return setTimer(false);
   }, [gameStage]);
+
+  useEffect(() => {
+    if (timer === null && gameStage === "white" && !isCzar) {
+      whiteCardChoosed(null);
+    }
+  }, [timer]);
 
   if (loading && !currentLobby)
     return (
@@ -391,16 +408,17 @@ const Game = ({ socket }) => {
       </main>
     );
 
-  if (closingGame)
+  if (gameEnds) return <GameEnd currentGame={currentLobby} />;
+
+  if (closingGame && !gameEnds)
     return (
       <main>
-        {console.log("closingGame", closingGame)}
         <h1>
           {closingGame < 2
             ? "Less then 2 players, game will be closed"
             : "To less players, continue with game anyway?"}
         </h1>
-        {isHost && (
+        {isHost && closingGame >= 2 && (
           <ul>
             <li>
               <button onClick={() => setClosingGame(false)}>Continue</button>
@@ -414,8 +432,6 @@ const Game = ({ socket }) => {
         )}
       </main>
     );
-
-  if (gameEnds) return <GameEnd currentGame={currentLobby} />;
 
   return (
     <main className="game">
@@ -522,16 +538,13 @@ const Game = ({ socket }) => {
               )}
             </DragAndDropContainer>
           ) : null}
-          {/*timerTrigger && timer && (
+          {console.log("timer", timer)}
+          {timerTrigger && timer && (
             <div className="timerContainer">
               <Countdown timer={timer} setTimer={setTimer} />
             </div>
           )}
-          {!timer && (
-            <div className="timeMessageContainer">
-              <h1>Time's up Bitch!</h1>
-            </div>
-          )*/}
+
           {showErrMessage && (
             <Error
               showErrMessage={showErrMessage}

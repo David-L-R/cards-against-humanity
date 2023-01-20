@@ -29,7 +29,7 @@ const Czar = ({
 
   const selectCard = ({ index, element, event }) => {
     //update all black cards
-
+    setTimer(false);
     if (index) {
       const [selected] = blackCards.splice(index, 1);
 
@@ -56,7 +56,7 @@ const Czar = ({
   };
 
   useEffect(() => {
-    if (timer === null) {
+    if (timer === null && gameStage === "black") {
       selectCard({ index: null });
     }
   }, [timer]);
