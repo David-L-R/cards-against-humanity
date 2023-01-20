@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import { useAppContext } from "../context";
 import KickButton from "./KickButton";
 import { parseCookies } from "nookies";
+import Avatar from "./Avatar.jsx";
 
 const Scoreboard = ({ currentLobby, socket }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -106,6 +107,7 @@ const Scoreboard = ({ currentLobby, socket }) => {
                     </div>
                   )}
                   <img className="avatar" src="/favicon.ico" alt="" />
+                  <Avatar userName={player.name} />
 
                   <span className="player-name">{player.name}</span>
                 </div>

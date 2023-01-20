@@ -26,7 +26,8 @@ const Lobby = (props) => {
   const [linkInvation, setlinkInvation] = useState("");
   const [isLoading, setIsloading] = useState(true);
   const [currentLobby, setCurrentLobby] = useState(null);
-  const { setStoreData } = useAppContext();
+  const { storeData, setStoreData } = useAppContext();
+  console.log("storeData", storeData);
 
   const handleGameCreation = () => {
     setIsloading(true);
@@ -49,9 +50,6 @@ const Lobby = (props) => {
   useEffect(() => {
     //listener to update page from server after DB entry changed
     socket.on("updateRoom", ({ currentLobby, err, kicked }) => {
-      console.log("currentLobby", currentLobby);
-      console.log("err", err);
-      console.log("kicked", kicked);
       if (!currentLobby || err) {
         setIsloading(false);
         return setShowErrMessage(
@@ -83,7 +81,7 @@ const Lobby = (props) => {
       inactive ? setInactive(true) : setInactive(false);
 
       if (err) return console.warn(err);
-
+      setStoreData((prev) => ({ ...prev, playerName: player.name }));
       setPlayers((pre) => (pre = players));
     });
 
@@ -183,8 +181,7 @@ const Lobby = (props) => {
               x: -1300,
               rotate: -120,
               transition: { duration: 0.75 },
-            }}
-          >
+            }}>
             <div className="waitingLobbyTextWrapper">
               <h1 style={{ paddingTop: "20px" }}>
                 Waiting for players&nbsp;
@@ -239,8 +236,7 @@ const Lobby = (props) => {
                           width: "inherit",
                         }
                       : null
-                  }
-                >
+                  }>
                   <span>{isLoading ? "Loading..." : "Ready"}</span>
                 </button>
               )}
@@ -251,8 +247,7 @@ const Lobby = (props) => {
               players.map((player) => (
                 <li
                   key={player.name}
-                  className={player.inactive ? "inactive" : null}
-                >
+                  className={player.inactive ? "inactive" : null}>
                   <h2
                     className={player.name.length > 9 ? "wrap-text" : null}
                     style={{
@@ -266,8 +261,7 @@ const Lobby = (props) => {
                           : "20px",
                       whiteSpace: "pre-wrap",
                       padding: "15px",
-                    }}
-                  >
+                    }}>
                     {player.name.toUpperCase()}
                   </h2>
                   {player.inactive && (

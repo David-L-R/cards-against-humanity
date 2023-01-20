@@ -1,13 +1,14 @@
-import { createAvatar } from "@dicebear/avatars";
-import * as style from "@dicebear/avatars-avataaars-sprites";
-import React from "react";
-import parse from "html-react-parser";
+import { createAvatar } from "@dicebear/core";
+import { avataaars } from "@dicebear/collection";
+import React, { useEffect, useState } from "react";
 import AvatarCustomizer from "./AvatarCustomizer";
-import { useState } from "react";
+import { parseCookies, setCookie } from "nookies";
 
-const Avatar = ({ UserName, savedAvatar }) => {
+const Avatar = ({ userName }) => {
+  const cookies = parseCookies();
+
   const [avatarOptions, setAvatarOptions] = useState({
-    seed: UserName,
+    seed: userName,
   });
 
   const handleSetAvatarOptions = (value, key) => {
@@ -19,14 +20,29 @@ const Avatar = ({ UserName, savedAvatar }) => {
   };
 
   //create avatar based on options
-  function GetAvatar({ avatarOptions, savedAvatar }) {
-    let Ava = createAvatar(style, { ...avatarOptions });
-    return <div dangerouslySetInnerHTML={{ __html: Ava }}></div>;
-    //return parse(savedAvatar ? savedAvatar : Ava);
-  }
+  const AvatarSVG = ({ avatarOptions }) => {
+    const avatar = createAvatar(avataaars, { ...avatarOptions });
+    const svg = avatar.toString();
+
+    //store avatar in cookie
+    setCookie(null, "avatar", JSON.stringify(avatarOptions), { path: "/" });
+
+    return (
+      <div className="avatar" dangerouslySetInnerHTML={{ __html: svg }}></div>
+    );
+  };
+
+  useEffect(() => {
+    setAvatarOptions((prev) => ({ ...prev, seed: userName }));
+  }, [userName]);
+
+  useEffect(() => {
+    if (cookies.avatar) setAvatarOptions((prev) => JSON.parse(cookies.avatar));
+  }, []);
+
   return (
-    <div className="avatar-image">
-      <GetAvatar avatarOptions={avatarOptions} savedAvatar={savedAvatar} />
+    <div>
+      <AvatarSVG avatarOptions={avatarOptions} />
       <AvatarCustomizer handleSetAvatarOptions={handleSetAvatarOptions} />
     </div>
   );
