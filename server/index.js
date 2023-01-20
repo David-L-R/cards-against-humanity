@@ -48,9 +48,7 @@ io.on("connection", (socket) => {
 
   socket.on("createNewLobby", (data) => createNewLobby({ socket, data }));
 
-  socket.on("updateLobby", ({ lobbyId, id, joinGame, newPLayerName }) =>
-    updateClient({ lobbyId, socket, id, io, joinGame, newPLayerName })
-  );
+  socket.on("updateLobby", (data) => updateClient({ ...data, socket, io }));
 
   socket.on("findRoom", ({ lobbyId, newPlayerName, id }) => {
     findRoomToJoin({ lobbyId, newPlayerName, socket, id, io });
@@ -65,8 +63,8 @@ io.on("connection", (socket) => {
     });
   });
 
-  socket.on("createGameObject", ({ setRounds, maxHandSize, lobbyId }) => {
-    createGame({ setRounds, maxHandSize, lobbyId, io, socket });
+  socket.on("createGameObject", (data) => {
+    createGame({ ...data, io, socket });
   });
 
   socket.on("getUpdatedGame", ({ lobbyId, name, id, gameIdentifier }) =>
@@ -75,7 +73,8 @@ io.on("connection", (socket) => {
 
   socket.on("changeGame", async (data) => {
     const { lobbyId } = data;
-    // add request object to queue
+
+    // add request from client to queue map
     queue[lobbyId] = {
       lobby: lobbyId,
       data: queue[lobbyId]?.data ? [...queue[lobbyId].data, data] : [data],

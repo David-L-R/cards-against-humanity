@@ -68,6 +68,7 @@ export const updateClient = async ({
   id,
   io,
   newPLayerName,
+  avatar,
 }) => {
   socket.userId = id;
   if (!lobbyId || !id)
@@ -83,6 +84,7 @@ export const updateClient = async ({
 
     if (foundPLayer) {
       foundPLayer.inactive = false;
+      foundPLayer.avatar = avatar && avatar;
       const playerIndex = currentLobby.players.findIndex(
         (player) => player.id === id
       );

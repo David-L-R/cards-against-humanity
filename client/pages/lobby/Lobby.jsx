@@ -27,7 +27,6 @@ const Lobby = (props) => {
   const [isLoading, setIsloading] = useState(true);
   const [currentLobby, setCurrentLobby] = useState(null);
   const { storeData, setStoreData } = useAppContext();
-  console.log("storeData", storeData);
 
   const handleGameCreation = () => {
     setIsloading(true);
@@ -50,6 +49,7 @@ const Lobby = (props) => {
   useEffect(() => {
     //listener to update page from server after DB entry changed
     socket.on("updateRoom", ({ currentLobby, err, kicked }) => {
+      console.log("currentLobby", currentLobby);
       if (!currentLobby || err) {
         setIsloading(false);
         return setShowErrMessage(

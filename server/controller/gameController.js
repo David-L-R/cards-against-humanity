@@ -191,6 +191,8 @@ export const changeGame = async (states) => {
 
   //change current turn
   try {
+    console.log("gameId", gameId);
+    console.log("gameIdentifier", gameIdentifier);
     const currentGame = await GameCollection.findOne({
       "Game.id": gameId,
       "Game.gameIdentifier": gameIdentifier,

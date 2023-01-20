@@ -81,7 +81,7 @@ const Scoreboard = ({ currentLobby, socket }) => {
                 key={player.id}
                 className={player.inactive ? "inactive-player" : null}
                 onMouseEnter={(e) => setShowKick(e.target.dataset.id)}
-                onMouseLeave={() => setShowKick(false)}
+                onMouseLeave={showKick ? () => setShowKick(false) : null}
                 data-id={player.id}>
                 <div>
                   {storeData.isHost &&
@@ -106,8 +106,11 @@ const Scoreboard = ({ currentLobby, socket }) => {
                       <RiVipCrown2Fill className="crown" />
                     </div>
                   )}
-                  <img className="avatar" src="/favicon.ico" alt="" />
-                  <Avatar userName={player.name} />
+                  <Avatar
+                    userName={player.name}
+                    playerId={player.id}
+                    playerAvatar={player.avatar}
+                  />
 
                   <span className="player-name">{player.name}</span>
                 </div>
