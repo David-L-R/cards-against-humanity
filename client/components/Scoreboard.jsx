@@ -3,7 +3,6 @@ import { AiOutlineCheckCircle } from "react-icons/ai";
 import { VscDebugDisconnect } from "react-icons/vsc";
 import { RiVipCrown2Fill } from "react-icons/Ri";
 import { CgCloseO } from "react-icons/Cg";
-import { useSession } from "next-auth/react";
 import { useAppContext } from "../context";
 import KickButton from "./KickButton";
 import { parseCookies } from "nookies";

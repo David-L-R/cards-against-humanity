@@ -1,7 +1,5 @@
 import LobbyCollection from "../database/models/lobby.js";
 import GameCollection from "../database/models/game.js";
-import consoleSuccess from "../utils/consoleSuccess.js";
-import cardDecksData from "../data/allCards.json" assert { type: "json" };
 import randomName from "../utils/randomName.js";
 
 export const createNewLobby = async ({ socket, data }) => {

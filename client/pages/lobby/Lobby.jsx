@@ -22,20 +22,18 @@ const Lobby = (props) => {
   const [players, setPlayers] = useState([]);
   const [copied, setCopied] = useState(false);
   const [isHost, setHost] = useState(false);
-  const [inactive, setInactive] = useState(false);
   const [linkInvation, setlinkInvation] = useState("");
   const [isLoading, setIsloading] = useState(true);
   const [currentLobby, setCurrentLobby] = useState(null);
-  const { storeData, setStoreData } = useAppContext();
+  const { setStoreData } = useAppContext();
 
   const handleGameCreation = () => {
     setIsloading(true);
-
     socket.emit("createGameObject", {
       lobbyId,
       setRounds: amountOfRounds,
       maxHandSize: handSize,
-    }); //setRounds, maxHandSize,
+    });
   };
 
   const changePLayerName = (newPLayerName) => {
@@ -47,9 +45,7 @@ const Lobby = (props) => {
   };
 
   useEffect(() => {
-    //listener to update page from server after DB entry changed
     socket.on("updateRoom", ({ currentLobby, err, kicked }) => {
-      console.log("currentLobby", currentLobby);
       if (!currentLobby || err) {
         setIsloading(false);
         return setShowErrMessage(
@@ -78,7 +74,6 @@ const Lobby = (props) => {
       isHost
         ? (setHost(true), setStoreData((prev) => ({ ...prev, isHost: true })))
         : setHost(false);
-      inactive ? setInactive(true) : setInactive(false);
 
       if (err) return console.warn(err);
       setStoreData((prev) => ({ ...prev, playerName: player.name }));
@@ -131,19 +126,7 @@ const Lobby = (props) => {
       setCopied(false);
     }, 3000);
   };
-  /*
-  if (showErrMessage && !isHost)
-    return (
-      <main>
-        {showErrMessage && (
-          <Error
-            showErrMessage={showErrMessage}
-            setShowErrMessage={setShowErrMessage}
-          />
-        )}
-      </main>
-    );
-*/
+
   if (isLoading && !currentLobby)
     return (
       <main>

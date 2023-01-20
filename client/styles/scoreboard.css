@@ -197,7 +197,6 @@
   padding: 0;
 }
 .sideMenu button:hover svg {
-  /* background-color: rgb(227, 227, 227); */
   color: #eb455f;
   transform: rotate(360deg);
   transition: 0.3s;

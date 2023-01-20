@@ -2,7 +2,7 @@ import { createAvatar } from "@dicebear/core";
 import { avataaars } from "@dicebear/collection";
 import React, { useEffect, useState } from "react";
 import AvatarCustomizer from "./AvatarCustomizer";
-import { parseCookies, setCookie } from "nookies";
+import { parseCookies } from "nookies";
 import { socket } from "../pages/_app";
 import { useAppContext } from "../context";
 import { useRouter } from "next/router";
@@ -47,9 +47,6 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
   const AvatarSVG = ({ avatarOptions }) => {
     const avatar = createAvatar(avataaars, { ...avatarOptions });
     const svg = avatar.toString();
-
-    //store avatar in cookie
-    // setCookie(null, "avatar", JSON.stringify(avatarOptions), { path: "/" });
 
     return (
       <div
