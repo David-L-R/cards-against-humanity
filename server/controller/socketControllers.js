@@ -2,8 +2,8 @@ import LobbyCollection from "../database/models/lobby.js";
 import GameCollection from "../database/models/game.js";
 import randomName from "../utils/randomName.js";
 
-export const createNewLobby = async ({ socket, data }) => {
-  const { hostName, id } = data;
+export const createNewLobby = async (data) => {
+  const { hostName, id, socket } = data;
   const lobby = {
     games: [],
     waiting: [{ name: hostName, id, isHost: true, inactive: false, points: 0 }],

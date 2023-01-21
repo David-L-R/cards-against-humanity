@@ -13,6 +13,7 @@ import {
 } from "./controller/socketControllers.js";
 import { createGame, sendCurrentGame } from "./controller/gameController.js";
 import processQueue from "./utils/processQueue.js";
+import useQueue from "./utils/useQueue.js";
 
 dotenv.config();
 connectDB();
@@ -40,49 +41,53 @@ server.listen(PORT, async (req, res) => {
   console.log(`Server running under ${PORT}`);
 });
 
-const queue = {}; // {lobby: lobbyId, loading:Boolean, data:[{data to precess}]}
-
 //Socket.io
 io.on("connection", (socket) => {
   console.log(`user connected: ${socket.id}`);
 
-  socket.on("createNewLobby", (data) => createNewLobby({ socket, data }));
+  socket.on("createNewLobby", (data) =>
+    useQueue({ data, socket, io, channelName: "createNewLobby" })
+  );
 
-  socket.on("updateLobby", (data) => updateClient({ ...data, socket, io }));
+  socket.on("updateLobby", (data) =>
+    useQueue({ data, socket, io, channelName: "updateLobby" })
+  );
 
-  socket.on("findRoom", ({ lobbyId, newPlayerName, id }) => {
-    findRoomToJoin({ lobbyId, newPlayerName, socket, id, io });
-  });
+  socket.on("findRoom", (data) =>
+    useQueue({ data, socket, io, channelName: "findRoom" })
+  );
 
   socket.on("disconnect", async (reason) => {
     const userId = socket.userId;
-    setPlayerInactive({
-      reason,
+    useQueue({
       userId,
       io,
+      channelName: "disconnect",
+      data: { lobbyId: reason.replace(" ", "") },
     });
   });
 
   socket.on("createGameObject", (data) => {
-    createGame({ ...data, io, socket });
+    useQueue({ data, socket, io, channelName: "createGameObject" });
   });
 
-  socket.on("getUpdatedGame", ({ lobbyId, name, id, gameIdentifier }) =>
-    sendCurrentGame({ lobbyId, name, id, io, socket, gameIdentifier })
+  socket.on("getUpdatedGame", (data) =>
+    useQueue({ data, socket, io, channelName: "getUpdatedGame" })
   );
 
   socket.on("changeGame", async (data) => {
-    const { lobbyId } = data;
-
-    // add request from client to queue map
-    queue[lobbyId] = {
-      lobby: lobbyId,
-      data: queue[lobbyId]?.data ? [...queue[lobbyId].data, data] : [data],
-      loading: queue[lobbyId]?.loading ? queue[lobbyId].loading : false,
-    };
-    if (!queue[lobbyId].loading) {
-      queue[lobbyId].loading = true;
-      processQueue({ lobbyId, io, socket, queue });
-    }
+    useQueue({ data, socket, io, channelName: "changeGame" });
   });
 });
+
+/*
+
+lobbyId:{
+lobby: lobbyId
+loading:Boolean
+data:[{data to precess}]
+channel: function
+}
+
+
+*/

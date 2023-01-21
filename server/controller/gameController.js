@@ -16,6 +16,11 @@ export const createGame = async ({
   let amountOfRounds = parseInt(setRounds);
   let handSize = parseInt(maxHandSize);
 
+  if (!lobbyId)
+    io.to(lobbyId).emit("newgame", {
+      err: "Wrong or missng lobby ID",
+    });
+
   //set default if client dos not setup anything
   if (!setRounds) amountOfRounds = 10;
   if (!maxHandSize) handSize = 10;
@@ -83,25 +88,21 @@ export const createGame = async ({
     io.to(lobbyId).emit("newgame", { newGameData });
     updateGameInLobby(newGameData);
   } catch (error) {
+    console.error[error];
     io.to(lobbyId).emit("newgame", {
       err: "Can not create new Game, please host a new one",
     });
   }
 };
 
-export const sendCurrentGame = async ({
-  gameIdentifier,
-  lobbyId,
-  name,
-  id,
-  io,
-  socket,
-}) => {
+export const sendCurrentGame = async (data) => {
+  const { gameIdentifier, lobbyId, id, io, socket } = data;
+
   if (!lobbyId || !id)
     return io.to(socket.id).emit("currentGame", { err: "Missing Lobby ID " });
 
   socket.userId = id;
-  //jopin socket after disconnect
+  //join socket after disconnect
   socket.join(lobbyId);
   try {
     const currentGame = await GameCollection.findOne({
@@ -150,6 +151,7 @@ export const sendCurrentGame = async ({
     currentGame.save();
     io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });
   } catch (error) {
+    console.error(error);
     io.to(socket.id).emit("currentGame", {
       err: "Wrong lobby ID, please check your room code",
     });
