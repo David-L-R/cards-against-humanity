@@ -95,14 +95,11 @@ const updateTurn = async ({
       const activePlayers = currentGame.Game.players.filter(
         (player) => !player.inactive
       );
-      console.log("activePlayers", activePlayers);
       const randomIndex = Math.floor(
         Math.random() * (activePlayers.length - 1)
       );
 
-      console.log("randomIndex", randomIndex);
       const newCzar = activePlayers[randomIndex];
-      console.log("newCzar", newCzar);
       //asign new czar
       currentTurn.czar = newCzar;
 
@@ -111,10 +108,6 @@ const updateTurn = async ({
         (player) => player.player !== newCzar.id
       );
     }
-
-    //if not enough players, close game
-    // if (currentGame.Game.players.filter((player) => !player.inactive < 2))
-    //   currentGame.Game.concluded = true;
 
     return currentGame;
   }
