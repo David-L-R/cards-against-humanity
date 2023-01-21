@@ -194,7 +194,6 @@ const Game = ({ socket }) => {
     //getting whole game infos, also rejoin player to socket io
     socket.on("currentGame", ({ currentGame, err }) => {
       console.log("currentGame", currentGame);
-      let willClosedSoon;
       setLoading(false);
 
       //if error ocurred
@@ -204,6 +203,7 @@ const Game = ({ socket }) => {
       //if game was closed, show Game end component
       if (currentGame.concluded) {
         setGameEnds(true);
+        setTimer(false);
       }
 
       //if less then 3 players, let host decide to close the game
