@@ -21,6 +21,14 @@ const updateTurn = async ({
   const currentTurnIndex = currentGame?.Game?.turns?.length - 1;
   const currentTurn = currentGame?.Game?.turns[currentTurnIndex];
 
+  //reactivate each player after they really played
+  if (!leavedGame && currentGame?.Game) {
+    currentGame.Game.players = currentGame.Game.players.map((player) => {
+      if (player.id === playerId) player.inactive = false;
+      return player;
+    });
+  }
+
   //if just avatar gotes changed
   if (changeAvatar) {
     currentGame.Game.players = currentGame.Game.players.map((player) => {
@@ -34,7 +42,6 @@ const updateTurn = async ({
   if (kickPlayer) {
     //kick player from Lobby
     const currentLobby = await LobbyCollection.findById(lobbyId);
-    console.log("currentLobby", currentLobby);
     currentLobby.players = currentLobby.players.filter(
       (player) => player.id !== playerId
     );
@@ -78,7 +85,7 @@ const updateTurn = async ({
     );
     const currentCzar = currentTurn.czar;
 
-    //if normal player leaves active, set inactive in white_cards
+    //if normal player leaves running Game, set inactive in Game.players
     if (currentPlayer) {
       currentPlayer.inactive = true;
     }
@@ -88,9 +95,14 @@ const updateTurn = async ({
       const activePlayers = currentGame.Game.players.filter(
         (player) => !player.inactive
       );
-      const randomIndex = Math.random() * (activePlayers.length - 1);
-      const newCzar = activePlayers[randomIndex];
+      console.log("activePlayers", activePlayers);
+      const randomIndex = Math.floor(
+        Math.random() * (activePlayers.length - 1)
+      );
 
+      console.log("randomIndex", randomIndex);
+      const newCzar = activePlayers[randomIndex];
+      console.log("newCzar", newCzar);
       //asign new czar
       currentTurn.czar = newCzar;
 
@@ -101,8 +113,8 @@ const updateTurn = async ({
     }
 
     //if not enough players, close game
-    if (currentGame.Game.players.filter((player) => !player.inactive < 2))
-      currentGame.Game.concluded = true;
+    // if (currentGame.Game.players.filter((player) => !player.inactive < 2))
+    //   currentGame.Game.concluded = true;
 
     return currentGame;
   }
@@ -147,7 +159,6 @@ const updateTurn = async ({
       cards: updatedHand,
       played_card: playedWhite,
       points: 0,
-      active: true,
     };
 
     //update player in turns.white_cards

@@ -21,7 +21,7 @@ export const createGame = async ({
   if (!maxHandSize) handSize = 10;
 
   try {
-    //if alreday games where played, increase to game indentifiyer
+    //if alreday games where played, increase the game indentifiyer
     const lobby = await LobbyCollection.findById(lobbyId);
     let currentGameIndex = lobby.games.length;
 
@@ -162,8 +162,8 @@ export const changeGame = async (states) => {
 
       const updatedGame = dealCards({ currentGame, playerId });
 
-      updatedGame.save();
       io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
+      updatedGame.save();
       return;
     } catch (error) {
       console.log("error", error);

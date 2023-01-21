@@ -15,7 +15,7 @@ function GameEnd({ currentGame }) {
   const allPLayersWithStats = currentGame.players.map((player) => ({
     playerName: player.name,
     points: player.points,
-    timesCzar: currentGame.turns.filter((turn) => turn.czar.id === player.id)
+    timesCzar: currentGame.turns.filter((turn) => turn.czar?.id === player.id)
       .length,
     wonRounds: currentGame.turns.filter(
       (turn) => turn.winner.player === player.id

@@ -1,6 +1,5 @@
 .avatar-image {
   position: relative;
-  cursor: pointer;
   min-width: 30px;
   max-width: 50px;
 }
