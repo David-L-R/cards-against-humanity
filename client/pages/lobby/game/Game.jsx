@@ -233,34 +233,12 @@ const Game = ({ socket }) => {
         !currentGame.players.find((player) => player.id === cookies.socketId)
       ) {
         setShowErrMessage(
-          "Your are not part of this round, redirecting you back"
+          "Your are not part of this game, redirecting you back"
         );
         return setTimeout(() => {
           router.push(`/`);
         }, 3000);
       }
-
-      //TODO!!! close and redirect or show statistik page if not enough players??
-      //abort game if not enough player
-      // if (currentGame.players.filter((player) => !player.inactive).length < 2) {
-      //   setShowErrMessage(
-      //     "Not enough players left. Game closed and redirecting you back!"
-      //   );
-      //   setTimeout(() => {
-      //     router.push(`/lobby/${lobbyId}`);
-      //   }, 3000);
-      // }
-
-      //if max rounds reached = games finished = show statistik page
-
-      //TODO:!!! push players to lobby or show statistik page??
-      // if game is concluded, redirect
-      // if (currentGame.concluded && currentGame.turns.length !== currentGame.setRounds) {
-      //   setShowErrMessage("This game goets closed, please create a new one");
-      //   setTimeout(() => {
-      //     router.push(`/lobby/${lobbyId}`);
-      //   }, 3000);
-      // }
 
       const lastTurnIndex = currentGame.turns.length - 1;
       const lastTurn = currentGame.turns[lastTurnIndex];

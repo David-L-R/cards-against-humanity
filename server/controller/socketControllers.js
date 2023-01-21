@@ -130,8 +130,8 @@ export const setPlayerInactive = async ({ reason, io, userId }) => {
     const currentLobby = lobbyList[lobbyList.length - 1];
 
     //set leaving player inactive if they are in a running game
-    const currenGameIndex = currentLobby.games.length - 1;
-    if (currenGameIndex >= 0) {
+    const currenGameIndex = currentLobby.games?.length - 1;
+    if (currenGameIndex && currenGameIndex >= 0) {
       const gameId = currentLobby._id.toString();
       const currentGame = await GameCollection.findOne({
         "Game.id": gameId,
@@ -146,7 +146,7 @@ export const setPlayerInactive = async ({ reason, io, userId }) => {
       });
 
       // if czar leaves, assign a new one
-      if (currenCzar.id === userId) {
+      if (currenCzar?.id === userId) {
         currentTurn.czar = currentGame.Game.players.find(
           (player) => !player.inactive
         );
@@ -161,7 +161,7 @@ export const setPlayerInactive = async ({ reason, io, userId }) => {
       currentGame.save();
       io.to(gameId).emit("currentGame", { currentGame: currentGame.Game });
     }
-
+    console.log("RUN!");
     //search for player that needs to be set inactive from lobby
     currentLobby.waiting = currentLobby.waiting.map((player) => {
       if (player.id === userId) player.inactive = true;
