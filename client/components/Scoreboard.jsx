@@ -12,7 +12,10 @@ const Scoreboard = ({ currentLobby, socket }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showKick, setShowKick] = useState(false);
   const cookies = parseCookies();
-  const { players, turns } = currentLobby;
+  const { turns } = currentLobby;
+  const players = currentLobby.waiting
+    ? currentLobby.waiting
+    : currentLobby.players;
   const currentTurn = turns && turns[turns.length - 1];
   const { stage, white_cards, czar } = currentTurn
     ? currentTurn

@@ -15,7 +15,16 @@ const lobbyModel = mongoose.Schema(
         avatar: Object,
       },
     ],
-    waiting: [{ id: String, name: String }],
+    waiting: [
+      {
+        id: String,
+        name: String,
+        isHost: false,
+        inactive: false,
+        points: Number,
+        avatar: Object,
+      },
+    ],
   },
   {
     timestamps: true,

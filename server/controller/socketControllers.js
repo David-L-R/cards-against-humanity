@@ -6,8 +6,8 @@ export const createNewLobby = async ({ socket, data }) => {
   const { hostName, id } = data;
   const lobby = {
     games: [],
-    waiting: [],
-    players: [{ name: hostName, id, isHost: true, inactive: false, points: 0 }],
+    waiting: [{ name: hostName, id, isHost: true, inactive: false, points: 0 }],
+    players: [],
   };
 
   try {
@@ -59,16 +59,11 @@ export const findRoomToJoin = async ({
   }
 };
 
-export const updateClient = async ({
-  lobbyId,
-  socket,
-  joinGame,
-  id,
-  io,
-  newPLayerName,
-  avatar,
-}) => {
+export const updateClient = async (data) => {
+  const { lobbyId, socket, joinGame, id, io, newPLayerName, avatar } = data;
   socket.userId = id;
+  console.log("lobbyId", lobbyId);
+  console.log("id", id);
   if (!lobbyId || !id)
     return socket.emit("updateRoom", {
       err: "Cant find game to join. Wrong lobby id or player id",
@@ -76,20 +71,25 @@ export const updateClient = async ({
 
   try {
     const currentLobby = await LobbyCollection.findOne({ _id: lobbyId });
-    const foundPLayer = currentLobby.players.find((player) => player.id === id);
+    const foundPLayer = currentLobby.waiting.find((player) => player.id === id);
+
+    // delte players from lobby.players to be available for a game rejoining  lobby
+    currentLobby.players = currentLobby.players.filter(
+      (currPlayer) => currPlayer.id !== id
+    );
 
     if (newPLayerName) foundPLayer.name = newPLayerName;
 
     if (foundPLayer) {
       foundPLayer.inactive = false;
       foundPLayer.avatar = avatar && avatar;
-      const playerIndex = currentLobby.players.findIndex(
+      const playerIndex = currentLobby.waiting.findIndex(
         (player) => player.id === id
       );
       if (playerIndex === 0) {
         foundPLayer.isHost = true;
-        //change alle other palyer to be not the host
-        currentLobby.players = currentLobby.players.map((player, index) => {
+        //change alle other player to be not the host
+        currentLobby.waiting = currentLobby.waiting.map((player, index) => {
           if (index === 0) return player;
           player.isHost = false;
           return player;
@@ -105,7 +105,7 @@ export const updateClient = async ({
         name: randomName(),
         points: 0,
       };
-      currentLobby.players.push(newPLayer);
+      currentLobby.waiting.push(newPLayer);
     }
     socket.join(lobbyId);
     currentLobby.save();
@@ -114,6 +114,7 @@ export const updateClient = async ({
       currentLobby,
     });
   } catch (err) {
+    console.error(err);
     socket.emit("updateRoom", {
       err: "cant update Client",
     });
@@ -124,7 +125,7 @@ export const setPlayerInactive = async ({ reason, io, userId }) => {
   //set player inactive on disconnect
   try {
     const lobbyList = await LobbyCollection.find({
-      "players.id": userId,
+      "waiting.id": userId,
     });
     const currentLobby = lobbyList[lobbyList.length - 1];
 
@@ -162,25 +163,25 @@ export const setPlayerInactive = async ({ reason, io, userId }) => {
     }
 
     //search for player that needs to be set inactive from lobby
-    currentLobby.players = currentLobby.players.map((player) => {
+    currentLobby.waiting = currentLobby.waiting.map((player) => {
       if (player.id === userId) player.inactive = true;
       if (player.isHost) player.isHost = false;
       return player;
     });
 
     //find actuall host
-    let findHost = currentLobby.players.find((player) => {
+    let findHost = currentLobby.waiting.find((player) => {
       return player.isHost && !player.inactive;
     });
 
     //if no host inside game, make the next PLayer to host
     if (!findHost) {
-      const activePlayerIndex = currentLobby.players.findIndex(
+      const activePlayerIndex = currentLobby.waiting.findIndex(
         (player) => !player.inactive
       );
       if (activePlayerIndex >= 0) {
-        currentLobby.players[activePlayerIndex].isHost = true;
-        findHost = currentLobby.players[activePlayerIndex];
+        currentLobby.waiting[activePlayerIndex].isHost = true;
+        findHost = currentLobby.waiting[activePlayerIndex];
       }
     }
     const lobby = await currentLobby.save();
@@ -188,6 +189,7 @@ export const setPlayerInactive = async ({ reason, io, userId }) => {
 
     if (lobbyId) io.to(lobbyId).emit("updateRoom", { currentLobby });
   } catch (error) {
+    console.error(error);
     return { err: "Cant find player to remove" };
   }
 };

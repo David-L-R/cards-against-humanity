@@ -28,8 +28,12 @@ export const createGame = async ({
     if (!lobby)
       return socket.to(lobbyId).emit("newgame", { err: "Can not find lobby" });
 
-    // add each ACTIVE players all necessary keys
-    const allPlayers = lobby.players
+    // add each ACTIVE players wich are INSIDE lobby all necessary keys
+    lobby.waiting = lobby.waiting.filter(
+      (waitPlayer) =>
+        !lobby.players.find((player) => player.id === waitPlayer.id)
+    );
+    const allPlayers = lobby.waiting
       .filter((player) => !player.inactive)
       .map((player) => {
         const newPLayer = { ...player };
@@ -44,6 +48,9 @@ export const createGame = async ({
       return io.to(socket.id).emit("newgame", {
         err: "Please wait for at least one more  Player",
       });
+
+    lobby.players = [...allPlayers];
+    lobby.save();
 
     const [black] = allCards.map((set) => set.black);
     const [white] = allCards.map((set) => set.white);
@@ -72,10 +79,9 @@ export const createGame = async ({
       ],
       timerTrigger: false,
     };
-
     const newGameData = await GameCollection.create({ Game: gamedata });
-    updateGameInLobby(newGameData);
     io.to(lobbyId).emit("newgame", { newGameData });
+    updateGameInLobby(newGameData);
   } catch (error) {
     io.to(lobbyId).emit("newgame", {
       err: "Can not create new Game, please host a new one",
@@ -180,7 +186,6 @@ export const changeGame = async (states) => {
       "Game.id": gameId,
       "Game.gameIdentifier": gameIdentifier,
     });
-
     const updatedGame = await updateTurn({ ...states, currentGame });
 
     if (!updatedGame) throw new Error("Server error, no game found");
