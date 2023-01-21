@@ -121,7 +121,7 @@ export const updateClient = async (data) => {
   }
 };
 
-export const setPlayerInactive = async ({ reason, io, userId }) => {
+export const setPlayerInactive = async ({ io, userId }) => {
   //set player inactive on disconnect
   try {
     const lobbyList = await LobbyCollection.find({
