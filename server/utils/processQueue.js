@@ -1,6 +1,28 @@
-import { changeGame } from "../controller/gameController.js";
+import {
+  changeGame,
+  createGame,
+  sendCurrentGame,
+} from "../controller/gameController.js";
+import {
+  createNewLobby,
+  findRoomToJoin,
+  setPlayerInactive,
+  updateClient,
+} from "../controller/socketControllers.js";
 
-const processQueue = async ({ queue, lobbyId, io, socket }) => {
+const callbacks = {
+  changeGame: changeGame,
+  getUpdatedGame: sendCurrentGame,
+  createGameObject: createGame,
+  disconnect: setPlayerInactive,
+  findRoom: findRoomToJoin,
+  updateLobby: updateClient,
+  createNewLobby: createNewLobby,
+};
+
+const processQueue = async (allData) => {
+  const { queue, lobbyId } = allData;
+
   // abort loop if request array is empty
   if (queue[lobbyId].data.length === 0) {
     delete queue[lobbyId];
@@ -8,10 +30,11 @@ const processQueue = async ({ queue, lobbyId, io, socket }) => {
   }
 
   const data = queue[lobbyId].data.shift();
+  const channelName = queue[lobbyId].channelName;
 
-  await changeGame({ ...data, io, socket });
+  await callbacks[channelName]({ ...allData, ...data });
 
-  processQueue({ lobbyId, io, socket, queue });
+  processQueue(allData);
 };
 
 export default processQueue;

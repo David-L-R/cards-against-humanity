@@ -14,6 +14,7 @@ const Czar = ({
   const [showBlackCards, setshowBlackCards] = useState([]);
   const [activeIndex, setActiveIndex] = useState(false);
 
+  // get randokm black cards and let czar decide
   const randomBlackCards = () => {
     const amountCardsToSelect = 3;
     const cardsToDisplay = [];
@@ -27,9 +28,10 @@ const Czar = ({
     return setshowBlackCards((prev) => [...cardsToDisplay]);
   };
 
+  //select a black card and send to team
   const selectCard = ({ index, element, event }) => {
+    setTimer(false);
     //update all black cards
-
     if (index) {
       const [selected] = blackCards.splice(index, 1);
 
@@ -39,31 +41,17 @@ const Czar = ({
         setshowBlackCards(null);
         chooseBlackCard(selected);
       }, 1500);
-      setTimer(false);
       return;
     }
-
-    const [selected] = showBlackCards.splice(1, 1);
-    setBlackCards(() => [...blackCards]);
-    setActiveIndex(index);
-    setTimeout(() => {
-      setshowBlackCards(null);
-      chooseBlackCard(selected.card);
-    }, 1500);
-
-    setTimer(false);
+    //choose random card and set player inactive
+    chooseBlackCard(null);
     return;
   };
 
   useEffect(() => {
-    if (timer === null) {
-      selectCard({ index: null });
-    }
-  }, [timer]);
-
-  useEffect(() => {
     randomBlackCards();
   }, []);
+
   if (!showBlackCards || gameStage !== "black") return;
 
   return (

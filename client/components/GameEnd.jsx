@@ -15,7 +15,7 @@ function GameEnd({ currentGame }) {
   const allPLayersWithStats = currentGame.players.map((player) => ({
     playerName: player.name,
     points: player.points,
-    timesCzar: currentGame.turns.filter((turn) => turn.czar.id === player.id)
+    timesCzar: currentGame.turns.filter((turn) => turn.czar?.id === player.id)
       .length,
     wonRounds: currentGame.turns.filter(
       (turn) => turn.winner.player === player.id
@@ -55,7 +55,7 @@ function GameEnd({ currentGame }) {
           ))}
       </ul>
 
-      <button>
+      <button style={{ color: "red" }}>
         <h3 onClick={() => router.push(`/lobby/${storeData.lobbyId}`)}>
           Back to Lobby!!!!!
         </h3>
