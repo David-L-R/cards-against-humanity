@@ -35,7 +35,7 @@
   transition: all 0.3s ease-in-out;
   border-right: 2px solid black;
 }
-.sideMenu ul {
+.sideMenu > ul {
   list-style: none;
   padding: 0;
 }

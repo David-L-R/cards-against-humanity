@@ -9,8 +9,8 @@ export const updateGameInLobby = async (game) => {
 
   if (lobby.games[currentGameIndex]?.Game.concluded) {
     lobby.games.push(game);
-    return lobby.save();
+    return await lobby.save();
   }
   lobby.games[currentGameIndex] = game;
-  return lobby.save();
+  return await lobby.save();
 };

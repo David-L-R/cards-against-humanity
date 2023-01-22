@@ -10,6 +10,7 @@ const Czar = ({
   gameStage,
   timer,
   setTimer,
+  startStopTimer,
 }) => {
   const [showBlackCards, setshowBlackCards] = useState([]);
   const [activeIndex, setActiveIndex] = useState(false);
@@ -30,7 +31,6 @@ const Czar = ({
 
   //select a black card and send to team
   const selectCard = ({ index, element, event }) => {
-    setTimer(false);
     //update all black cards
     if (index) {
       const [selected] = blackCards.splice(index, 1);

@@ -17,9 +17,49 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
     seed: userName,
     ...playerAvatar,
   };
+
+  const emotions = {
+    happy: {
+      eyebrows: ["raisedExcitedNatural"],
+      eyes: ["happy"],
+      mouth: ["smile"],
+    },
+    sad: {
+      eyebrows: ["sadConcernedNatural"],
+      eyes: ["cry"],
+      mouth: ["sad"],
+    },
+    angry: {
+      eyebrows: ["angryNatural"],
+      eyes: ["surprised"],
+      mouth: ["grimace"],
+    },
+    love: {
+      eyebrows: ["raisedExcited"],
+      eyes: ["hearts"],
+      mouth: ["smile"],
+    },
+    wonder: {
+      eyebrows: ["upDownNatural"],
+      eyes: ["surprised"],
+      mouth: ["serious"],
+    },
+    dead: {
+      eyebrows: ["raisedExcitedNatural"],
+      eyes: ["xDizzy"],
+      mouth: ["screamOpen"],
+    },
+  };
+
   const handleSetAvatarOptions = (value, key) => {
     const newOptions = { ...avatarOptions };
     newOptions[key] = [value];
+    storeAvatarSettings(newOptions);
+  };
+
+  const handlEemotions = (emotions) => {
+    const newOptions = { ...avatarOptions, ...emotions };
+
     storeAvatarSettings(newOptions);
   };
 
@@ -45,6 +85,7 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
 
   //create avatar based on options
   const AvatarSVG = ({ avatarOptions }) => {
+    console.log("avatarOptions", avatarOptions);
     const avatar = createAvatar(avataaars, { ...avatarOptions });
     const svg = avatar.toString();
 
@@ -69,7 +110,44 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
         <AvatarCustomizer
           handleSetAvatarOptions={handleSetAvatarOptions}
           setShowSettings={setShowSettings}>
-          <AvatarSVG avatarOptions={avatarOptions} />
+          <div className="avatar-preview">
+            <AvatarSVG avatarOptions={avatarOptions} />
+            <div>
+              <h3>EMOTIONS</h3>
+              <ul>
+                <li>
+                  <button onClick={() => handlEemotions(emotions.happy)}>
+                    happy
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => handlEemotions(emotions.angry)}>
+                    angry
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => handlEemotions(emotions.sad)}>
+                    sad
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => handlEemotions(emotions.wonder)}>
+                    wonder
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => handlEemotions(emotions.love)}>
+                    love
+                  </button>
+                </li>
+                <li>
+                  <button onClick={() => handlEemotions(emotions.dead)}>
+                    dead
+                  </button>
+                </li>
+              </ul>
+            </div>
+          </div>
         </AvatarCustomizer>
       )}
     </div>

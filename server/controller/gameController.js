@@ -55,7 +55,7 @@ export const createGame = async ({
       });
 
     lobby.players = [...allPlayers];
-    lobby.save();
+    await lobby.save();
 
     const [black] = allCards.map((set) => set.black);
     const [white] = allCards.map((set) => set.white);
@@ -148,8 +148,8 @@ export const sendCurrentGame = async (data) => {
       return player;
     });
 
-    currentGame.save();
     io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });
+    await currentGame.save();
   } catch (error) {
     console.error(error);
     io.to(socket.id).emit("currentGame", {
@@ -171,7 +171,7 @@ export const changeGame = async (states) => {
       const updatedGame = dealCards({ currentGame, playerId });
 
       io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
-      updatedGame.save();
+      await updatedGame.save();
       return;
     } catch (error) {
       console.log("error", error);
@@ -188,6 +188,7 @@ export const changeGame = async (states) => {
       "Game.id": gameId,
       "Game.gameIdentifier": gameIdentifier,
     });
+
     const updatedGame = await updateTurn({ ...states, currentGame });
 
     if (!updatedGame) throw new Error("Server error, no game found");

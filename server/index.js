@@ -5,14 +5,6 @@ import { Server } from "socket.io";
 import express from "express";
 import cors from "cors";
 import http from "http";
-import {
-  createNewLobby,
-  setPlayerInactive,
-  findRoomToJoin,
-  updateClient,
-} from "./controller/socketControllers.js";
-import { createGame, sendCurrentGame } from "./controller/gameController.js";
-import processQueue from "./utils/processQueue.js";
 import useQueue from "./utils/useQueue.js";
 
 dotenv.config();

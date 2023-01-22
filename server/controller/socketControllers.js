@@ -39,7 +39,6 @@ export const findRoomToJoin = async ({
 
     // update player list in DB
     lobby.players.push(player);
-    lobby.save();
 
     //join player into room and send lobbyId back
     socket.join(lobbyId);
@@ -51,6 +50,7 @@ export const findRoomToJoin = async ({
 
     //updateing room
     io.to(lobbyId).emit("updateRoom", { currentLobby: lobby });
+    await lobby.save();
   } catch (error) {
     return socket.emit("foundRoom", {
       noRoom: true,
@@ -62,8 +62,7 @@ export const findRoomToJoin = async ({
 export const updateClient = async (data) => {
   const { lobbyId, socket, joinGame, id, io, newPLayerName, avatar } = data;
   socket.userId = id;
-  console.log("lobbyId", lobbyId);
-  console.log("id", id);
+
   if (!lobbyId || !id)
     return socket.emit("updateRoom", {
       err: "Cant find game to join. Wrong lobby id or player id",
@@ -108,7 +107,7 @@ export const updateClient = async (data) => {
       currentLobby.waiting.push(newPLayer);
     }
     socket.join(lobbyId);
-    currentLobby.save();
+    await currentLobby.save();
 
     io.to(lobbyId).emit("updateRoom", {
       currentLobby,
@@ -128,9 +127,10 @@ export const setPlayerInactive = async ({ io, userId }) => {
       "waiting.id": userId,
     });
     const currentLobby = lobbyList[lobbyList.length - 1];
+    if (!currentLobby) return;
 
     //set leaving player inactive if they are in a running game
-    const currenGameIndex = currentLobby.games?.length - 1;
+    const currenGameIndex = currentLobby?.games?.length - 1;
     if (currenGameIndex && currenGameIndex >= 0) {
       const gameId = currentLobby._id.toString();
       const currentGame = await GameCollection.findOne({
@@ -158,11 +158,11 @@ export const setPlayerInactive = async ({ io, userId }) => {
         }));
         currentTurn.black_card = null;
       }
-      currentGame.save();
       io.to(gameId).emit("currentGame", { currentGame: currentGame.Game });
+      await currentGame.save();
     }
-    console.log("RUN!");
     //search for player that needs to be set inactive from lobby
+
     currentLobby.waiting = currentLobby.waiting.map((player) => {
       if (player.id === userId) player.inactive = true;
       if (player.isHost) player.isHost = false;

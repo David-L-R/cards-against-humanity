@@ -13,7 +13,7 @@ function Countdown({ timer, setTimer }) {
         </div>
       );
   };
-
+  if (!timer) return false;
   return (
     <div className="timer-wrapper">
       <CountdownCircleTimer

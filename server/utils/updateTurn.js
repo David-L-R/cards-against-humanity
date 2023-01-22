@@ -48,8 +48,8 @@ const updateTurn = async ({
     currentLobby.waiting = currentLobby.waiting.filter(
       (player) => player.id !== playerId
     );
-    currentLobby.save();
     io.to(lobbyId).emit("updateRoom", { currentLobby, kicked: true });
+    await currentLobby.save();
 
     //kick player from game if played one
     if (currentGame?.Game) {

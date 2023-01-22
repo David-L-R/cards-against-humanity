@@ -2,6 +2,8 @@
   position: relative;
   min-width: 30px;
   max-width: 50px;
+  flex-basis: 30%;
+  flex-shrink: 0;
 }
 
 .settings-wrapper {
@@ -21,7 +23,7 @@
   justify-content: stretch;
 }
 
-.settings-wrapper > .avatar-image {
+.settings-wrapper .avatar-image {
   width: 150px;
   max-width: none;
 }
@@ -116,7 +118,7 @@
   outline: none;
 }
 
-.settings-wrapper button {
+.settings-wrapper > button {
   position: absolute;
   top: 0;
   right: 0;
@@ -128,4 +130,53 @@
   font-size: 25px;
   color: white;
   margin: 6px;
+}
+
+.avatar-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  justify-content: space-evenly;
+  padding-top: 1rem;
+}
+
+.avatar-preview > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.avatar-preview ul {
+  color: white;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  flex-basis: 40%;
+  flex-grow: 1;
+}
+
+.avatar-preview ul > li {
+  width: min-content;
+}
+
+.avatar-preview ul > li > button {
+  background-color: white;
+  color: black;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  max-width: 50%;
+  min-width: 100px;
+  transition: all 150ms;
+}
+.avatar-preview ul > li:hover > button {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 7px -3px rgba(255, 255, 255, 0.61);
 }

@@ -213,7 +213,7 @@ const Game = ({ socket }) => {
       //if less then 2 players, close the game after 3.5s, else abort the closing function
       if (
         currentGame.players.filter((player) => !player.inactive).length < 2 &&
-        !closingGame
+        !currentGame.concluded
       ) {
         setShowErrMessage(
           "Not enough Players left, game will be closed within 3 seconds"
@@ -393,7 +393,7 @@ const Game = ({ socket }) => {
       }
 
       if (gameStage === "white" && timerTrigger) {
-        setTimer(10);
+        setTimer(30);
       }
 
       if (gameStage === "deciding" && timerTrigger) {
@@ -516,7 +516,7 @@ const Game = ({ socket }) => {
                 {"You are inactive, you are able to turn back in each stage"}
               </div>
             )}
-            {timerTrigger && timer && (
+            {timerTrigger && (
               <div className="timerContainer">
                 <Countdown timer={timer} setTimer={setTimer} />
               </div>
@@ -602,7 +602,7 @@ const Game = ({ socket }) => {
               )}
             </DragAndDropContainer>
           ) : null}
-          {timerTrigger && timer && (
+          {timerTrigger && (
             <div className="timerContainer">
               <Countdown timer={timer} setTimer={setTimer} />
             </div>
