@@ -85,7 +85,6 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
 
   //create avatar based on options
   const AvatarSVG = ({ avatarOptions }) => {
-    console.log("avatarOptions", avatarOptions);
     const avatar = createAvatar(avataaars, { ...avatarOptions });
     const svg = avatar.toString();
 

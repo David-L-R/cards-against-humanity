@@ -86,7 +86,7 @@ export const createGame = async ({
     };
     const newGameData = await GameCollection.create({ Game: gamedata });
     io.to(lobbyId).emit("newgame", { newGameData });
-    updateGameInLobby(newGameData);
+    await updateGameInLobby(newGameData);
   } catch (error) {
     console.error[error];
     io.to(lobbyId).emit("newgame", {
@@ -194,8 +194,8 @@ export const changeGame = async (states) => {
     if (!updatedGame) throw new Error("Server error, no game found");
     if (updatedGame === "kicked") return;
 
-    updateGameInLobby(updatedGame);
     io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
+    await updateGameInLobby(updatedGame);
     await updatedGame.save();
   } catch (error) {
     console.log("error", error);

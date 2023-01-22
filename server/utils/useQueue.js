@@ -48,7 +48,8 @@ const processQueue = async (allData) => {
 
   // abort loop if request array is empty
   if (queue[lobbyId].data.length === 0 || !queue[lobbyId]) {
-    delete queue[lobbyId];
+    queue[lobbyId].loading = false;
+    // delete queue[lobbyId];
     return;
   }
 
