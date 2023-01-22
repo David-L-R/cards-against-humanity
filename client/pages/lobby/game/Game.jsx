@@ -211,7 +211,10 @@ const Game = ({ socket }) => {
       //   setClosingGame(true);
 
       //if less then 2 players, close the game after 3.5s, else abort the closing function
-      if (currentGame.players.filter((player) => !player.inactive).length < 2) {
+      if (
+        currentGame.players.filter((player) => !player.inactive).length < 2 &&
+        !closingGame
+      ) {
         setShowErrMessage(
           "Not enough Players left, game will be closed within 3 seconds"
         );

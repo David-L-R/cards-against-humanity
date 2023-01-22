@@ -14,6 +14,9 @@ const useQueue = (allData) => {
     channelName,
   };
 
+  console.log("queue", queue);
+  console.log("queue[lobbyId].data", queue[lobbyId].data);
+
   // execute queue
   if (!queue[lobbyId].loading) {
     queue[lobbyId].loading = true;
