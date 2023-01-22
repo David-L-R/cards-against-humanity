@@ -6,9 +6,11 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import useQueue from "./utils/useQueue.js";
+import { connectToCluster } from "./database/MongoBd/database.js";
 
 dotenv.config();
-connectDB();
+// connectDB();
+export const database = await connectToCluster();
 
 const app = express();
 app.use(cors());

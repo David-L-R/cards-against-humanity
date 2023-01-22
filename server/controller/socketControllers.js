@@ -1,6 +1,10 @@
 import LobbyCollection from "../database/models/lobby.js";
 import GameCollection from "../database/models/game.js";
 import randomName from "../utils/randomName.js";
+import {
+  collectionCreateLobby,
+  collectionFindLobby,
+} from "../database/MongoBd/crudOperations.js";
 
 export const createNewLobby = async (data) => {
   const { hostName, id, socket } = data;
@@ -9,18 +13,15 @@ export const createNewLobby = async (data) => {
     waiting: [{ name: hostName, id, isHost: true, inactive: false, points: 0 }],
     players: [],
   };
-
   try {
-    const newLobby = await LobbyCollection.create({
-      ...lobby,
-    });
-
-    const lobbyId = newLobby._id.toString();
+    const lobbyId = await collectionCreateLobby({ lobby });
 
     socket.emit("LobbyCreated", { lobbyId, hostName });
     socket.join(lobbyId);
   } catch (err) {
+    console.error(err);
     socket.emit("error", { err });
+    process.exit();
   }
 };
 
@@ -35,7 +36,7 @@ export const findRoomToJoin = async ({
 
   // searche game in MongoDb
   try {
-    const lobby = await LobbyCollection.findById(lobbyId);
+    const lobby = await collectionFindLobby({ lobbyId });
 
     // update player list in DB
     lobby.players.push(player);
@@ -69,7 +70,8 @@ export const updateClient = async (data) => {
     });
 
   try {
-    const currentLobby = await LobbyCollection.findOne({ _id: lobbyId });
+    const currentLobby = await collectionFindLobby({ lobbyId });
+    if (!currentLobby) throw new Error("Lobby not Found");
     const foundPLayer = currentLobby.waiting.find((player) => player.id === id);
 
     // delte players from lobby.players to be available for a game rejoining  lobby
@@ -107,11 +109,11 @@ export const updateClient = async (data) => {
       currentLobby.waiting.push(newPLayer);
     }
     socket.join(lobbyId);
-    await currentLobby.save();
 
     io.to(lobbyId).emit("updateRoom", {
       currentLobby,
     });
+    await currentLobby.save();
   } catch (err) {
     console.error(err);
     socket.emit("updateRoom", {
