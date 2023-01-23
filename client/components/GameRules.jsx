@@ -5,7 +5,7 @@ function GameRules({ setShowRules, showRules }) {
   if (!showRules) return;
   return (
     <div className="gameRulesBackdrop">
-      <div className={showRules ? "gameRules animation" : "gameRules"}>
+      <div className="gameRules">
         <button onClick={() => setShowRules(false)}>
           <CgCloseO className="closeMenuButton" />
         </button>

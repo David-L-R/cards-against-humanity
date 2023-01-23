@@ -11,9 +11,11 @@ import { AiOutlineDollarCircle, AiOutlineMail } from "react-icons/ai";
 import Settings from "./Settings";
 import { useAppContext } from "../context";
 import GameRules from "./GameRules";
+import ReportBug from "./ReportBug";
 
 function Navbar(props) {
   const [showRules, setShowRules] = useState(false);
+  const [showBug, setShowBug] = useState(false);
   const { socket, setHandSize, setAmountOfRounds, handSize, amountOfRounds } =
     props;
   const { data: session } = useSession();
@@ -37,6 +39,14 @@ function Navbar(props) {
         pathname: `/lobby/${lobbyId}`,
       });
     }
+  };
+
+  const handleDonate = () => {
+    window.open(
+      "https://www.paypal.com/donate/?hosted_button_id=GYX5SR7ZTMGQA",
+      "_blank",
+      "height=500px,width=500px"
+    );
   };
 
   useEffect(() => {
@@ -103,13 +113,13 @@ function Navbar(props) {
             </div>
             <div className="navBarText">Settings</div>
           </li>
-          <li>
+          <li onClick={() => setShowBug(true)}>
             <div className="navbarIcons">
               <BsBug />
             </div>
             <div className="navBarText">Report a Bug</div>
           </li>
-          <li>
+          <li onClick={handleDonate}>
             <div className="navbarIcons">
               <AiOutlineDollarCircle />
             </div>
@@ -132,6 +142,11 @@ function Navbar(props) {
           Copyright © 2023 Man Makes Monster. All rights reserved.
         </p>
 
+        <ReportBug
+          setShowBug={setShowBug}
+          showBug={showBug}
+          className="gameRulesContent"
+        />
         <GameRules
           setShowRules={setShowRules}
           showRules={showRules}

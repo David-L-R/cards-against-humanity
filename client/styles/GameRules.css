@@ -9,6 +9,7 @@
   padding: 30px;
   border-radius: 15px;
   border: 2px solid white;
+  animation: entryAnimation 0.2s linear forwards;
 }
 .gameRulesText {
   display: grid;
@@ -30,7 +31,7 @@
 }
 .closeMenuButton {
   position: absolute;
-  top: 1%;
+  top: 2%;
   right: 1%;
   width: 45px;
   height: 45px;
@@ -48,9 +49,7 @@
   transform: rotate(360deg);
   transition: 0.3s;
 }
-.gameRules {
-  animation: entryAnimation 0.2s linear forwards;
-}
+
 @keyframes entryAnimation {
   from {
     transform: translateX(1500px);
