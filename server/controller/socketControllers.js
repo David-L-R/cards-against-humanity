@@ -2,11 +2,14 @@ import LobbyCollection from "../database/models/lobby.js";
 import GameCollection from "../database/models/game.js";
 import randomName from "../utils/randomName.js";
 import {
+  collectionChangeLobby,
   collectionCreateLobby,
+  collectionFindGame,
   collectionFindLobby,
 } from "../database/MongoBd/crudOperations.js";
 
 export const createNewLobby = async (data) => {
+  console.log("RUNN! createNewLobby");
   const { hostName, id, socket } = data;
   const lobby = {
     games: [],
@@ -15,6 +18,7 @@ export const createNewLobby = async (data) => {
   };
   try {
     const lobbyId = await collectionCreateLobby({ lobby });
+    console.log("lobbyId", lobbyId);
 
     socket.emit("LobbyCreated", { lobbyId, hostName });
     socket.join(lobbyId);
@@ -36,10 +40,10 @@ export const findRoomToJoin = async ({
 
   // searche game in MongoDb
   try {
-    const lobby = await collectionFindLobby({ lobbyId });
+    const currentLobby = await collectionFindLobby({ lobbyId });
 
     // update player list in DB
-    lobby.players.push(player);
+    currentLobby.players.push(player);
 
     //join player into room and send lobbyId back
     socket.join(lobbyId);
@@ -50,8 +54,8 @@ export const findRoomToJoin = async ({
     });
 
     //updateing room
-    io.to(lobbyId).emit("updateRoom", { currentLobby: lobby });
-    await lobby.save();
+    io.to(lobbyId).emit("updateRoom", { currentLobby });
+    await collectionChangeLobby({ lobbyId, currentLobby });
   } catch (error) {
     return socket.emit("foundRoom", {
       noRoom: true,
@@ -113,7 +117,7 @@ export const updateClient = async (data) => {
     io.to(lobbyId).emit("updateRoom", {
       currentLobby,
     });
-    await currentLobby.save();
+    await collectionChangeLobby({ lobbyId, currentLobby });
   } catch (err) {
     console.error(err);
     socket.emit("updateRoom", {
@@ -125,20 +129,23 @@ export const updateClient = async (data) => {
 export const setPlayerInactive = async ({ io, userId }) => {
   //set player inactive on disconnect
   try {
-    const lobbyList = await LobbyCollection.find({
-      "waiting.id": userId,
-    });
-    const currentLobby = lobbyList[lobbyList.length - 1];
+    const currentLobby = await collectionFindLobby({ userId });
+    if (!currentLobby) throw new Error();
+    const lobbyId = currentLobby._id.toString();
+
+    // console.log("lobbyList!!!", lobbyList);
+    // const currentLobby = lobbyList[lobbyList.length - 1];
     if (!currentLobby) return;
 
     //set leaving player inactive if they are in a running game
     const currenGameIndex = currentLobby?.games?.length - 1;
     if (currenGameIndex && currenGameIndex >= 0) {
       const gameId = currentLobby._id.toString();
-      const currentGame = await GameCollection.findOne({
-        "Game.id": gameId,
-        "Game.gameIdentifier": currenGameIndex,
+      const currentGame = await collectionFindGame({
+        lobbyId,
+        gameIdentifier: currenGameIndex,
       });
+
       const currentTurn =
         currentGame.Game.turns[currentGame.Game.turns.length - 1];
       const currenCzar = currentTurn?.czar;
@@ -161,7 +168,11 @@ export const setPlayerInactive = async ({ io, userId }) => {
         currentTurn.black_card = null;
       }
       io.to(gameId).emit("currentGame", { currentGame: currentGame.Game });
-      await currentGame.save();
+      await collectionChangeGame({
+        lobbyId,
+        gameIdentifier: currenGameIndex,
+        currentGame,
+      });
     }
     //search for player that needs to be set inactive from lobby
 
@@ -186,8 +197,7 @@ export const setPlayerInactive = async ({ io, userId }) => {
         findHost = currentLobby.waiting[activePlayerIndex];
       }
     }
-    const lobby = await currentLobby.save();
-    const lobbyId = lobby._id.toString();
+    await collectionChangeLobby({ lobbyId, currentLobby });
 
     if (lobbyId) io.to(lobbyId).emit("updateRoom", { currentLobby });
   } catch (error) {

@@ -551,6 +551,7 @@ const Game = ({ socket }) => {
               {"You are inactive, you are able to turn back in each stage"}
             </div>
           )}
+
           {isCzar && blackCards && gameStage === "black" && (
             <Czar
               blackCards={blackCards}
@@ -562,7 +563,6 @@ const Game = ({ socket }) => {
               setTimer={setTimer}
             />
           )}
-
           {(isCzar && gameStage !== "black") || !isCzar ? (
             <DragAndDropContainer
               data={cardsOnTable}
@@ -602,11 +602,11 @@ const Game = ({ socket }) => {
               )}
             </DragAndDropContainer>
           ) : null}
-          {timerTrigger && (
+          {/* {timerTrigger && (
             <div className="timerContainer">
               <Countdown timer={timer} setTimer={setTimer} />
             </div>
-          )}
+          )} */}
 
           {showErrMessage && (
             <Error

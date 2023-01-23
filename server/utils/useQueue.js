@@ -9,8 +9,8 @@ import {
   setPlayerInactive,
   updateClient,
 } from "../controller/socketControllers.js";
+import { queue } from "../index.js";
 
-const queue = {}; // {lobby: {lobby: lobbyId, loading:Boolean, data:[{states to process, channelname}]}}
 const callbacks = {
   changeGame: changeGame,
   getUpdatedGame: sendCurrentGame,
@@ -25,7 +25,6 @@ const useQueue = async (allData) => {
   const { data, channelName } = allData;
   const { lobbyId } = data;
 
-  const startTimer = performance.now();
   // add request from client to queue map
   queue[lobbyId] = {
     lobby: lobbyId,
@@ -34,11 +33,15 @@ const useQueue = async (allData) => {
       : [{ states: data, channelName }],
     loading: queue[lobbyId]?.loading,
   };
+  // queue[lobbyId].lobby = 2;
+  // queue[lobbyId].data.push({ states: data, channelName });
+
+  showQueue();
 
   // execute queue
   if (!queue[lobbyId].loading) {
     queue[lobbyId].loading = true;
-    await processQueue({ ...allData, queue, startTimer });
+    processQueue({ ...allData, queue });
   }
 };
 
@@ -47,18 +50,27 @@ const processQueue = async (allData) => {
   const { lobbyId } = data;
 
   // abort loop if request array is empty
-  if (queue[lobbyId].data.length === 0 || !queue[lobbyId]) {
+  if (queue[lobbyId].data.length === 0) {
     queue[lobbyId].loading = false;
-    // delete queue[lobbyId];
+    //delete queue[lobbyId];
     return;
   }
 
   const { states, channelName } = queue[lobbyId].data.shift();
-  // console.log("RUN QUEUE");
-  // console.log("states, channel", states, channelName);
-  await callbacks[channelName]({ ...allData, ...states });
+  try {
+    await callbacks[channelName]({ ...allData, ...states });
+  } catch (error) {
+    console.log("queue loob error!", error);
+  }
 
   processQueue(allData);
+};
+
+const showQueue = () => {
+  console.log(
+    "---------------------------------------------------------------",
+    queue
+  );
 };
 
 export default useQueue;

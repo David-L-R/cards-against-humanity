@@ -50,8 +50,6 @@ const Lobby = (props) => {
 
   useEffect(() => {
     socket.on("updateRoom", ({ currentLobby, err, kicked }) => {
-      console.log("currentLobby", currentLobby);
-
       if (!currentLobby || err) {
         setIsloading(false);
         return setShowErrMessage(
@@ -89,6 +87,7 @@ const Lobby = (props) => {
 
     // creates new game if host and redirect everyone to game
     socket.on("newgame", ({ newGameData, err }) => {
+      console.log("newGameData", newGameData);
       if (!newGameData || err) {
         setIsloading(false);
         return setShowErrMessage(err);

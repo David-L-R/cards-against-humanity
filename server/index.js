@@ -11,6 +11,7 @@ import { connectToCluster } from "./database/MongoBd/database.js";
 dotenv.config();
 // connectDB();
 export const database = await connectToCluster();
+export const queue = {}; // {lobby: {lobby: lobbyId, loading:Boolean, data:[{states to process, channelname}]}}
 
 const app = express();
 app.use(cors());

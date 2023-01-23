@@ -1,4 +1,5 @@
 import LobbyCollection from "../database/models/lobby.js";
+import { collectionFindLobby } from "../database/MongoBd/crudOperations.js";
 
 const updateTurn = async ({
   currentGame,
@@ -41,7 +42,7 @@ const updateTurn = async ({
   //kick player
   if (kickPlayer) {
     //kick player from Lobby
-    const currentLobby = await LobbyCollection.findById(lobbyId);
+    const currentLobby = await collectionFindLobby({ lobbyId });
     currentLobby.players = currentLobby.players.filter(
       (player) => player.id !== playerId
     );
@@ -49,7 +50,6 @@ const updateTurn = async ({
       (player) => player.id !== playerId
     );
     io.to(lobbyId).emit("updateRoom", { currentLobby, kicked: true });
-    await currentLobby.save();
 
     //kick player from game if played one
     if (currentGame?.Game) {
@@ -240,7 +240,7 @@ const updateTurn = async ({
       const newTurn = {
         turn: currentTurn.turn + 1,
         czar: nextCzar,
-        stage: "black",
+        stage: ["black"],
         white_cards: Game.players
           // .filter((player) => player.id !== nextCzar.id && !player.inactive)
           .map((player) => {

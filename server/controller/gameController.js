@@ -5,6 +5,13 @@ import { updateGameInLobby } from "../utils/addGameToLobby.js";
 import updateTurn from "../utils/updateTurn.js";
 import { update } from "react-spring";
 import dealCards from "../utils/dealCardsToPlayers.js";
+import {
+  collectionChangeGame,
+  collectionChangeLobby,
+  collectionCreateGame,
+  collectionFindGame,
+  collectionFindLobby,
+} from "../database/MongoBd/crudOperations.js";
 
 export const createGame = async ({
   setRounds,
@@ -27,7 +34,8 @@ export const createGame = async ({
 
   try {
     //if alreday games where played, increase the game indentifiyer
-    const lobby = await LobbyCollection.findById(lobbyId);
+
+    const lobby = await collectionFindLobby({ lobbyId });
     let currentGameIndex = lobby.games.length;
 
     if (!lobby)
@@ -55,7 +63,7 @@ export const createGame = async ({
       });
 
     lobby.players = [...allPlayers];
-    await lobby.save();
+    await collectionChangeLobby({ lobbyId, currentLobby: lobby });
 
     const [black] = allCards.map((set) => set.black);
     const [white] = allCards.map((set) => set.white);
@@ -84,7 +92,7 @@ export const createGame = async ({
       ],
       timerTrigger: false,
     };
-    const newGameData = await GameCollection.create({ Game: gamedata });
+    const newGameData = await collectionCreateGame({ Game: gamedata });
     io.to(lobbyId).emit("newgame", { newGameData });
     await updateGameInLobby(newGameData);
   } catch (error) {
@@ -105,10 +113,7 @@ export const sendCurrentGame = async (data) => {
   //join socket after disconnect
   socket.join(lobbyId);
   try {
-    const currentGame = await GameCollection.findOne({
-      "Game.id": lobbyId,
-      "Game.gameIdentifier": gameIdentifier,
-    });
+    const currentGame = await collectionFindGame({ lobbyId, gameIdentifier });
 
     const czar = currentGame.Game.turns[currentGame.Game.turns.length - 1].czar;
     //if no czar, asign new one
@@ -135,7 +140,7 @@ export const sendCurrentGame = async (data) => {
 
     //if no player leaves or joines, just update the current client/player
     if (foundPLayer && foundPLayer.inactive === false) {
-      currentGame.save();
+      await collectionChangeGame({ lobbyId, gameIdentifier, currentGame });
       return io
         .to(socket.id)
         .emit("currentGame", { currentGame: currentGame.Game });
@@ -149,7 +154,7 @@ export const sendCurrentGame = async (data) => {
     });
 
     io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });
-    await currentGame.save();
+    await collectionChangeGame({ lobbyId, gameIdentifier, currentGame });
   } catch (error) {
     console.error(error);
     io.to(socket.id).emit("currentGame", {
@@ -163,15 +168,16 @@ export const changeGame = async (states) => {
 
   if (stage === "dealing") {
     try {
-      const currentGame = await GameCollection.findOne({
-        "Game.id": gameId,
-        "Game.gameIdentifier": gameIdentifier,
-      });
+      const currentGame = await collectionFindGame({ lobbyId, gameIdentifier });
 
       const updatedGame = dealCards({ currentGame, playerId });
 
       io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
-      await updatedGame.save();
+      await collectionChangeGame({
+        lobbyId,
+        gameIdentifier,
+        currentGame: updatedGame,
+      });
       return;
     } catch (error) {
       console.log("error", error);
@@ -184,10 +190,7 @@ export const changeGame = async (states) => {
 
   //change current turn
   try {
-    const currentGame = await GameCollection.findOne({
-      "Game.id": gameId,
-      "Game.gameIdentifier": gameIdentifier,
-    });
+    const currentGame = await collectionFindGame({ lobbyId, gameIdentifier });
 
     const updatedGame = await updateTurn({ ...states, currentGame });
 
@@ -196,7 +199,11 @@ export const changeGame = async (states) => {
 
     io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
     await updateGameInLobby(updatedGame);
-    await updatedGame.save();
+    await collectionChangeGame({
+      lobbyId,
+      gameIdentifier,
+      currentGame: updatedGame,
+    });
   } catch (error) {
     console.log("error", error);
     io.to(lobbyId).emit("currentGame", {
