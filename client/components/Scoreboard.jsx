@@ -68,8 +68,8 @@ const Scoreboard = ({ currentLobby, socket }) => {
         >
           <p>SCORES</p>
         </div>
-        <button onClick={openMenu} className="closeMenuButton">
-          <CgCloseO />
+        <button onClick={openMenu}>
+          <CgCloseO className="closeMenuButton" />
         </button>
         <ul>
           <h1>SCOREBOARD</h1>
