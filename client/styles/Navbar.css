@@ -70,9 +70,7 @@
 
   margin-right: -230px;
 }
-.gameRulesContent {
-  transition: 3s;
-}
+
 .accountMenu:hover {
   margin-right: 0px;
   color: white;
@@ -108,6 +106,7 @@
   margin: auto;
   font-size: 32px;
   padding-left: 15px;
+  display: flex;
 }
 
 .navBarText {

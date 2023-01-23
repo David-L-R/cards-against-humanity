@@ -32,6 +32,7 @@
   border-radius: 30px;
   border-bottom: 10px solid #aa3446;
   color: white;
+  z-index: 30;
 }
 .kickButton:active {
   scale: 0.95;

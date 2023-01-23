@@ -12,10 +12,13 @@ import Settings from "./Settings";
 import { useAppContext } from "../context";
 import GameRules from "./GameRules";
 import ReportBug from "./ReportBug";
+import Contact from "./Contact";
 
 function Navbar(props) {
   const [showRules, setShowRules] = useState(false);
   const [showBug, setShowBug] = useState(false);
+  const [showContact, setShowContact] = useState(false);
+
   const { socket, setHandSize, setAmountOfRounds, handSize, amountOfRounds } =
     props;
   const { data: session } = useSession();
@@ -131,7 +134,7 @@ function Navbar(props) {
             </div>
             <div className="navBarText">Game Rules</div>
           </li>
-          <li>
+          <li onClick={() => setShowContact(true)}>
             <div className="navbarIcons">
               <AiOutlineMail />
             </div>
@@ -150,6 +153,11 @@ function Navbar(props) {
         <GameRules
           setShowRules={setShowRules}
           showRules={showRules}
+          className="gameRulesContent"
+        />
+        <Contact
+          setShowContact={setShowContact}
+          showContact={showContact}
           className="gameRulesContent"
         />
       </div>
