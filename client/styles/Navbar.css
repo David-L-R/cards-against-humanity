@@ -1,3 +1,33 @@
+.backButton {
+  font-size: 40px;
+  position: relative;
+  background-color: black;
+  padding-left: 20px;
+}
+.backButton:hover:after {
+  content: "Back to Lobby";
+  color: white;
+  font-size: 30px;
+  position: absolute;
+  transform: translate(10%, 6%);
+  width: max-content;
+  transition: all 0.5s ease-in-out;
+  animation: slide-in 0.5s ease-in-out forwards;
+  z-index: -1;
+  opacity: 0;
+}
+@keyframes slide-in {
+  0% {
+    opacity: 0;
+    left: -200px;
+  }
+
+  100% {
+    opacity: 1;
+    left: 42px;
+  }
+}
+
 .navContainer {
   position: fixed;
   height: 80px;
@@ -28,16 +58,70 @@
   right: 0;
   width: 300px;
   height: 100%;
-  background-color: white;
+  background-color: black;
+  /*border-left: 2px solid rgba(255, 255, 255, 0.545);*/
   z-index: 20;
   flex-direction: column;
   display: flex;
   flex-direction: column;
   transition: all 0.3s ease-in-out;
-  color: black;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.545);
+
+  margin-right: -230px;
+}
+.gameRulesContent {
+  transition: 3s;
+}
+.accountMenu:hover {
+  margin-right: 0px;
+  color: white;
+  border-left: 2px solid white;
+}
+.accountMenu p:hover {
+  margin-right: 0px;
 }
 .navIcon {
   border-radius: 50%;
   width: 50px;
   height: 50px;
+}
+.accountMenu ul li {
+  position: relative;
+  display: grid;
+  grid-template-columns: 0.4fr 1.7fr;
+  height: 70px;
+  margin: auto;
+  justify-content: center;
+
+  transition: 0.2s;
+}
+.accountMenu ul li:hover {
+  background: white;
+  color: black;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.navbarIcons {
+  width: 70px;
+  margin: auto;
+  font-size: 32px;
+  padding-left: 15px;
+}
+
+.navBarText {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+.copyright {
+  padding-left: 70px;
+  padding-right: 70px;
+  position: relative;
+  justify-content: center;
+  display: flex;
+  margin-top: auto;
+  color: grey;
+  text-align: center;
 }

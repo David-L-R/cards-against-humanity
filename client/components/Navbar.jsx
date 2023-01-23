@@ -10,8 +10,10 @@ import { BsCardChecklist } from "react-icons/bs";
 import { AiOutlineDollarCircle, AiOutlineMail } from "react-icons/ai";
 import Settings from "./Settings";
 import { useAppContext } from "../context";
+import GameRules from "./GameRules";
 
 function Navbar(props) {
+  const [showRules, setShowRules] = useState(false);
   const { socket, setHandSize, setAmountOfRounds, handSize, amountOfRounds } =
     props;
   const { data: session } = useSession();
@@ -50,40 +52,45 @@ function Navbar(props) {
   }, [router.isReady, router]);
 
   return (
-    <nav className="navContainer">
-      <div className="backButtonContainer">
-        {lobbyId && gameIdentifier && (
-          <h2 className="backButton">
-            <button onClick={backToLobby}>
-              <IoIosArrowBack />
-            </button>
-          </h2>
-        )}
-        <div className="accountMenu">
+    <>
+      <nav className="navContainer">
+        <div className="backButtonContainer">
+          {lobbyId && gameIdentifier && (
+            <h2 className="backButton">
+              <button onClick={backToLobby}>
+                <IoIosArrowBack />
+              </button>
+            </h2>
+          )}
+        </div>
+      </nav>
+      <div className="accountMenu">
+        <ul>
           {session ? (
-            <div>
+            <li className="loggedInProfileContainer">
               <div>
-                <p> {session.user.name}</p>
                 <img src={session.user.image} alt={session.user.name} />
               </div>
 
               <div>
+                <p> {session.user.name}</p>
                 <button>Profile</button>
                 <button onClick={signOut}>Sign out</button>
               </div>
-            </div>
+            </li>
           ) : (
-            <div className="profileContainer">
-              <CgProfile />
-              <div>
-                <button onClick={signIn}>Login</button>
-                <button onClick={signIn}>Sign up</button>
+            <li className="loggedOutProfileContainer">
+              <div className="navbarIcons">
+                <CgProfile />
               </div>
-            </div>
+              <div className="navBarText">
+                <button onClick={signIn}>Sign In</button>
+              </div>
+            </li>
           )}
-          <ul>
-            <li>
-              {/*{lobbyId && !gameIdentifier && storeData?.isHost && (
+
+          <li>
+            {/*{lobbyId && !gameIdentifier && storeData?.isHost && (
                 <Settings
                   setHandSize={setHandSize}
                   setAmountOfRounds={setAmountOfRounds}
@@ -91,35 +98,47 @@ function Navbar(props) {
                   amountOfRounds={amountOfRounds}
                 />
               )}*/}
-              <div>
-                <FiSettings />
-                Settings
-              </div>
-            </li>
-            <li>
-              <div>
-                <BsBug /> Report a Bug
-              </div>
-            </li>
-            <li>
-              <div>
-                <AiOutlineDollarCircle /> Buy us Coffee
-              </div>
-            </li>
-            <li>
-              <div>
-                <BsCardChecklist /> Game Rules
-              </div>
-            </li>
-            <li>
-              <div>
-                <AiOutlineMail /> Contact us
-              </div>
-            </li>
-          </ul>
-        </div>
+            <div className="navbarIcons">
+              <FiSettings />
+            </div>
+            <div className="navBarText">Settings</div>
+          </li>
+          <li>
+            <div className="navbarIcons">
+              <BsBug />
+            </div>
+            <div className="navBarText">Report a Bug</div>
+          </li>
+          <li>
+            <div className="navbarIcons">
+              <AiOutlineDollarCircle />
+            </div>
+            <div className="navBarText">Buy us Coffee</div>
+          </li>
+          <li onClick={() => setShowRules(true)}>
+            <div className="navbarIcons">
+              <BsCardChecklist />
+            </div>
+            <div className="navBarText">Game Rules</div>
+          </li>
+          <li>
+            <div className="navbarIcons">
+              <AiOutlineMail />
+            </div>
+            <div className="navBarText">Contact us</div>
+          </li>
+        </ul>
+        <p className="copyright">
+          Copyright © 2023 Man Makes Monster. All rights reserved.
+        </p>
+
+        <GameRules
+          setShowRules={setShowRules}
+          showRules={showRules}
+          className="gameRulesContent"
+        />
       </div>
-    </nav>
+    </>
   );
 }
 

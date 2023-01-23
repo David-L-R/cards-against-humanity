@@ -1,0 +1,63 @@
+.gameRules {
+  position: fixed;
+  width: 50%;
+  height: max-content;
+  inset: 0;
+  margin: auto;
+  background-color: black;
+  color: white;
+  padding: 30px;
+  border-radius: 15px;
+  border: 2px solid white;
+}
+.gameRulesText {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 50px;
+}
+
+.gameRulesText ol li {
+  list-style-type: upper-roman;
+  padding-top: 15px;
+}
+.gameRulesBackdrop {
+  position: fixed;
+
+  width: 100%;
+  height: 100%;
+  inset: 0;
+  backdrop-filter: blur(10px);
+}
+.closeMenuButton {
+  position: absolute;
+  top: 1%;
+  right: 1%;
+  width: 45px;
+  height: 45px;
+  font-size: 40px;
+  border-radius: 50%;
+  align-items: center;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  background-color: transparent;
+  padding: 0;
+}
+.closeMenuButton:hover {
+  color: #eb455f;
+  transform: rotate(360deg);
+  transition: 0.3s;
+}
+.gameRules {
+  animation: entryAnimation 0.2s linear forwards;
+}
+@keyframes entryAnimation {
+  from {
+    transform: translateX(1500px);
+    scale: 0.3;
+  }
+  to {
+    transform: translateX(0);
+    scale: 1;
+  }
+}
