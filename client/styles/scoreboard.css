@@ -35,7 +35,7 @@
   transition: all 0.3s ease-in-out;
   border-right: 2px solid black;
 }
-.sideMenu ul {
+.sideMenu > ul {
   list-style: none;
   padding: 0;
 }
@@ -84,6 +84,7 @@
   position: relative;
 }
 .profileContainer {
+  position: relative;
   display: grid;
   grid-template-columns: 0.4fr 1.1fr;
   align-items: center;
@@ -180,7 +181,11 @@
   font-size: 18px;
 }
 
+<<<<<<< HEAD
 .closeMenuButton {
+=======
+.sideMenu > button {
+>>>>>>> 952639db14d882b45afa33ce41fd291e4a2342e1
   position: absolute;
   top: 1%;
   right: 5%;
@@ -192,10 +197,15 @@
   margin: auto;
   display: flex;
   justify-content: center;
+  background-color: transparent;
   padding: 0;
 }
+<<<<<<< HEAD
 .closeMenuButton:hover {
   background-color: rgb(227, 227, 227);
+=======
+.sideMenu button:hover svg {
+>>>>>>> 952639db14d882b45afa33ce41fd291e4a2342e1
   color: #eb455f;
   transform: rotate(360deg);
   transition: 0.3s;

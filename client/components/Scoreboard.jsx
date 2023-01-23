@@ -3,16 +3,19 @@ import { AiOutlineCheckCircle } from "react-icons/ai";
 import { VscDebugDisconnect } from "react-icons/vsc";
 import { RiVipCrown2Fill } from "react-icons/Ri";
 import { CgCloseO } from "react-icons/Cg";
-import { useSession } from "next-auth/react";
 import { useAppContext } from "../context";
 import KickButton from "./KickButton";
 import { parseCookies } from "nookies";
+import Avatar from "./Avatar.jsx";
 
 const Scoreboard = ({ currentLobby, socket }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showKick, setShowKick] = useState(false);
   const cookies = parseCookies();
-  const { players, turns } = currentLobby;
+  const { turns } = currentLobby;
+  const players = currentLobby.waiting
+    ? currentLobby.waiting
+    : currentLobby.players;
   const currentTurn = turns && turns[turns.length - 1];
   const { stage, white_cards, czar } = currentTurn
     ? currentTurn
@@ -82,7 +85,7 @@ const Scoreboard = ({ currentLobby, socket }) => {
                 key={player.id}
                 className={player.inactive ? "inactive-player" : null}
                 onMouseEnter={(e) => setShowKick(e.target.dataset.id)}
-                onMouseLeave={() => setShowKick(false)}
+                onMouseLeave={showKick ? () => setShowKick(false) : null}
                 data-id={player.id}
               >
                 <div>
@@ -112,7 +115,11 @@ const Scoreboard = ({ currentLobby, socket }) => {
                       <RiVipCrown2Fill className="crown" />
                     </div>
                   )}
-                  <img className="avatar" src="/favicon.ico" alt="" />
+                  <Avatar
+                    userName={player.name}
+                    playerId={player.id}
+                    playerAvatar={player.avatar}
+                  />
 
                   <span className="player-name">{player.name}</span>
                 </div>

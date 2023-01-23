@@ -18,6 +18,7 @@ const gameModel = mongoose.Schema(
           points: Number, //default zero, every round won adds a point.
           hand: Array, //just white Cards
           isHost: Boolean,
+          avatar: Object,
         },
       ],
       deck: {
@@ -31,7 +32,6 @@ const gameModel = mongoose.Schema(
           stage: [
             "start", // scramble and pushes player array to game, switch clients go game page,
             "dealing", // gives players up to {handSize} cards, selects starting point in array op players for Czar election
-            // "election", // {Czar} gets elected, gets saved into turn object
             "black", // black card gets picked.random, save to turn object, if (!rejected) continue. if(rejected){repeat}
             "white", // black card gets displayed, timer-start triggers, players pick their cards by submit, {white_cards} get saved, timer-end triggers
             "deciding", // all {white_cards.played_card} gets displayed for Czar, they pick winner by submit. {winner} gets saved.

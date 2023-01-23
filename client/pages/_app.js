@@ -15,7 +15,6 @@ export const socket = io("http://localhost:5555/", {
 
 function MyApp({ Component, router, pageProps: { session, ...pageProps } }) {
   const cookies = parseCookies();
-
   const [amountOfRounds, setAmountOfRounds] = useState(10);
   const [handSize, setHandSize] = useState(10);
 

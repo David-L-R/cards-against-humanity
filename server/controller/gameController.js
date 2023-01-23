@@ -16,20 +16,29 @@ export const createGame = async ({
   let amountOfRounds = parseInt(setRounds);
   let handSize = parseInt(maxHandSize);
 
+  if (!lobbyId)
+    io.to(lobbyId).emit("newgame", {
+      err: "Wrong or missng lobby ID",
+    });
+
   //set default if client dos not setup anything
   if (!setRounds) amountOfRounds = 10;
   if (!maxHandSize) handSize = 10;
 
   try {
-    //if alreday games where played, increase to game indentifiyer
+    //if alreday games where played, increase the game indentifiyer
     const lobby = await LobbyCollection.findById(lobbyId);
     let currentGameIndex = lobby.games.length;
 
     if (!lobby)
       return socket.to(lobbyId).emit("newgame", { err: "Can not find lobby" });
 
-    // add each ACTIVE players all necessary keys
-    const allPlayers = lobby.players
+    // add each ACTIVE players wich are INSIDE lobby all necessary keys
+    lobby.waiting = lobby.waiting.filter(
+      (waitPlayer) =>
+        !lobby.players.find((player) => player.id === waitPlayer.id)
+    );
+    const allPlayers = lobby.waiting
       .filter((player) => !player.inactive)
       .map((player) => {
         const newPLayer = { ...player };
@@ -44,6 +53,9 @@ export const createGame = async ({
       return io.to(socket.id).emit("newgame", {
         err: "Please wait for at least one more  Player",
       });
+
+    lobby.players = [...allPlayers];
+    await lobby.save();
 
     const [black] = allCards.map((set) => set.black);
     const [white] = allCards.map((set) => set.white);
@@ -72,30 +84,25 @@ export const createGame = async ({
       ],
       timerTrigger: false,
     };
-
     const newGameData = await GameCollection.create({ Game: gamedata });
-    updateGameInLobby(newGameData);
     io.to(lobbyId).emit("newgame", { newGameData });
+    await updateGameInLobby(newGameData);
   } catch (error) {
+    console.error[error];
     io.to(lobbyId).emit("newgame", {
       err: "Can not create new Game, please host a new one",
     });
   }
 };
 
-export const sendCurrentGame = async ({
-  gameIdentifier,
-  lobbyId,
-  name,
-  id,
-  io,
-  socket,
-}) => {
+export const sendCurrentGame = async (data) => {
+  const { gameIdentifier, lobbyId, id, io, socket } = data;
+
   if (!lobbyId || !id)
     return io.to(socket.id).emit("currentGame", { err: "Missing Lobby ID " });
 
   socket.userId = id;
-  //jopin socket after disconnect
+  //join socket after disconnect
   socket.join(lobbyId);
   try {
     const currentGame = await GameCollection.findOne({
@@ -141,9 +148,10 @@ export const sendCurrentGame = async ({
       return player;
     });
 
-    currentGame.save();
     io.to(lobbyId).emit("currentGame", { currentGame: currentGame.Game });
+    await currentGame.save();
   } catch (error) {
+    console.error(error);
     io.to(socket.id).emit("currentGame", {
       err: "Wrong lobby ID, please check your room code",
     });
@@ -151,22 +159,7 @@ export const sendCurrentGame = async ({
 };
 
 export const changeGame = async (states) => {
-  const {
-    sendWhiteCards,
-    blackCards,
-    playerId,
-    stage,
-    gameId,
-    gameIdentifier,
-    lobbyId,
-    playedBlack,
-    playedWhite,
-    winningCards,
-    leavedGame,
-    closeGame,
-    io,
-    socket,
-  } = states;
+  const { playerId, stage, gameId, gameIdentifier, lobbyId, io } = states;
 
   if (stage === "dealing") {
     try {
@@ -177,8 +170,8 @@ export const changeGame = async (states) => {
 
       const updatedGame = dealCards({ currentGame, playerId });
 
-      updatedGame.save();
       io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
+      await updatedGame.save();
       return;
     } catch (error) {
       console.log("error", error);
@@ -201,8 +194,8 @@ export const changeGame = async (states) => {
     if (!updatedGame) throw new Error("Server error, no game found");
     if (updatedGame === "kicked") return;
 
-    updateGameInLobby(updatedGame);
     io.to(lobbyId).emit("currentGame", { currentGame: updatedGame.Game });
+    await updateGameInLobby(updatedGame);
     await updatedGame.save();
   } catch (error) {
     console.log("error", error);

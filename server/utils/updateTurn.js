@@ -15,20 +15,41 @@ const updateTurn = async ({
   closeGame,
   kickPlayer,
   lobbyId,
+  changeAvatar,
+  avatar,
 }) => {
   const currentTurnIndex = currentGame?.Game?.turns?.length - 1;
   const currentTurn = currentGame?.Game?.turns[currentTurnIndex];
+
+  //reactivate each player after they really played
+  if (!leavedGame && currentGame?.Game) {
+    currentGame.Game.players = currentGame.Game.players.map((player) => {
+      if (player.id === playerId) player.inactive = false;
+      return player;
+    });
+  }
+
+  //if just avatar gotes changed
+  if (changeAvatar) {
+    currentGame.Game.players = currentGame.Game.players.map((player) => {
+      if (player.id === playerId) player.avatar = avatar;
+      return player;
+    });
+    return currentGame;
+  }
 
   //kick player
   if (kickPlayer) {
     //kick player from Lobby
     const currentLobby = await LobbyCollection.findById(lobbyId);
-    console.log("currentLobby", currentLobby);
     currentLobby.players = currentLobby.players.filter(
       (player) => player.id !== playerId
     );
-    await currentLobby.save();
+    currentLobby.waiting = currentLobby.waiting.filter(
+      (player) => player.id !== playerId
+    );
     io.to(lobbyId).emit("updateRoom", { currentLobby, kicked: true });
+    await currentLobby.save();
 
     //kick player from game if played one
     if (currentGame?.Game) {
@@ -67,7 +88,7 @@ const updateTurn = async ({
     );
     const currentCzar = currentTurn.czar;
 
-    //if normal player leaves active, set inactive in white_cards
+    //if normal player leaves running Game, set inactive in Game.players
     if (currentPlayer) {
       currentPlayer.inactive = true;
     }
@@ -77,9 +98,11 @@ const updateTurn = async ({
       const activePlayers = currentGame.Game.players.filter(
         (player) => !player.inactive
       );
-      const randomIndex = Math.random() * (activePlayers.length - 1);
-      const newCzar = activePlayers[randomIndex];
+      const randomIndex = Math.floor(
+        Math.random() * (activePlayers.length - 1)
+      );
 
+      const newCzar = activePlayers[randomIndex];
       //asign new czar
       currentTurn.czar = newCzar;
 
@@ -88,10 +111,6 @@ const updateTurn = async ({
         (player) => player.player !== newCzar.id
       );
     }
-
-    //if not enough players, close game
-    if (currentGame.Game.players.filter((player) => !player.inactive < 2))
-      currentGame.Game.concluded = true;
 
     return currentGame;
   }
@@ -136,7 +155,6 @@ const updateTurn = async ({
       cards: updatedHand,
       played_card: playedWhite,
       points: 0,
-      active: true,
     };
 
     //update player in turns.white_cards
@@ -199,6 +217,12 @@ const updateTurn = async ({
       currentTurn.completed.length >=
       Game.players.filter((player) => !player.inactive).length
     ) {
+      //if max rounds reached, close game
+      if (currentGame.Game.turns.length === currentGame.Game.setRounds) {
+        currentGame.Game.concluded = true;
+        return currentGame;
+      }
+
       const currCzarIndex = Game.players
         .filter((player) => !player.inactive)
         .indexOf(

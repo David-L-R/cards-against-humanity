@@ -4,7 +4,7 @@ import { socket } from "../pages/_app";
 
 const KickButton = ({ playerId, playerName }) => {
   const [showButton, setShowButton] = useState(false);
-  const { storeData, setStoreData } = useAppContext();
+  const { storeData } = useAppContext();
 
   const handleKick = () => {
     const playerData = {
