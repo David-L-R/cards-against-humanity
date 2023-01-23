@@ -107,7 +107,8 @@ const Czar = ({
                       : blackIndex === showBlackCards.length - 1
                       ? "highest"
                       : "lowest"
-                  }>
+                  }
+                >
                   <div
                     key={cardItem.card.text + blackIndex}
                     className={` ${style.black} czarPicking`}
@@ -116,7 +117,8 @@ const Czar = ({
                         index: cardItem.index,
                         event: e,
                       });
-                    }}>
+                    }}
+                  >
                     {cardItem.card.text}
                   </div>
                 </m.li>
@@ -129,7 +131,8 @@ const Czar = ({
                         index: cardItem.index,
                         event: e,
                       });
-                    }}>
+                    }}
+                  >
                     {cardItem.card.text}
                   </div>
                 </li>

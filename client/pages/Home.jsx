@@ -76,8 +76,7 @@ const Home = ({ socket }) => {
         >
           <div
             className={
-              // i added a new class on the very parent elemt on each card, to change z-index and
-              isHostActive // the perspective
+              isHostActive
                 ? "lobbyContainer lobbyContainer-active"
                 : " lobbyContainer "
             }
@@ -117,7 +116,7 @@ const Home = ({ socket }) => {
           <div
             className={
               isJoinActive
-                ? "lobbyContainer  lobbyContainer-active " // also here
+                ? "lobbyContainer  lobbyContainer-active "
                 : " lobbyContainer"
             }
           >

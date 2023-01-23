@@ -2,7 +2,7 @@
   position: fixed;
   height: 80px;
   width: 100%;
-  /*padding-left: 20px;*/
+
   padding-right: 20px;
   top: 0;
   right: 0;
@@ -12,13 +12,7 @@
   justify-content: space-between;
   padding-top: 1rem;
 }
-.dropdownIcon {
-  align-items: center;
-  display: flex;
-}
-.greetingText {
-  padding-right: 15px;
-}
+
 .fuckitDannisadvice {
   position: relative;
   display: flex;
@@ -27,79 +21,23 @@
   column-gap: 0.5rem;
   margin-top: auto;
 }
-.dropdownContainer:hover .dropdown-content {
-  display: block;
-}
-.dropdown-content {
-  display: none;
-  position: absolute;
+
+.accountMenu {
+  position: fixed;
+  top: 0;
   right: 0;
-  background-color: black;
-  border: 1px solid white;
-  min-width: 120px;
-  height: 200px;
-  border-radius: 15px;
-  justify-content: center;
-  padding: 0;
-  z-index: 1;
+  width: 300px;
+  height: 100%;
+  background-color: white;
+  z-index: 20;
+  flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease-in-out;
+  color: black;
 }
 .navIcon {
   border-radius: 50%;
-  width: 45px;
-  height: 45px;
-}
-.dropdown-content button {
-  cursor: pointer;
-  font-weight: 800;
-  letter-spacing: 2px;
-  width: 100%;
-  padding: 10px;
-  background: none;
-  border-radius: 13px 13px 0 0;
-  color: white;
-}
-.dropdown-content button:hover {
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.459);
-  border: 1px solid rgba(255, 255, 255, 0.459);
-  color: black;
-}
-.backButton {
-  font-size: 40px;
-  position: relative;
-  background-color: black;
-  padding-left: 20px;
-}
-.backButton:hover:after {
-  content: "Back to Lobby";
-  color: white;
-  font-size: 30px;
-  position: absolute;
-  transform: translate(10%, 6%);
-  width: max-content;
-  transition: all 0.5s ease-in-out;
-  animation: slide-in 0.5s ease-in-out forwards;
-  z-index: -1;
-  opacity: 0;
-}
-
-.dropdown-content p {
-  display: flex;
-  justify-content: center;
-}
-.navIconSVG {
-  border-radius: 50%;
   width: 50px;
   height: 50px;
-}
-@keyframes slide-in {
-  0% {
-    opacity: 0;
-    left: -200px;
-  }
-
-  100% {
-    opacity: 1;
-    left: 42px;
-  }
 }

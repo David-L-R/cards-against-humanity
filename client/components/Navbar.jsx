@@ -3,6 +3,11 @@ import { signIn, signOut, getProviders, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import { IoIosArrowBack } from "react-icons/Io";
+import { CgProfile } from "react-icons/cg";
+import { BsBug } from "react-icons/bs";
+import { FiSettings } from "react-icons/fi";
+import { BsCardChecklist } from "react-icons/bs";
+import { AiOutlineDollarCircle, AiOutlineMail } from "react-icons/ai";
 import Settings from "./Settings";
 import { useAppContext } from "../context";
 
@@ -54,8 +59,72 @@ function Navbar(props) {
             </button>
           </h2>
         )}
+        <div className="accountMenu">
+          {session ? (
+            <div>
+              <div>
+                <p> {session.user.name}</p>
+                <img src={session.user.image} alt={session.user.name} />
+              </div>
+
+              <div>
+                <button>Profile</button>
+                <button onClick={signOut}>Sign out</button>
+              </div>
+            </div>
+          ) : (
+            <div className="profileContainer">
+              <CgProfile />
+              <div>
+                <button onClick={signIn}>Login</button>
+                <button onClick={signIn}>Sign up</button>
+              </div>
+            </div>
+          )}
+          <ul>
+            <li>
+              {/*{lobbyId && !gameIdentifier && storeData?.isHost && (
+                <Settings
+                  setHandSize={setHandSize}
+                  setAmountOfRounds={setAmountOfRounds}
+                  handSize={handSize}
+                  amountOfRounds={amountOfRounds}
+                />
+              )}*/}
+              <div>
+                <FiSettings />
+                Settings
+              </div>
+            </li>
+            <li>
+              <div>
+                <BsBug /> Report a Bug
+              </div>
+            </li>
+            <li>
+              <div>
+                <AiOutlineDollarCircle /> Buy us Coffee
+              </div>
+            </li>
+            <li>
+              <div>
+                <BsCardChecklist /> Game Rules
+              </div>
+            </li>
+            <li>
+              <div>
+                <AiOutlineMail /> Contact us
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
-      <div className="fuckitDannisadvice">
+    </nav>
+  );
+}
+
+/*
+<div className="fuckitDannisadvice">
         {lobbyId && !gameIdentifier && storeData?.isHost && (
           <Settings
             setHandSize={setHandSize}
@@ -92,8 +161,6 @@ function Navbar(props) {
           )}
         </div>
       </div>
-    </nav>
-  );
-}
+      */
 
 export default Navbar;

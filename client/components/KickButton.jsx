@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAppContext } from "../context";
 import { socket } from "../pages/_app";
 
-const KickButton = ({ playerId }) => {
+const KickButton = ({ playerId, playerName }) => {
   const [showButton, setShowButton] = useState(false);
   const { storeData, setStoreData } = useAppContext();
 
@@ -18,14 +18,23 @@ const KickButton = ({ playerId }) => {
   };
 
   return (
-    <div className="kick-container" onMouseLeave={() => setShowButton(false)}>
+    <div
+      className="kick-container kick-hover"
+      onMouseLeave={() => setShowButton(false)}
+    >
       <img
         className="kick-icon"
         onClick={() => setShowButton(true)}
         src="/combat-kick.png"
         alt="shoe kicking air"
       />
-      {showButton && <button onClick={handleKick}>F1nIsH HiM!</button>}
+      {showButton && (
+        <div className="kickButtonBackground">
+          <button onClick={handleKick} className="kickButton">
+            <p>Kick {playerName}? </p>
+          </button>
+        </div>
+      )}
     </div>
   );
 };

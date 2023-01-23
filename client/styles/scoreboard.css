@@ -180,15 +180,7 @@
   font-size: 18px;
 }
 
-.sideMenu button {
-  position: absolute;
-  top: 1%;
-  right: 5%;
-  width: 40px;
-  height: 40px;
-  font-size: 40px;
-}
-.sideMenu button {
+.closeMenuButton {
   position: absolute;
   top: 1%;
   right: 5%;
@@ -202,7 +194,7 @@
   justify-content: center;
   padding: 0;
 }
-.sideMenu button:hover {
+.closeMenuButton:hover {
   background-color: rgb(227, 227, 227);
   color: #eb455f;
   transform: rotate(360deg);
