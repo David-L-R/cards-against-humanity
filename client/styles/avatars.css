@@ -9,12 +9,25 @@
   flex-shrink: 0;
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.118);
-  overflow: hidden;
+  /*overflow: hidden;*/
+  transition: 0.3s;
+}
+.avatar-image svg {
+  border-radius: 50%;
   transition: 0.3s;
 }
 .avatar-image:hover {
   transition: 0.3s;
+  scale: 1.1;
+}
+.avatar-image svg:hover {
+  position: absolute;
+  display: flex;
+  transform: translateY(-7px);
   scale: 1.3;
+  overflow: hidden;
+  border-radius: 50%;
+  transition: 0.3s;
 }
 
 .settings-wrapper {
@@ -40,6 +53,11 @@
   max-width: none;
   background: none;
   scale: 1.1;
+}
+.settings-wrapper .avatar-image svg:hover {
+  scale: 1;
+  transform: translateY(0);
+  transition: 0;
 }
 
 @keyframes fadeIn {

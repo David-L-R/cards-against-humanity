@@ -129,6 +129,7 @@ const Scoreboard = ({ currentLobby, socket }) => {
               </li>
             ))}
         </ul>
+
         {turns?.length > 0 && (
           <div className="scoreStats">
             <div className="fuckingClass">
