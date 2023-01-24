@@ -32,7 +32,6 @@
   position: fixed;
   height: 80px;
   width: 100%;
-
   padding-right: 20px;
   top: 0;
   right: 0;
@@ -86,12 +85,13 @@
 }
 .accountMenu ul li {
   position: relative;
-  display: grid;
-  grid-template-columns: 0.4fr 1.7fr;
-  height: 70px;
+  /*display: grid;
+  grid-template-columns: 0.4fr 1.7fr;*/
+  display: flex;
+  gap: 20px;
+  min-height: 70px;
   margin: auto;
   justify-content: center;
-
   transition: 0.2s;
 }
 .accountMenu ul li:hover {
@@ -109,11 +109,6 @@
   display: flex;
 }
 
-.navBarText {
-  display: flex;
-  align-items: center;
-  font-weight: bold;
-}
 .copyright {
   padding-left: 70px;
   padding-right: 70px;
@@ -123,4 +118,33 @@
   margin-top: auto;
   color: grey;
   text-align: center;
+}
+.arrowDownIcon {
+  display: flex;
+  font-size: 24px;
+  transition: 0.3s;
+  transform: rotate(180deg);
+}
+.openArrow {
+  transform: rotate(0deg);
+  transition: 0.3s;
+}
+#sidebar-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+#settingsToggle {
+  display: flex;
+  width: 100%;
+  gap: 20px;
+}
+
+.navBarText {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  justify-content: space-between;
+  padding-right: 20px;
+  width: 100%;
 }

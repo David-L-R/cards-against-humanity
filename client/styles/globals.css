@@ -75,6 +75,7 @@ body {
   margin: auto;
   font-family: Roboto;
   background: url("../public/background3.svg");
+  backdrop-filter: blur(10px);
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;

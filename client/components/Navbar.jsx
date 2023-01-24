@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { signIn, signOut, getProviders, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
-import { IoIosArrowBack } from "react-icons/Io";
+import { IoIosArrowBack, IoIosArrowDown } from "react-icons/Io";
 import { CgProfile } from "react-icons/cg";
 import { BsBug } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
@@ -15,6 +15,8 @@ import ReportBug from "./ReportBug";
 import Contact from "./Contact";
 
 function Navbar(props) {
+  const [open, setOpen] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
   const [showRules, setShowRules] = useState(false);
   const [showBug, setShowBug] = useState(false);
   const [showContact, setShowContact] = useState(false);
@@ -77,12 +79,13 @@ function Navbar(props) {
           )}
         </div>
       </nav>
-      <div className="accountMenu">
+      <div className="accountMenu" onMouseLeave={() => setShowSettings(false)}>
         <ul>
           {session ? (
             <li className="loggedInProfileContainer">
               <div>
-                <img src={session.user.image} alt={session.user.name} />
+                <img src={`${session.user.image}`} alt={session.user.name} />
+                {console.log(session.user.image, "session img")}
               </div>
 
               <div>
@@ -102,20 +105,50 @@ function Navbar(props) {
             </li>
           )}
 
-          <li>
-            {/*{lobbyId && !gameIdentifier && storeData?.isHost && (
+          {lobbyId && !gameIdentifier && storeData?.isHost ? (
+            <>
+              <li id="sidebar-item">
+                <div
+                  id="settingsToggle"
+                  onClick={() => setShowSettings((prev) => !prev)}
+                >
+                  <div className="navbarIcons">
+                    <FiSettings />
+                  </div>
+                  <div className="navBarText">
+                    Settings
+                    <span
+                      className={
+                        showSettings
+                          ? "arrowDownIcon "
+                          : "arrowDownIcon openArrow"
+                      }
+                    >
+                      <IoIosArrowDown />
+                    </span>
+                  </div>
+                </div>
+              </li>
+              <li id={showSettings ? "openSettings" : "closeSettings"}>
                 <Settings
+                  showSettings={showSettings}
+                  setShowSettings={setShowSettings}
                   setHandSize={setHandSize}
                   setAmountOfRounds={setAmountOfRounds}
                   handSize={handSize}
                   amountOfRounds={amountOfRounds}
                 />
-              )}*/}
-            <div className="navbarIcons">
-              <FiSettings />
-            </div>
-            <div className="navBarText">Settings</div>
-          </li>
+              </li>
+            </>
+          ) : (
+            <li style={{ color: "grey" }}>
+              <div className="navbarIcons">
+                <FiSettings />
+              </div>
+              <div className="navBarText">Settings</div>
+            </li>
+          )}
+
           <li onClick={() => setShowBug(true)}>
             <div className="navbarIcons">
               <BsBug />
