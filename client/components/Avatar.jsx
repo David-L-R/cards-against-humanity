@@ -106,50 +106,54 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
   return (
     <div>
       <AvatarSVG avatarOptions={avatarOptions} />
+
       {showSettings && (
-        <AvatarCustomizer
-          handleSetAvatarOptions={handleSetAvatarOptions}
-          setShowSettings={setShowSettings}
-        >
-          <div className="avatar-preview">
-            <AvatarSVG avatarOptions={avatarOptions} />
-            <div>
-              <h3>EMOTIONS</h3>
-              <ul>
-                <li>
-                  <button onClick={() => handlEemotions(emotions.happy)}>
-                    happy
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => handlEemotions(emotions.angry)}>
-                    angry
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => handlEemotions(emotions.sad)}>
-                    sad
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => handlEemotions(emotions.wonder)}>
-                    wonder
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => handlEemotions(emotions.love)}>
-                    love
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => handlEemotions(emotions.dead)}>
-                    dead
-                  </button>
-                </li>
-              </ul>
+        <>
+          <div className="avatarBackground"></div>
+          <AvatarCustomizer
+            handleSetAvatarOptions={handleSetAvatarOptions}
+            setShowSettings={setShowSettings}
+          >
+            <div className="avatar-preview">
+              <AvatarSVG avatarOptions={avatarOptions} />
+              <div>
+                <h3>EMOTIONS</h3>
+                <ul>
+                  <li>
+                    <button onClick={() => handlEemotions(emotions.happy)}>
+                      happy
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={() => handlEemotions(emotions.angry)}>
+                      angry
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={() => handlEemotions(emotions.sad)}>
+                      sad
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={() => handlEemotions(emotions.wonder)}>
+                      wonder
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={() => handlEemotions(emotions.love)}>
+                      love
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={() => handlEemotions(emotions.dead)}>
+                      dead
+                    </button>
+                  </li>
+                </ul>
+              </div>
             </div>
-          </div>
-        </AvatarCustomizer>
+          </AvatarCustomizer>
+        </>
       )}
     </div>
   );

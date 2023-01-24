@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import { avataaars } from "@dicebear/collection";
 import { CgCloseO } from "react-icons/Cg";
 import hexColors from "../utils/hexCodes";
@@ -9,11 +9,27 @@ const AvatarCustomizer = ({
   children,
 }) => {
   const avaProps = avataaars.schema.properties;
+  const settingsWrapperRef = useRef(null);
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (
+        !settingsWrapperRef.current.contains(e.target) &&
+        !e.target.closest(".avatar-image")
+      ) {
+        setShowSettings(false);
+      }
+    };
+    document.addEventListener("click", handleClick);
+    return () => {
+      document.removeEventListener("click", handleClick);
+    };
+  }, []);
 
   return (
     <>
       {
-        <div className="settings-wrapper">
+        <div className="settings-wrapper" ref={settingsWrapperRef}>
           {children}
           <ul className="avata-settings">
             {Object.entries(avaProps)
@@ -33,7 +49,8 @@ const AvatarCustomizer = ({
                     <select
                       onChange={(e) =>
                         handleSetAvatarOptions(e.target.value, entry[0])
-                      }>
+                      }
+                    >
                       {optionList &&
                         optionList.map((option) => {
                           return (
@@ -57,4 +74,5 @@ const AvatarCustomizer = ({
     </>
   );
 };
+
 export default AvatarCustomizer;
