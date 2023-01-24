@@ -5,12 +5,15 @@ import { parseCookies } from "nookies";
 import { IoIosArrowBack } from "react-icons/Io";
 import Settings from "./Settings";
 import { useAppContext } from "../context";
+import Error from "./Error";
 
 function Navbar(props) {
   const { socket, setHandSize, setAmountOfRounds, handSize, amountOfRounds } =
     props;
   const { data: session } = useSession();
   const { storeData } = useAppContext();
+  const [showErrMessage, setShowErrMessage] = useState(false);
+  const [reconnect, setReconnect] = useState(false);
 
   const router = useRouter();
   const [lobbyId, setLobbyId] = useState(null);
@@ -33,6 +36,22 @@ function Navbar(props) {
   };
 
   useEffect(() => {
+    if (socket) {
+      socket.on("disconnect", (reason) => {
+        setShowErrMessage(
+          "Server connectrion lost! Please reload or go back to Hompage"
+        );
+      });
+
+      socket.io.on("reconnect", () => {
+        setShowErrMessage(false);
+        setReconnect("Successfully reconnected with Server");
+        setTimeout(() => {
+          setReconnect(false);
+        }, 5000);
+      });
+    }
+
     if (router.query.lobbyId && router.query.gameId) {
       setGameIdentifier(router.query.gameId[0]);
       setLobbyId(router.query.lobbyId);
@@ -42,7 +61,7 @@ function Navbar(props) {
       setGameIdentifier(null);
       return setLobbyId(router.query.lobbyId[0]);
     }
-  }, [router.isReady, router]);
+  }, [router.isReady, router, socket]);
 
   return (
     <nav className="navContainer">
@@ -92,6 +111,12 @@ function Navbar(props) {
           )}
         </div>
       </div>
+
+      <Error
+        showErrMessage={showErrMessage}
+        setShowErrMessage={setShowErrMessage}
+        success={reconnect}
+      />
     </nav>
   );
 }

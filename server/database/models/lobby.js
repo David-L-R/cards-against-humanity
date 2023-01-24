@@ -3,8 +3,7 @@ import deleteOutatedData from "../../utils/deleteOutatedData.js";
 
 const lobbyModel = mongoose.Schema(
   {
-    // id: String,
-    games: [],
+    games: [{ type: Object, index: true }],
     players: [
       {
         id: String,

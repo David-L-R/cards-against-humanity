@@ -6,6 +6,7 @@ import express from "express";
 import cors from "cors";
 import http from "http";
 import useQueue from "./utils/useQueue.js";
+import consoleSuccess from "./utils/consoleSuccess.js";
 
 dotenv.config();
 connectDB();
@@ -19,7 +20,7 @@ app.use(
     extended: true,
   })
 );
-
+export const queue = {}; // {lobby: {lobby: lobbyId, loading:Boolean, data:[{states to process, channelname}]}}
 const PORT = process.env.PORT || 5555;
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -30,24 +31,27 @@ const io = new Server(server, {
 });
 
 server.listen(PORT, async (req, res) => {
-  console.log(`Server running under ${PORT}`);
+  consoleSuccess(`Server running under ${PORT}`);
 });
 
 //Socket.io
 io.on("connection", (socket) => {
   console.log(`user connected: ${socket.id}`);
 
-  socket.on("createNewLobby", (data) =>
-    useQueue({ data, socket, io, channelName: "createNewLobby" })
-  );
+  socket.on("createNewLobby", (data) => {
+    socket.join(data.lobbyId);
+    useQueue({ data, socket, io, channelName: "createNewLobby" });
+  });
 
-  socket.on("updateLobby", (data) =>
-    useQueue({ data, socket, io, channelName: "updateLobby" })
-  );
+  socket.on("updateLobby", (data) => {
+    socket.join(data.lobbyId),
+      useQueue({ data, socket, io, channelName: "updateLobby" });
+  });
 
-  socket.on("findRoom", (data) =>
-    useQueue({ data, socket, io, channelName: "findRoom" })
-  );
+  socket.on("findRoom", (data) => {
+    socket.join(data.lobbyId),
+      useQueue({ data, socket, io, channelName: "findRoom" });
+  });
 
   socket.on("disconnect", async (reason) => {
     const userId = socket.userId;
@@ -60,15 +64,18 @@ io.on("connection", (socket) => {
   });
 
   socket.on("createGameObject", (data) => {
+    socket.join(data.lobbyId);
     useQueue({ data, socket, io, channelName: "createGameObject" });
   });
 
-  socket.on("getUpdatedGame", (data) =>
-    useQueue({ data, socket, io, channelName: "getUpdatedGame" })
-  );
+  socket.on("getUpdatedGame", (data) => {
+    socket.join(data.lobbyId);
+    useQueue({ data, socket, io, channelName: "getUpdatedGame" });
+  });
 
   socket.on("changeGame", async (data) => {
-    useQueue({ data, socket, io, channelName: "changeGame" });
+    socket.join(data.lobbyId),
+      useQueue({ data, socket, io, channelName: "changeGame" });
   });
 });
 

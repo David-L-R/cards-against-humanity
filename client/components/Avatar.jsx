@@ -64,12 +64,6 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
   };
 
   const storeAvatarSettings = (options) => {
-    socket.emit("updateLobby", {
-      lobbyId: storeData.lobbyId,
-      id: cookies.socketId,
-      avatar: options,
-    });
-
     // if in runnning game, also update Game object
     if (currGameId) {
       socket.emit("changeGame", {
@@ -80,7 +74,13 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
         gameIdentifier: currGameId,
         changeAvatar: true,
       });
+      return;
     }
+    socket.emit("updateLobby", {
+      lobbyId: storeData.lobbyId,
+      id: cookies.socketId,
+      avatar: options,
+    });
   };
 
   //create avatar based on options
