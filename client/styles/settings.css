@@ -128,11 +128,12 @@
   width: 40px;
   height: 40px;
 }
+.settingsButton:active {
+  color: grey;
+}
 #closeSettings {
   height: 0;
-
   display: none;
-
   transition: all 0.3s, display 0.5s linear 0.5s;
 }
 #closeSettings > ul {

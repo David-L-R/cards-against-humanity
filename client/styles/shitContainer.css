@@ -90,6 +90,16 @@
   left: 85%;
   animation: rain 5s infinite linear;
 }
+.shit11 {
+  position: fixed;
+  width: 150px;
+  height: 150px;
+  opacity: 0;
+  top: 10%;
+  left: 68%;
+  animation: rain 2s infinite linear;
+  animation-delay: 3s;
+}
 
 @keyframes rain {
   from {

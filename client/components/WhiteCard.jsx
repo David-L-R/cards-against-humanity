@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { motion as m } from "framer-motion";
 
 function WhiteCard({ getNewWhiteCard, loading }) {
   const [isActive, setIsActive] = useState(false);
@@ -18,10 +17,11 @@ function WhiteCard({ getNewWhiteCard, loading }) {
   }, [loading]);
 
   return (
-    <m.div className="whiteCardContainer">
+    <div className="whiteCardContainer">
       <div
         className={isActive ? "whiteCard whiteIsFlipped" : "whiteCard"}
-        onClick={handleClick}>
+        onClick={handleClick}
+      >
         <div className="whiteCardFace whiteCardFace--front">
           <h2>Cards Against Humanity.</h2>
 
@@ -35,7 +35,7 @@ function WhiteCard({ getNewWhiteCard, loading }) {
           </div>
         </div>
       </div>
-    </m.div>
+    </div>
   );
 }
 

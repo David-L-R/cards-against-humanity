@@ -1,6 +1,10 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { useAppContext } from "../context";
+//import useWindowSize from "react-use/lib/useWindowSize";
+import Confetti from "react-confetti";
+import BalloonContainer from "./FloatingBalloons";
+import Avatar from "./Avatar.jsx";
 
 function GameEnd({ currentGame }) {
   const amountOfRoundsPlayed = currentGame.turns.length;
@@ -36,7 +40,32 @@ function GameEnd({ currentGame }) {
   }));
 
   return (
-    <main style={{ paddingLeft: "10rem" }}>
+    <>
+      <div className="confettiContainer">
+        <Confetti width="2000px" height="2000px" />
+      </div>
+      <div className="gameEndContainer">
+        <BalloonContainer totalBaloon={4} style={{ width: "100%" }} />
+        <div className="gameEndTextField">
+          <h1>And the Winner is...</h1>
+          <h1 className="WinnnerName">{`${overallWinner.name}!`}</h1>
+          <div className="winnerAvatarContainer">
+            <Avatar className="avatarWinner" />
+          </div>
+        </div>
+        <img src="/pedestal2.svg" alt="a Fucking Pedestal" />
+      </div>
+      <div className="shit11">
+        <img src="/poopemoji.svg" />
+      </div>
+    </>
+  );
+}
+
+export default GameEnd;
+
+/*
+<main style={{ paddingLeft: "10rem" }}>
       <h1>Game ends, .... Really pretty just for you Danni!!!!</h1>
       <h2>{`WINNER!! is ${overallWinner.name} with ${overallWinner.points} points`}</h2>
       <p>{`Played ${amountOfRoundsPlayed} rounds out of ${maxRounds}`}</p>
@@ -60,8 +89,6 @@ function GameEnd({ currentGame }) {
           Back to Lobby!!!!!
         </h3>
       </button>
+      <img src="/pedestal.svg" alt="" />
     </main>
-  );
-}
-
-export default GameEnd;
+    */

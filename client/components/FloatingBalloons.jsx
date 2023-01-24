@@ -4,8 +4,6 @@ function random(num) {
   return Math.floor(Math.random() * num);
 }
 
-let totalBaloon = 15; // specify number of balloon you want
-
 function getRandomStyles() {
   let mt = random(200);
   let ml = random(20);
@@ -31,7 +29,8 @@ function getRandomStyles() {
   }
 }
 
-function BalloonContainer() {
+function BalloonContainer(props) {
+  const { totalBaloon = 15 } = props;
   const [balloons, setBalloons] = useState([]);
 
   useEffect(() => {
