@@ -37,11 +37,6 @@ export function DragItem(props) {
     ...props.style,
   };
 
-  const deleteClass = (elem) => {
-    elem.classList.remove("lastWhiteCard");
-    console.log("elem", elem);
-  };
-
   return (
     <li
       ref={setNodeRef}

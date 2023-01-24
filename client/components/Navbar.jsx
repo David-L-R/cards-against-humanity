@@ -10,22 +10,22 @@ import { BsCardChecklist } from "react-icons/bs";
 import { AiOutlineDollarCircle, AiOutlineMail } from "react-icons/ai";
 import Settings from "./Settings";
 import { useAppContext } from "../context";
+import Error from "./Error";
 import GameRules from "./GameRules";
 import ReportBug from "./ReportBug";
 import Contact from "./Contact";
 
 function Navbar(props) {
-  const [open, setOpen] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showRules, setShowRules] = useState(false);
   const [showBug, setShowBug] = useState(false);
   const [showContact, setShowContact] = useState(false);
-
   const { socket, setHandSize, setAmountOfRounds, handSize, amountOfRounds } =
     props;
   const { data: session } = useSession();
   const { storeData } = useAppContext();
-
+  const [showErrMessage, setShowErrMessage] = useState(false);
+  const [reconnect, setReconnect] = useState(false);
   const router = useRouter();
   const [lobbyId, setLobbyId] = useState(null);
   const cookies = parseCookies();
@@ -55,6 +55,22 @@ function Navbar(props) {
   };
 
   useEffect(() => {
+    if (socket) {
+      socket.on("disconnect", (reason) => {
+        setShowErrMessage(
+          "Server connectrion lost! Please reload or go back to Hompage"
+        );
+      });
+
+      socket.io.on("reconnect", () => {
+        setShowErrMessage(false);
+        setReconnect("Successfully reconnected with Server");
+        setTimeout(() => {
+          setReconnect(false);
+        }, 5000);
+      });
+    }
+
     if (router.query.lobbyId && router.query.gameId) {
       setGameIdentifier(router.query.gameId[0]);
       setLobbyId(router.query.lobbyId);
@@ -64,7 +80,7 @@ function Navbar(props) {
       setGameIdentifier(null);
       return setLobbyId(router.query.lobbyId[0]);
     }
-  }, [router.isReady, router]);
+  }, [router.isReady, router, socket]);
 
   return (
     <>
@@ -110,8 +126,7 @@ function Navbar(props) {
               <li id="sidebar-item">
                 <div
                   id="settingsToggle"
-                  onClick={() => setShowSettings((prev) => !prev)}
-                >
+                  onClick={() => setShowSettings((prev) => !prev)}>
                   <div className="navbarIcons">
                     <FiSettings />
                   </div>
@@ -122,8 +137,7 @@ function Navbar(props) {
                         showSettings
                           ? "arrowDownIcon "
                           : "arrowDownIcon openArrow"
-                      }
-                    >
+                      }>
                       <IoIosArrowDown />
                     </span>
                   </div>
@@ -194,48 +208,13 @@ function Navbar(props) {
           className="gameRulesContent"
         />
       </div>
+      <Error
+        showErrMessage={showErrMessage}
+        setShowErrMessage={setShowErrMessage}
+        success={reconnect}
+      />
     </>
   );
 }
-
-/*
-<div className="fuckitDannisadvice">
-        {lobbyId && !gameIdentifier && storeData?.isHost && (
-          <Settings
-            setHandSize={setHandSize}
-            setAmountOfRounds={setAmountOfRounds}
-            handSize={handSize}
-            amountOfRounds={amountOfRounds}
-          />
-        )}
-        <div className="dropdownContainer">
-          {session ? (
-            <>
-              <div className="dropdownIcon">
-                <p className="greetingText"> {session.user.name}</p>
-                <img
-                  src={session.user.image}
-                  alt={session.user.name}
-                  className="navIcon"
-                />
-              </div>
-
-              <div className="dropdown-content">
-                <button>Profile</button>
-                <button onClick={signOut}>Sign out</button>
-              </div>
-            </>
-          ) : (
-            <>
-              <img className="navIconSVG" src="/avatarPlaceholder.svg" alt="" />
-              <div className="dropdown-content">
-                <button onClick={signIn}>Login</button>
-                <button onClick={signIn}>Sign up</button>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
-      */
 
 export default Navbar;

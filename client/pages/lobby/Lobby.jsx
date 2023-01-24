@@ -11,13 +11,13 @@ import { parseCookies } from "nookies";
 import Loading from "../../components/Loading";
 import PageNotFound from "../../components/PageNotFound";
 import { useAppContext } from "../../context";
+import { TfiRocket } from "react-icons/tfi";
 
 const Lobby = (props) => {
   const { socket, handSize, amountOfRounds } = props;
   const router = useRouter();
   const { joinGame } = router.query;
   const cookies = parseCookies();
-  const [lobbyId, setLobbyId] = useState(null);
   const [showErrMessage, setShowErrMessage] = useState(null);
   const [players, setPlayers] = useState([]);
   const [copied, setCopied] = useState(false);
@@ -25,7 +25,9 @@ const Lobby = (props) => {
   const [linkInvation, setlinkInvation] = useState("");
   const [isLoading, setIsloading] = useState(true);
   const [currentLobby, setCurrentLobby] = useState(null);
-  const { setStoreData } = useAppContext();
+  const [listenersReady, setListenersReady] = useState(false);
+  const { storeData, setStoreData } = useAppContext();
+  const lobbyId = storeData.lobbyId;
 
   const handleGameCreation = () => {
     setIsloading(true);
@@ -49,63 +51,63 @@ const Lobby = (props) => {
   };
 
   useEffect(() => {
-    socket.on("updateRoom", ({ currentLobby, err, kicked }) => {
-      console.log("currentLobby", currentLobby);
-
-      if (!currentLobby || err) {
-        setIsloading(false);
-        return setShowErrMessage(
-          "Can not find Lobby, please check our invatation link"
-        );
-      }
-      const player = currentLobby.waiting.find(
-        (player) => player.id === cookies.socketId
-      );
-      //if player got kicket
-      if (kicked && !player)
-        return (
-          setShowErrMessage("You got kicked! Redirecting you back"),
-          setTimeout(() => {
-            router.push("/");
-          }, 3500)
-        );
-
-      setIsloading(false);
-      setCurrentLobby(currentLobby);
-
-      if (!player) return setShowErrMessage("Player not found");
-      const { waiting } = currentLobby;
-      const { id, name, isHost, inactive } = player;
-      //check if the host
-      isHost
-        ? (setHost(true), setStoreData((prev) => ({ ...prev, isHost: true })))
-        : setHost(false);
-
-      if (err) return console.warn(err);
-
-      setStoreData((prev) => ({ ...prev, playerName: player.name }));
-      setPlayers((pre) => waiting);
-    });
-
-    // creates new game if host and redirect everyone to game
-    socket.on("newgame", ({ newGameData, err }) => {
-      if (!newGameData || err) {
-        setIsloading(false);
-        return setShowErrMessage(err);
-      }
-      const stage = newGameData.Game.turns[0].stage[0];
-      const gameId = newGameData.Game.gameIdentifier;
-      if (lobbyId) {
-        if (stage === "start") {
-          let gamePath = {
-            pathname: `/lobby/game/${gameId}`,
-            query: { lobbyId: lobbyId },
-          };
-          router.push(gamePath);
+    if (lobbyId) {
+      socket.on("updateRoom", ({ currentLobby, err, kicked }) => {
+        if (!currentLobby || err) {
+          setIsloading(false);
+          return setShowErrMessage(
+            "Can not find Lobby, please check our invatation link"
+          );
         }
-      }
-    });
+        const player = currentLobby.waiting.find(
+          (player) => player.id === cookies.socketId
+        );
+        //if player got kicket
+        if (kicked && !player)
+          return (
+            setShowErrMessage("You got kicked! Redirecting you back"),
+            setTimeout(() => {
+              router.push("/");
+            }, 3500)
+          );
 
+        setIsloading(false);
+        setCurrentLobby(currentLobby);
+
+        if (!player) return setShowErrMessage("Player not found");
+        const { waiting } = currentLobby;
+        const { id, name, isHost, inactive } = player;
+        //check if the host
+        isHost
+          ? (setHost(true), setStoreData((prev) => ({ ...prev, isHost: true })))
+          : setHost(false);
+
+        if (err) return console.warn(err);
+
+        setStoreData((prev) => ({ ...prev, playerName: player.name }));
+        setPlayers((pre) => waiting);
+      });
+
+      // creates new game if host and redirect everyone to game
+      socket.on("newgame", ({ newGameData, err }) => {
+        if (!newGameData || err) {
+          setIsloading(false);
+          return setShowErrMessage(err);
+        }
+        const stage = newGameData.turns[0].stage[0];
+        const gameId = newGameData.gameIdentifier;
+        if (lobbyId) {
+          if (stage === "start") {
+            let gamePath = {
+              pathname: `/lobby/game/${gameId}`,
+              query: { lobbyId: lobbyId },
+            };
+            router.push(gamePath);
+          }
+        }
+      });
+    }
+    setListenersReady(true);
     return () => {
       socket.removeAllListeners();
     };
@@ -113,15 +115,14 @@ const Lobby = (props) => {
 
   useEffect(() => {
     //self update page after got redirected, use key from query as lobby id
-    if (lobbyId) {
+    if (lobbyId && listenersReady) {
       socket.emit("updateLobby", { lobbyId, id: cookies.socketId, joinGame });
     }
-  }, [lobbyId]);
+  }, [listenersReady, lobbyId]);
 
   useEffect(() => {
     if (router.query.lobbyId) {
       setlinkInvation(`${window?.location.href}?joinGame=true`);
-      setLobbyId(router.query.lobbyId[0]);
       setStoreData((prev) => ({ ...prev, lobbyId: router.query.lobbyId[0] }));
     }
   }, [router.isReady]);
@@ -162,6 +163,7 @@ const Lobby = (props) => {
             <Scoreboard currentLobby={currentLobby} socket={socket} />
           </section>
         )}
+        <h1></h1>
         <section className="waitingLobbyCard">
           <m.div
             className="framerContainer"
@@ -256,7 +258,16 @@ const Lobby = (props) => {
                       whiteSpace: "pre-wrap",
                       padding: "15px",
                     }}>
-                    {player.name.toUpperCase()}
+                    {player.name.toUpperCase() !== "DAVID" ? (
+                      player.name.toUpperCase()
+                    ) : (
+                      <>
+                        <TfiRocket className="rockt" />
+                        {/* <TfiRocket />
+                        <TfiRocket />
+                        <TfiRocket /> */}
+                      </>
+                    )}
                   </h2>
                   {player.inactive && (
                     <p>is disconnected and {randomInsult()}</p>

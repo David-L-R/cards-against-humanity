@@ -39,7 +39,6 @@ const Game = ({ socket }) => {
   const [maxHandSize, setMaxHandSize] = useState(null);
   const [closingGame, setClosingGame] = useState(false);
   const [gameEnds, setGameEnds] = useState(false);
-  const [myTimeOut, setMyTimeOut] = useState(null);
   const { storeData, setStoreData } = useAppContext();
 
   const chooseBlackCard = (selected) => {
@@ -130,6 +129,8 @@ const Game = ({ socket }) => {
   //clicking the ready button, stores ready state in DB
   const checkoutRound = (id, inactive) => {
     setTimer(false);
+
+    //prevent player from smashing ready button like an idiot ^^
     if (
       currentLobby.turns[currentLobby.turns.length - 1].completed.find(
         (player) => player.player_id === id
@@ -146,7 +147,6 @@ const Game = ({ socket }) => {
     };
 
     if (inactive) {
-      socket.emit("changeGame", { ...playerData });
       socket.emit("changeGame", { ...playerData, leavedGame: true });
       return;
     }
@@ -177,29 +177,41 @@ const Game = ({ socket }) => {
   };
 
   //  clsoes the game and display the game end component
-  const handleClosingGame = () => {
-    if (isHost) {
+  const handleClosingGame = (input) => {
+    const force = input?.force;
+    if (isHost || force) {
       const playerData = {
         playerId: cookies.socketId,
         gameId,
-        lobbyId,
-        gameIdentifier,
+        lobbyId: storeData.lobbyId,
         closeGame: true,
       };
+      console.log("playerData", playerData);
       socket.emit("changeGame", { ...playerData });
     }
   };
 
   useEffect(() => {
     //getting whole game infos, also rejoin player to socket io
-    socket.on("currentGame", ({ currentGame, err }) => {
+    socket.on("currentGame", ({ currentGame, err, kicked }) => {
       console.log("currentGame", currentGame);
       setLoading(false);
 
+      //if player got kicket
+      const player = currentGame?.players.find(
+        (player) => player.id === cookies.socketId
+      );
+      if (kicked && !player && currentGame)
+        setShowErrMessage("You got kicked! Redirecting you back"),
+          setTimeout(() => {
+            router.push("/");
+          }, 3500);
+
       //if error ocurred
-      if (err || !currentGame) {
-        return setShowErrMessage(err);
+      if (err || (!currentGame && !kicked)) {
+        return setShowErrMessage(err ? err : "You are not part of this game!");
       }
+
       //if game was closed, show Game end component
       if (currentGame.concluded) {
         setGameEnds(true);
@@ -218,17 +230,12 @@ const Game = ({ socket }) => {
         setShowErrMessage(
           "Not enough Players left, game will be closed within 3 seconds"
         );
-        setMyTimeOut(
-          setTimeout(() => {
-            handleClosingGame();
-            setClosingGame(
-              currentGame.players.filter((player) => !player.inactive).length
-            );
-          }, 3500)
-        );
-      } else {
-        setShowErrMessage(false);
-        clearTimeout(myTimeOut);
+        handleClosingGame({ force: true });
+
+        setTimeout(() => {
+          router.push(`/lobby/${storeData.lobbyId}`);
+        }, 3500);
+        return;
       }
 
       // if players cookie is not stored inside game Object = player is not part of the game, redirect to hompage
@@ -285,11 +292,7 @@ const Game = ({ socket }) => {
           : setIsCzar(false);
 
         //if czar and stage white is is currently runnning, display white cards from users
-        if (
-          // currentCzarId === cookies.socketId &&
-          stage === "white" ||
-          stage === "deciding"
-        ) {
+        if (stage === "white" || stage === "deciding") {
           const playerList = lastTurn.white_cards
             .map((player) => player.played_card)
             .filter((cards) => cards.length > 0);
@@ -346,12 +349,11 @@ const Game = ({ socket }) => {
     return () => {
       socket.removeAllListeners();
     };
-  }, [lobbyId, gameStage, gameIdentifier]);
+  }, [router.isReady]);
 
   //self update page after got redirected, use key from query as lobby id
   useEffect(() => {
     if (lobbyId) {
-      // setLobbyId(router.query.lobbyId);
       socket.emit("getUpdatedGame", {
         lobbyId: router.query.lobbyId,
         playerName,
@@ -461,11 +463,7 @@ const Game = ({ socket }) => {
   if (closingGame && !gameEnds)
     return (
       <main>
-        <h1>
-          {closingGame < 2
-            ? "Less then 2 players, game will be closed"
-            : "To less players, continue with game anyway?"}
-        </h1>
+        <h1>{"To less players, continue with game anyway?"}</h1>
         {isHost && closingGame >= 2 && (
           <ul>
             <li>
@@ -485,7 +483,7 @@ const Game = ({ socket }) => {
     <main className="game">
       {gameStage === "winner" ? (
         <>
-          <div className="debuggerMonitor">
+          <div className="debuggerMonitor" style={{ paddingRight: "4rem" }}>
             Game player : {playerName} <br />
             <br />
             gamestage : {gameStage}
@@ -516,16 +514,16 @@ const Game = ({ socket }) => {
                 {"You are inactive, you are able to turn back in each stage"}
               </div>
             )}
-            {timerTrigger && (
+            {/* {timerTrigger && (
               <div className="timerContainer">
                 <Countdown timer={timer} setTimer={setTimer} />
               </div>
-            )}
+            )} */}
           </Winner>
         </>
       ) : (
         <>
-          <div className="debuggerMonitor">
+          <div className="debuggerMonitor" style={{ paddingRight: "4rem" }}>
             Game player : {playerName} <br />
             <br />
             gamestage : {gameStage}
