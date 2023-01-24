@@ -73,6 +73,9 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
+.czarPickingContainer ul li div {
+  padding: 50px;
+}
 
 .lowest {
   position: fixed;

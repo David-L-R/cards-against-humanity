@@ -56,18 +56,20 @@ const Scoreboard = ({ currentLobby, socket }) => {
           boxShadow: isOpen
             ? "20px 2px 31px 4px rgba(135,129,129,0.52)"
             : "none",
-        }}>
+        }}
+      >
         <div
           className="scoreButton"
           onClick={openMenu}
           style={{
             opacity: isOpen ? "0" : "1",
             cursor: isOpen ? "default" : "pointer",
-          }}>
+          }}
+        >
           <p>SCORES</p>
         </div>
         <button onClick={openMenu}>
-          <CgCloseO />
+          <CgCloseO className="closeMenuButton" />
         </button>
         <ul>
           <h1>SCOREBOARD</h1>
@@ -84,12 +86,17 @@ const Scoreboard = ({ currentLobby, socket }) => {
                 className={player.inactive ? "inactive-player" : null}
                 onMouseEnter={(e) => setShowKick(e.target.dataset.id)}
                 onMouseLeave={showKick ? () => setShowKick(false) : null}
-                data-id={player.id}>
+                data-id={player.id}
+              >
                 <div>
                   {storeData.isHost &&
                   showKick === player.id &&
                   player.id !== cookies.socketId ? (
-                    <KickButton playerId={player.id} socket={socket} />
+                    <KickButton
+                      playerId={player.id}
+                      socket={socket}
+                      playerName={player.name}
+                    />
                   ) : !player.inactive ? (
                     <AiOutlineCheckCircle
                       className={
@@ -122,6 +129,7 @@ const Scoreboard = ({ currentLobby, socket }) => {
               </li>
             ))}
         </ul>
+
         {turns?.length > 0 && (
           <div className="scoreStats">
             <div className="fuckingClass">

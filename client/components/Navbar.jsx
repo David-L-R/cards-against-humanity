@@ -2,19 +2,30 @@ import React, { useEffect, useState } from "react";
 import { signIn, signOut, getProviders, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
-import { IoIosArrowBack } from "react-icons/Io";
+import { IoIosArrowBack, IoIosArrowDown } from "react-icons/Io";
+import { CgProfile } from "react-icons/cg";
+import { BsBug } from "react-icons/bs";
+import { FiSettings } from "react-icons/fi";
+import { BsCardChecklist } from "react-icons/bs";
+import { AiOutlineDollarCircle, AiOutlineMail } from "react-icons/ai";
 import Settings from "./Settings";
 import { useAppContext } from "../context";
 import Error from "./Error";
+import GameRules from "./GameRules";
+import ReportBug from "./ReportBug";
+import Contact from "./Contact";
 
 function Navbar(props) {
+  const [showSettings, setShowSettings] = useState(false);
+  const [showRules, setShowRules] = useState(false);
+  const [showBug, setShowBug] = useState(false);
+  const [showContact, setShowContact] = useState(false);
   const { socket, setHandSize, setAmountOfRounds, handSize, amountOfRounds } =
     props;
   const { data: session } = useSession();
   const { storeData } = useAppContext();
   const [showErrMessage, setShowErrMessage] = useState(false);
   const [reconnect, setReconnect] = useState(false);
-
   const router = useRouter();
   const [lobbyId, setLobbyId] = useState(null);
   const cookies = parseCookies();
@@ -33,6 +44,14 @@ function Navbar(props) {
         pathname: `/lobby/${lobbyId}`,
       });
     }
+  };
+
+  const handleDonate = () => {
+    window.open(
+      "https://www.paypal.com/donate/?hosted_button_id=GYX5SR7ZTMGQA",
+      "_blank",
+      "height=500px,width=500px"
+    );
   };
 
   useEffect(() => {
@@ -64,60 +83,137 @@ function Navbar(props) {
   }, [router.isReady, router, socket]);
 
   return (
-    <nav className="navContainer">
-      <div className="backButtonContainer">
-        {lobbyId && gameIdentifier && (
-          <h2 className="backButton">
-            <button onClick={backToLobby}>
-              <IoIosArrowBack />
-            </button>
-          </h2>
-        )}
-      </div>
-      <div className="fuckitDannisadvice">
-        {lobbyId && !gameIdentifier && storeData?.isHost && (
-          <Settings
-            setHandSize={setHandSize}
-            setAmountOfRounds={setAmountOfRounds}
-            handSize={handSize}
-            amountOfRounds={amountOfRounds}
-          />
-        )}
-        <div className="dropdownContainer">
+    <>
+      <nav className="navContainer">
+        <div className="backButtonContainer">
+          {lobbyId && gameIdentifier && (
+            <h2 className="backButton">
+              <button onClick={backToLobby}>
+                <IoIosArrowBack />
+              </button>
+            </h2>
+          )}
+        </div>
+      </nav>
+      <div className="accountMenu" onMouseLeave={() => setShowSettings(false)}>
+        <ul>
           {session ? (
-            <>
-              <div className="dropdownIcon">
-                <p className="greetingText"> {session.user.name}</p>
-                <img
-                  src={session.user.image}
-                  alt={session.user.name}
-                  className="navIcon"
-                />
+            <li className="loggedInProfileContainer">
+              <div>
+                <img src={`${session.user.image}`} alt={session.user.name} />
+                {console.log(session.user.image, "session img")}
               </div>
 
-              <div className="dropdown-content">
+              <div>
+                <p> {session.user.name}</p>
                 <button>Profile</button>
                 <button onClick={signOut}>Sign out</button>
               </div>
+            </li>
+          ) : (
+            <li className="loggedOutProfileContainer">
+              <div className="navbarIcons">
+                <CgProfile />
+              </div>
+              <div className="navBarText">
+                <button onClick={signIn}>Sign In</button>
+              </div>
+            </li>
+          )}
+
+          {lobbyId && !gameIdentifier && storeData?.isHost ? (
+            <>
+              <li id="sidebar-item">
+                <div
+                  id="settingsToggle"
+                  onClick={() => setShowSettings((prev) => !prev)}>
+                  <div className="navbarIcons">
+                    <FiSettings />
+                  </div>
+                  <div className="navBarText">
+                    Settings
+                    <span
+                      className={
+                        showSettings
+                          ? "arrowDownIcon "
+                          : "arrowDownIcon openArrow"
+                      }>
+                      <IoIosArrowDown />
+                    </span>
+                  </div>
+                </div>
+              </li>
+              <li id={showSettings ? "openSettings" : "closeSettings"}>
+                <Settings
+                  showSettings={showSettings}
+                  setShowSettings={setShowSettings}
+                  setHandSize={setHandSize}
+                  setAmountOfRounds={setAmountOfRounds}
+                  handSize={handSize}
+                  amountOfRounds={amountOfRounds}
+                />
+              </li>
             </>
           ) : (
-            <>
-              <img className="navIconSVG" src="/avatarPlaceholder.svg" alt="" />
-              <div className="dropdown-content">
-                <button onClick={signIn}>Login</button>
-                <button onClick={signIn}>Sign up</button>
+            <li style={{ color: "grey" }}>
+              <div className="navbarIcons">
+                <FiSettings />
               </div>
-            </>
+              <div className="navBarText">Settings</div>
+            </li>
           )}
-        </div>
-      </div>
 
+          <li onClick={() => setShowBug(true)}>
+            <div className="navbarIcons">
+              <BsBug />
+            </div>
+            <div className="navBarText">Report a Bug</div>
+          </li>
+          <li onClick={handleDonate}>
+            <div className="navbarIcons">
+              <AiOutlineDollarCircle />
+            </div>
+            <div className="navBarText">Buy us Coffee</div>
+          </li>
+          <li onClick={() => setShowRules(true)}>
+            <div className="navbarIcons">
+              <BsCardChecklist />
+            </div>
+            <div className="navBarText">Game Rules</div>
+          </li>
+          <li onClick={() => setShowContact(true)}>
+            <div className="navbarIcons">
+              <AiOutlineMail />
+            </div>
+            <div className="navBarText">Contact us</div>
+          </li>
+        </ul>
+        <p className="copyright">
+          Copyright © 2023 Man Makes Monster. All rights reserved.
+        </p>
+
+        <ReportBug
+          setShowBug={setShowBug}
+          showBug={showBug}
+          className="gameRulesContent"
+        />
+        <GameRules
+          setShowRules={setShowRules}
+          showRules={showRules}
+          className="gameRulesContent"
+        />
+        <Contact
+          setShowContact={setShowContact}
+          showContact={showContact}
+          className="gameRulesContent"
+        />
+      </div>
       <Error
         showErrMessage={showErrMessage}
         setShowErrMessage={setShowErrMessage}
         success={reconnect}
       />
-    </nav>
+    </>
   );
 }
 

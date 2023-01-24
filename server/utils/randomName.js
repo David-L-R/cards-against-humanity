@@ -5,6 +5,7 @@ const randomName = () => {
     "King Dingeling",
     "Lana Reversed",
     "MOM",
+    "Andy",
     "Party Pooper",
     "Life of the Party",
     "Jokester",

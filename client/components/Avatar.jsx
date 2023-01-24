@@ -93,7 +93,8 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
         onClick={() => playerId === cookies.socketId && setShowSettings(true)}
         className={"avatar-image"}
         style={playerId === cookies.socketId ? { cursor: "pointer" } : null}
-        dangerouslySetInnerHTML={{ __html: svg }}></div>
+        dangerouslySetInnerHTML={{ __html: svg }}
+      ></div>
     );
   };
 
@@ -108,7 +109,8 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
       {showSettings && (
         <AvatarCustomizer
           handleSetAvatarOptions={handleSetAvatarOptions}
-          setShowSettings={setShowSettings}>
+          setShowSettings={setShowSettings}
+        >
           <div className="avatar-preview">
             <AvatarSVG avatarOptions={avatarOptions} />
             <div>
