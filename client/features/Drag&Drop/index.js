@@ -49,8 +49,7 @@ function DragAndDropContainer(props) {
       onDragStart={(e) => handleDragStart(e, setActiveId)}
       onDragCancel={() => handleDragCancel(setActiveId)}
       onDragOver={(e) => handleDragOver(e, setData)}
-      onDragEnd={(e) => handleDragEnd(e, setActiveId, setData)}
-    >
+      onDragEnd={(e) => handleDragEnd(e, setActiveId, setData)}>
       <div className="droppable-container">
         {Object.entries(data).map(([key], index) => {
           return index === 0 ? (
@@ -82,7 +81,7 @@ function DragAndDropContainer(props) {
       </div>
 
       <DragOverlay style={randomTilt()}>
-        {activeId ? <CardTemplate id={activeId} /> : null}
+        {activeId ? <CardTemplate id={activeId} isOverlay={true} /> : null}
       </DragOverlay>
     </DndContext>
   );

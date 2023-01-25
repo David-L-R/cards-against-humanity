@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useDndMonitor } from "@dnd-kit/core";
 
 const CardTemplate = (props) => {
-  const { id, isBlackCard, card, blackText } = props;
+  const { id, isBlackCard, card, blackText, isSkell, isOverlay } = props;
   let cardClass;
 
   (() => {
@@ -15,10 +15,11 @@ const CardTemplate = (props) => {
         return (cardClass = `${style.cardTemplateContainer} ${style.black}`);
       } else if (pack >= 0 && pack !== undefined) {
         return (cardClass = `${style.cardTemplateContainer}`);
-      }
-      return (cardClass = `${style.cardTemplateContainer} ${"skeleton"}`);
+      } else if (isSkell)
+        return (cardClass = `${style.cardTemplateContainer} ${"skeleton"}`);
     }
-    return (cardClass = `${style.cardTemplateContainer}`);
+    if (isOverlay) return (cardClass = `${style.cardTemplateContainer}`);
+    return (cardClass = `${style.cardTemplateContainer} ${style.hide}`);
   })();
 
   return (

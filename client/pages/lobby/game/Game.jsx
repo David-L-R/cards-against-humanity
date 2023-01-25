@@ -163,16 +163,11 @@ const Game = ({ socket }) => {
       gameIdentifier,
     };
 
-    if (cardsOnTable.player.cards.length < maxHandSize && !loading) {
-      if (!loading) {
-        loading = true;
-        setLoading(true);
-        socket.emit("changeGame", {
-          ...playerData,
-          sendWhiteCards: true,
-        });
-      }
-      return loading;
+    if (cardsOnTable.player.cards.length < maxHandSize) {
+      socket.emit("changeGame", {
+        ...playerData,
+        sendWhiteCards: true,
+      });
     }
   };
 
@@ -335,15 +330,6 @@ const Game = ({ socket }) => {
         setGameStage(stage);
         setLoading(false);
       }
-    });
-
-    socket.on("newWhiteCard", ({ newWhite }) => {
-      setCardsOnTable((prev) => {
-        return {
-          ...prev,
-          player: { label: "player", cards: [...prev.player.cards, newWhite] },
-        };
-      });
     });
 
     return () => {
@@ -569,8 +555,10 @@ const Game = ({ socket }) => {
               isCzar={isCzar}
               whiteCardChoosed={whiteCardChoosed}
               getNewWhiteCard={getNewWhiteCard}
+              setCardsOnTable={setCardsOnTable}
               loading={loading}
               confirmed={confirmed}
+              setConfirmed={setConfirmed}
               stage={gameStage}
               maxHandSize={maxHandSize}>
               {playedWhite && isCzar && (

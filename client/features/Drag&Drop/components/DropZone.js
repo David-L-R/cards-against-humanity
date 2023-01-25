@@ -8,7 +8,6 @@ import { DragItem } from "./DragItem";
 import { useState, useEffect } from "react";
 import CardTemplate from "../../../components/CardTemplate";
 import { motion as m } from "framer-motion";
-import { RiH1 } from "react-icons/Ri";
 import WhiteCard from "../../../components/WhiteCard";
 
 export function DropZone(props) {
@@ -23,11 +22,12 @@ export function DropZone(props) {
     maxHandSize,
     getNewWhiteCard,
     loading,
+    setCardsOnTable,
+    setConfirmed,
   } = props;
   const [blackCard, setBlackCard] = useState(null);
   const [skelletons, setSkelletons] = useState(null);
   const [blackText, setBlackText] = useState(null);
-  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const { setNodeRef } = useDroppable({
     id: id,
@@ -108,8 +108,7 @@ export function DropZone(props) {
     <SortableContext
       id={id}
       items={cards.map((card) => card && card.text)}
-      strategy={horizontalListSortingStrategy}
-    >
+      strategy={horizontalListSortingStrategy}>
       <article
         className={
           isCzar && blackCard
@@ -119,8 +118,7 @@ export function DropZone(props) {
             : isCzar && !blackCard
             ? "czarSelecteWhites whiteHandOut"
             : null
-        }
-      >
+        }>
         {id === "table" && !isCzar && !blackCard && (
           <div className="czarIsChoosing">
             <h1>Czar is Choosing a Black Card</h1>
@@ -130,8 +128,7 @@ export function DropZone(props) {
         <div
           className={
             blackCard ? "onTable black-on-table" : "onTable whiteCardTable"
-          }
-        >
+          }>
           <m.ul
             className={
               confirmed && blackCard ? "cardDisplay confirmed" : "cardDisplay"
@@ -143,8 +140,7 @@ export function DropZone(props) {
               y: 1300,
 
               transition: { duration: 0.5 },
-            }}
-          >
+            }}>
             {cards &&
               cards.map((card, index) => {
                 return (
@@ -167,8 +163,12 @@ export function DropZone(props) {
                   />
                 );
               })}
-            {id === "player" && (
-              <WhiteCard getNewWhiteCard={getNewWhiteCard} loading={loading} />
+            {id === "player" && cards.length < maxHandSize && (
+              <WhiteCard
+                getNewWhiteCard={getNewWhiteCard}
+                loading={loading}
+                setCardsOnTable={setCardsOnTable}
+              />
             )}
 
             {skelletons && stage === "white" && !isCzar
@@ -179,9 +179,8 @@ export function DropZone(props) {
                       !skell.show
                         ? `hide-skell skeleton${index}`
                         : `skeleton${index}`
-                    }
-                  >
-                    <CardTemplate card={skell} index={index} />
+                    }>
+                    <CardTemplate card={skell} index={index} isSkell={true} />
                   </li>
                 ))
               : null}
@@ -190,17 +189,16 @@ export function DropZone(props) {
                 <li
                   onClick={() => {
                     whiteCardChoosed([...cards.slice(1)]);
-                    setIsConfirmed(true);
+                    setConfirmed(true);
                   }}
                   className={
                     !confirmed && !isCzar
                       ? "selectButton active"
                       : "selectButton "
-                  }
-                >
+                  }>
                   <h3>Confirm</h3>
                 </li>
-                {isConfirmed && (
+                {confirmed && (
                   <h3 className="waitText">
                     Please wait Czar will choose a winner shortly...
                   </h3>

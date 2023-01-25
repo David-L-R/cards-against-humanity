@@ -139,7 +139,7 @@ const updateTurn = async ({
       return player;
     });
     io.to(socket.id).emit("newWhiteCard", { newWhite });
-    return currentGame;
+    return;
   }
 
   // send every player the choosen black card
@@ -243,14 +243,14 @@ const updateTurn = async ({
         currCzarIndex === lastPlayerIndex
           ? Game.players[0]
           : Game.players[currCzarIndex + 1];
-      // create new turn
 
+      // create new turn
       const newTurn = {
         turn: currentTurn.turn + 1,
         czar: nextCzar,
         stage: ["start", "dealing", "black"],
         white_cards: Game.players
-          // .filter((player) => player.id !== nextCzar.id && !player.inactive)
+          .filter((player) => player.id !== nextCzar.id && !player.inactive)
           .map((player) => {
             return { player: player.id, cards: player.hand, played_card: [] };
           }),

@@ -200,7 +200,7 @@ export const changeGame = async (states) => {
 
     const updatedGame = await updateTurn({ ...states, currentGame });
 
-    if (!updatedGame) throw new Error("Server error, no game found");
+    if (!updatedGame) return "Server error, no game found";
 
     io.to(lobbyId).emit("currentGame", {
       currentGame: updatedGame,

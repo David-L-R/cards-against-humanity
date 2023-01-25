@@ -11,6 +11,7 @@ const Winner = ({
   currentLobby,
   children,
 }) => {
+  console.log("currentTurn", currentTurn);
   const [noButtonAtAll, setNoButtonAtAll] = useState(true);
   const playerList = currentTurn.white_cards;
   const andysShit = currentLobby.turns[
@@ -77,7 +78,7 @@ const Winner = ({
                 className={
                   card?.pick
                     ? `${style.cardTemplateContainer} ${style.black}`
-                    : `${style.cardTemplateContainer}`
+                    : `${style.cardTemplateContainer} ${style.whites}`
                 }>
                 {card.text}
               </div>
@@ -104,6 +105,7 @@ const Winner = ({
         {loosingCards &&
           loosingCards.map((player) => (
             <li key={player.played_card}>
+              {console.log("player.played_card", player)}
               <div className={`${style.cardTemplateContainer} ${style.black}`}>
                 {addTextToBlack(player.played_card)}
               </div>

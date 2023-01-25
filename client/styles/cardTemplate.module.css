@@ -25,9 +25,38 @@
   color: white;
   transition: all 250ms;
   z-index: 0;
+  animation: slideIn 250ms ease-in-out;
+}
+
+@keyframes slideIn {
+  0% {
+    transform: translateX(50vw);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .black:hover {
   rotate: 3deg;
   cursor: pointer;
+}
+
+.hide {
+  opacity: 0;
+}
+
+.whites {
+  animation: showUp 250ms ease-in 250ms forwards;
+}
+
+@keyframes showUp {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
