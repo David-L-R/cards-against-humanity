@@ -76,14 +76,15 @@ function GameEnd({ currentGame }) {
       <div className="gameEndContainer">
         <BalloonContainer totalBaloon={4} style={{ width: "100%" }} />
         <div className="gameEndTextField">
-          <h1>And the Winner is...</h1>
-          <h1 className="WinnnerName">{`${overallWinner.name}!`}</h1>
+          <h1 className="winnerh1Text">And the Winner is...</h1>
+
           <div className="avatarsContainer">
             {winningPlayers &&
               winningPlayers.map((player, index) => {
                 if (index === 0)
                   return (
                     <div className="winnerAvatarContainer">
+                      <h3>{`${player.name}!`}</h3>
                       <Avatar playerAvatar={player?.avatar} />
                     </div>
                   );
@@ -98,6 +99,7 @@ function GameEnd({ currentGame }) {
                   return (
                     <div className="avatar3rd">
                       <Avatar playerAvatar={player?.avatar} />
+                      <h3>{`${player.name}`}</h3>
                     </div>
                   );
               })}

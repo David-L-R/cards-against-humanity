@@ -10,50 +10,47 @@ import { BiMinus } from "react-icons/bi";
 const Settings = ({
   setHandSize,
   setAmountOfRounds,
-  showSettings,
-  setShowSettings,
+  amountOfRounds,
+  handSize,
 }) => {
   const [error, setError] = useState(false);
   const [value, setValue] = useState(10);
   const [roundsValue, setRoundsValue] = useState(10);
 
-  const handleAbort = (e) => {
-    e.preventDefault();
-    setShowSettings(false);
-    setAmountOfRounds(10);
-    setHandSize(10);
-  };
-
-  const handleChange = (value) => {
-    if (value > 10) {
+  const handleChange = () => {
+    if (handSize > 10) {
       setHandSize(10);
       return setError(true);
     }
     setError(false);
-    setHandSize(value);
+    setHandSize(handSize);
   };
 
   const handleIncrement = () => {
-    if (value < 10) {
-      setValue(value + 1);
+    //+
+    if (handSize < 10) {
+      setHandSize(handSize + 1);
     }
   };
 
   const handleDecrement = () => {
-    if (value > 1) {
-      setValue(value - 1);
+    //-
+    if (handSize > 1) {
+      setHandSize(handSize - 1);
     }
   };
 
   const handleRoundsIncrement = () => {
-    if (roundsValue < 20) {
-      setRoundsValue(roundsValue + 1);
+    //rounds ++
+    if (amountOfRounds < 20) {
+      setAmountOfRounds(amountOfRounds + 1);
     }
   };
 
   const handleRoundsDecrement = () => {
-    if (roundsValue > 1) {
-      setRoundsValue(roundsValue - 1);
+    //rounds --
+    if (amountOfRounds > 1) {
+      setAmountOfRounds(amountOfRounds - 1);
     }
   };
 
@@ -77,7 +74,7 @@ const Settings = ({
           <input
             className="settingsInput"
             type="number"
-            value={value}
+            value={handSize}
             min="1"
             max="10"
             placeholder="Default 10"
@@ -96,7 +93,7 @@ const Settings = ({
           </button>
           <input
             className="settingsInput"
-            value={roundsValue}
+            value={amountOfRounds}
             type="number"
             placeholder="Default 10"
             onChange={(e) => setRoundsValue(parseInt(e.target.value))}
