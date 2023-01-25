@@ -140,6 +140,7 @@
   height: 55%;
   background-image: url(../public/musician.svg);
   background-size: contain;
+  background-repeat: no-repeat;
   background-position: bottom;
   display: flex;
   scale: 2;
