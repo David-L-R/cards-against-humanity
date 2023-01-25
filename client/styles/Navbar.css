@@ -61,13 +61,10 @@
   z-index: 20;
   flex-direction: column;
   display: flex;
-  flex-direction: column;
   transition: all 0.3s ease-in-out;
   justify-content: center;
   color: rgba(255, 255, 255, 0.545);
-
   margin-right: -230px;
-  z-index: 30;
 }
 
 .accountMenu:hover {

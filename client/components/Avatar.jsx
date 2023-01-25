@@ -12,11 +12,12 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
   const router = useRouter();
   const [showSettings, setShowSettings] = useState(false);
   const [currGameId, setCurrGameId] = useState(false);
-  const { storeData } = useAppContext();
+  const { storeData, setStoreData } = useAppContext();
   const avatarOptions = {
     seed: userName,
     ...playerAvatar,
   };
+  // setStoreData((prev) => ({ ...prev, avatar: avatarOptions }));
 
   const emotions = {
     happy: {
@@ -69,16 +70,15 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
       socket.emit("changeGame", {
         lobbyId: storeData.lobbyId,
         gameId: storeData.lobbyId,
-        playerId: cookies.socketId,
+        playerId: playerId,
         avatar: options,
-        gameIdentifier: currGameId,
         changeAvatar: true,
       });
       return;
     }
     socket.emit("updateLobby", {
       lobbyId: storeData.lobbyId,
-      id: cookies.socketId,
+      id: playerId,
       avatar: options,
     });
   };
@@ -93,10 +93,13 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
         onClick={() => playerId === cookies.socketId && setShowSettings(true)}
         className={"avatar-image"}
         style={playerId === cookies.socketId ? { cursor: "pointer" } : null}
-        dangerouslySetInnerHTML={{ __html: svg }}
-      ></div>
+        dangerouslySetInnerHTML={{ __html: svg }}></div>
     );
   };
+
+  useEffect(() => {
+    storeAvatarSettings(avatarOptions);
+  }, []);
 
   useEffect(() => {
     if (router.query.gameId) return setCurrGameId(router.query.gameId);
@@ -112,8 +115,7 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
           <div className="avatarBackground"></div>
           <AvatarCustomizer
             handleSetAvatarOptions={handleSetAvatarOptions}
-            setShowSettings={setShowSettings}
-          >
+            setShowSettings={setShowSettings}>
             <div className="avatar-preview">
               <AvatarSVG avatarOptions={avatarOptions} />
               <div>

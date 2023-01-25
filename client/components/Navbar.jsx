@@ -47,8 +47,8 @@ function Navbar(props) {
         lobbyId,
         gameId: lobbyId,
         leavedGame: true,
-        gameIdentifier,
       };
+      socket.removeAllListeners();
       socket.emit("changeGame", playerData);
       router.push({
         pathname: `/lobby/${lobbyId}`,

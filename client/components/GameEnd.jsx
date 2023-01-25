@@ -9,37 +9,11 @@ function GameEnd({ currentGame }) {
   const amountOfRoundsPlayed = currentGame.turns.length;
   const maxRounds = currentGame.setRounds;
   const { storeData } = useAppContext();
+  const { lobbyId } = storeData;
   const router = useRouter();
-
   const winningPlayers = currentGame.players
     .sort((a, b) => b.points - a.points)
     .filter((_, index) => index < 3);
-  console.log(winningPlayers, "winningPlayers");
-
-  // const sortedPlayers = players.sort((a, b) => b.points - a.points);
-
-  /*
-  function findSecondWinner(players) {
-    const sortedPlayers = players.sort((a, b) => b.points - a.points);
-    return sortedPlayers[1];
-  }
-  //map over the return statment players.map foreach player
-  const secondWinner = findSecondWinner(currentGame.players);
-  */
-
-  function findThirdWinner(players) {
-    if (players.length < 3) {
-      return null;
-    }
-    const sortedPlayers = players.sort((a, b) => b.points - a.points);
-    return sortedPlayers[2];
-  }
-  const thirdWinner = findThirdWinner(currentGame.players);
-  if (thirdWinner === null) {
-    console.log("can't find player");
-  } else {
-    console.log("player found");
-  }
 
   let overallWinner = 0;
   currentGame.players.forEach((player) => {
@@ -68,11 +42,16 @@ function GameEnd({ currentGame }) {
       .map((turn) => turn.black_card).length,
   }));
 
+  const backToLobby = () => {
+    router.push(`/lobby/${lobbyId}`);
+  };
+
   return (
     <>
       <div className="confettiContainer">
-        <Confetti width="2000px" height="2000px" />
+        <Confetti />
       </div>
+
       <div className="gameEndContainer">
         <BalloonContainer totalBaloon={4} style={{ width: "100%" }} />
         <div className="gameEndTextField">
@@ -104,17 +83,9 @@ function GameEnd({ currentGame }) {
                   );
               })}
           </div>
-          {/*<div className="winnerAvatarContainer">
-              <Avatar />
-            </div>
-            <div className="avatar2nd">
-              <Avatar />
-              <h3></h3>
-            </div>
-            <div className="avatar3rd">
-              <Avatar />
-              <h3></h3>
-  </div>*/}
+          <button onClick={backToLobby} style={{ zIndex: "1" }}>
+            Back to Lobby
+          </button>
         </div>
         <img src="/pedestal2.svg" alt="a Fucking Pedestal" />
       </div>
@@ -126,32 +97,3 @@ function GameEnd({ currentGame }) {
 }
 
 export default GameEnd;
-
-/*
-<main style={{ paddingLeft: "10rem" }}>
-      <h1>Game ends, .... Really pretty just for you Danni!!!!</h1>
-      <h2>{`WINNER!! is ${overallWinner.name} with ${overallWinner.points} points`}</h2>
-      <p>{`Played ${amountOfRoundsPlayed} rounds out of ${maxRounds}`}</p>
-
-      <ul>
-        {allPLayersWithStats &&
-          allPLayersWithStats.map((player) => (
-            <div>
-              <h1>{player.playerName}</h1>
-              <p>{`got ${player.points} Points`}</p>
-              <p>{`was ${player.timesCzar} times Czar`}</p>
-              <p>{`won ${player.wonRounds} round(s)`}</p>
-              <p>{`played ${player.playedWhites} white card(s)`}</p>
-              <p>{`played ${player.playedBlacks} black card(s)`}</p>
-            </div>
-          ))}
-      </ul>
-
-      <button style={{ color: "red" }}>
-        <h3 onClick={() => router.push(`/lobby/${storeData.lobbyId}`)}>
-          Back to Lobby!!!!!
-        </h3>
-      </button>
-      <img src="/pedestal.svg" alt="" />
-    </main>
-    */

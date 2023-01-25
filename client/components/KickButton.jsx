@@ -10,7 +10,6 @@ const KickButton = ({ playerId, playerName }) => {
     const playerData = {
       playerId,
       lobbyId: storeData.lobbyId,
-      gameIdentifier: storeData.gameIdentifier,
       kickPlayer: true,
       gameId: storeData.lobbyId,
     };
@@ -20,8 +19,7 @@ const KickButton = ({ playerId, playerName }) => {
   return (
     <div
       className="kick-container kick-hover"
-      onMouseLeave={() => setShowButton(false)}
-    >
+      onMouseLeave={() => setShowButton(false)}>
       <img
         className="kick-icon"
         onClick={() => setShowButton(true)}
