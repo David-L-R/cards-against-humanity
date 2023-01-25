@@ -35,7 +35,7 @@
   padding-right: 20px;
   top: 0;
   right: 0;
-  z-index: 20;
+  z-index: 5;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -52,28 +52,25 @@
 }
 
 .accountMenu {
-  backdrop-filter: blur(6px);
   position: fixed;
   top: 0;
   right: 0;
-  width: 300px;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.831);
-  z-index: 20;
-  flex-direction: column;
+  width: fit-content;
+  height: 100vh;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   transition: all 0.3s ease-in-out;
-  justify-content: center;
+  justify-content: space-between;
   color: rgba(255, 255, 255, 0.545);
-  margin-right: -230px;
-  z-index: 30;
+  margin-right: -170px;
 }
 
 .accountMenu:hover {
-  margin-right: 0px;
+  background-color: rgba(0, 0, 0, 0.631);
+  margin-right: 0;
   color: white;
-  border-left: 2px solid white;
+  border-left: 2px solid rgba(255, 255, 255, 0.767);
 }
 .accountMenu p:hover {
   margin-right: 0px;
@@ -115,15 +112,21 @@
 }
 
 .copyright {
-  padding-left: 70px;
-  padding-right: 70px;
   position: relative;
   justify-content: center;
   display: flex;
-  margin-top: auto;
   color: grey;
   text-align: center;
+  font-size: 12px;
+  opacity: 0;
+  display: block;
+  padding: 0 0.75rem;
 }
+.accountMenu:hover .copyright,
+.navContainer:hover ~ .accountMenu .copyright {
+  opacity: 1;
+}
+
 .arrowDownIcon {
   display: flex;
   font-size: 24px;
@@ -165,4 +168,44 @@
 .profileMenuIcon {
   display: flex;
   font-size: 28px;
+}
+
+@media (max-width: 640px) {
+  .accountMenu {
+    margin-right: -100vw;
+    font-size: 12px;
+    height: 75vh;
+    width: 100vw;
+  }
+
+  .navContainer::before {
+    content: "";
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 0;
+    right: 0;
+    color: white;
+    background-image: url("/burgerMenue.svg");
+    background-size: contain;
+    transform: rotateZ(180deg);
+    margin: 0.5rem;
+  }
+
+  .navContainer:hover ~ .accountMenu,
+  .accountMenu:hover {
+    backdrop-filter: blur(6px);
+    background-color: rgba(0, 0, 0, 0.731);
+    margin-right: 0;
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.315);
+    border-right: none;
+  }
+  .navbarIcons {
+    font-size: 25px;
+  }
+  .accountMenu ul li {
+    gap: 10px;
+    min-height: 50px;
+  }
 }

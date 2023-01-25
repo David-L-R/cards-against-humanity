@@ -22,8 +22,6 @@ function FrontPage() {
 
   return (
     <>
-      <Navbar />
-
       <m.div
         className="pageTransition"
         exit={{
@@ -31,8 +29,7 @@ function FrontPage() {
           opacity: 1,
           rotate: -120,
           transition: { duration: 0.6 },
-        }}
-      >
+        }}>
         <Link href="./Home" className="linkElement">
           <animated.div
             className="cardContainer"
@@ -40,8 +37,7 @@ function FrontPage() {
               set({ xys: calc(x, y) })
             }
             onMouseLeave={() => set({ xys: [0, 0, 1] })}
-            style={{ transform: props.xys.to(trans) }}
-          >
+            style={{ transform: props.xys.to(trans) }}>
             <div className="card">
               <div className="cardFace cardFace--front">
                 <h2>Cards Against Humanity.</h2>

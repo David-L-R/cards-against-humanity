@@ -57,6 +57,7 @@
 .lobbyFront {
   background: black;
   backface-visibility: hidden;
+  padding: 1rem;
 }
 
 .lobbyFront:hover,
@@ -72,23 +73,21 @@
   padding-left: 30px;
   padding-top: 30px;
 }
-.lobbyBack h2 {
-  cursor: default;
-  padding-top: 30px;
-}
 
 .lobbyBack {
   background: black;
   position: relative;
-  z-index: -1;
   transform: rotateY(180deg);
-  display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 1rem;
+  z-index: -1;
 }
 
 .lobbyBack h2 {
-  width: 175px;
-  padding-left: 25px;
+  height: 33%;
 }
 
 .lobbyContainer {
@@ -98,10 +97,10 @@
   border: none;
   display: flex;
   border-bottom: 3px solid white;
-  background: rgb(0, 0, 0);
+  background: transparent;
   font-size: 28px;
-  width: 170px;
   color: white;
+  width: 100%;
 }
 .lobbyJoinInputField {
   border: none;
@@ -114,15 +113,13 @@
 }
 
 .lobbyForm {
-  border-top: 15px solid transparent;
-  padding-left: 25px;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
 }
-.lobbyButtonWrapper {
-  position: fixed;
-  top: 80%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+
 .isLoading {
   width: 200px;
   background-color: black !important;
@@ -137,16 +134,13 @@
 }
 .lobbyButton {
   display: block;
-  width: 200px;
-  height: 45px;
   font-size: 18px;
   font-weight: 600;
   color: white;
   cursor: pointer;
-  background: black;
+  background: transparent;
   letter-spacing: 2px;
   text-align: center;
-  position: relative;
   transition: all 0.35s;
 }
 .lobbyButton span {
@@ -229,9 +223,9 @@
   }
 }
 
-@media only screen and (max-width: 600px) {
+/* @media only screen and (max-width: 600px) {
   .lobbyCard {
-    width: 150px;
+    width: 130px;
     height: 250px;
     display: flex;
     margin: auto;
@@ -242,7 +236,6 @@
     width: 100%;
     display: flex;
     gap: 1vw;
-    /*grid-template-columns: 1fr 1fr;*/
     font-size: 16px;
   }
   .lobbyCardRotate {
@@ -250,10 +243,17 @@
     transform: rotateY(180deg) scale(2) translateX(-50px);
   }
   .lobbyBack h2 {
-    font-size: 16px;
-    padding-top: 10px;
-    padding-left: 25px;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 0;
     width: 80%;
+  }
+
+  .lobbyBack {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
   }
   .lobbyInputField {
     border-bottom: 2px solid white;
@@ -265,12 +265,10 @@
 
   .lobbyForm {
     border-top: 15px solid transparent;
-    padding-left: 25px;
+    padding: 0;
   }
   .lobbyButtonWrapper {
-    position: fixed;
-    top: 80%;
-    left: 50%;
+    position: relative;
     transform: translate(-50%, -50%);
   }
   .lobbyButton {
@@ -321,8 +319,6 @@
     padding-left: 20px;
     letter-spacing: 0px;
   }
-  .lobbyJoinForm p {
-  }
 
   #lobbyHidden {
     transform: scale(1.2) translateY(-240px) rotate(0deg) translateX(90px);
@@ -332,5 +328,53 @@
     position: relative;
     transform: scale(1.2) translateY(-240px) rotate(0deg) translateX(-95px);
     z-index: 0;
+  }
+} */
+
+@media (max-width: 640px) {
+  .lobbyCardsContainer {
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid red;
+  }
+  .lobbyContainer-active {
+    position: absolute;
+    /* width: 100vw; */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid green;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .lobbyCardRotate {
+    transform: rotateY(180deg) translateX(0);
+  }
+  .lobbyCard {
+    height: 240px;
+    width: 170px;
+  }
+  .lobbyCard h2 {
+    font-size: 16px;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  .lobbyBack {
+    padding: 0.5rem;
+  }
+  .lobbyForm input {
+    font-size: 18px;
+  }
+  .lobbyCardRotate {
+    height: 300px;
+    width: 200px;
+  }
+  #lobbyHostVisible {
+    position: relative;
+    top: 0;
+    right: -100%;
   }
 }

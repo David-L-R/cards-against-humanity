@@ -1,6 +1,6 @@
 .gameRules {
   position: fixed;
-  width: 800px;
+  max-width: 800px;
   height: max-content;
   inset: 0;
   margin: auto;

@@ -1,12 +1,8 @@
 .bug-report-form {
   display: flex;
   flex-direction: column;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
+  justify-content: center;
+  align-items: center;
 }
 
 .form-group label {

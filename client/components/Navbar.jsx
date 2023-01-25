@@ -231,9 +231,10 @@ function Navbar(props) {
             <div className="navBarText">Contact us</div>
           </li>
         </ul>
-        <p className="copyright">
-          Copyright © 2023 Man Makes Monster. All rights reserved.
-        </p>
+        <div>
+          <p className="copyright">Copyright © 2023 Man Makes Monster.</p>
+          <p className="copyright">All rights reserved.</p>
+        </div>
         <Profile
           setShowProfileMenu={setShowProfileMenu}
           showProfileMenu={showProfileMenu}
