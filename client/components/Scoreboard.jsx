@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { VscDebugDisconnect } from "react-icons/vsc";
-import { RiVipCrown2Fill } from "react-icons/Ri";
-import { CgCloseO } from "react-icons/Cg";
+import { RiVipCrown2Fill } from "react-icons/ri";
+import { CgCloseO } from "react-icons/cg";
 import { useAppContext } from "../context";
 import KickButton from "./KickButton";
 import { parseCookies } from "nookies";
@@ -56,16 +56,14 @@ const Scoreboard = ({ currentLobby, socket }) => {
           boxShadow: isOpen
             ? "20px 2px 31px 4px rgba(135,129,129,0.52)"
             : "none",
-        }}
-      >
+        }}>
         <div
           className="scoreButton"
           onClick={openMenu}
           style={{
             opacity: isOpen ? "0" : "1",
             cursor: isOpen ? "default" : "pointer",
-          }}
-        >
+          }}>
           <p>SCORES</p>
         </div>
         <button onClick={openMenu}>
@@ -86,8 +84,7 @@ const Scoreboard = ({ currentLobby, socket }) => {
                 className={player.inactive ? "inactive-player" : null}
                 onMouseEnter={(e) => setShowKick(e.target.dataset.id)}
                 onMouseLeave={showKick ? () => setShowKick(false) : null}
-                data-id={player.id}
-              >
+                data-id={player.id}>
                 <div>
                   {storeData.isHost &&
                   showKick === player.id &&

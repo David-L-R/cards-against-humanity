@@ -1,5 +1,5 @@
 import React from "react";
-import { CgCloseO } from "react-icons/Cg";
+import { CgCloseO } from "react-icons/cg";
 
 function GameRules({ setShowRules, showRules }) {
   if (!showRules) return;

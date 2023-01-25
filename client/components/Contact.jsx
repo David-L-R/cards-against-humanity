@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CgCloseO } from "react-icons/Cg";
+import { CgCloseO } from "react-icons/cg";
 
 function Contact({ showContact, setShowContact }) {
   if (!showContact) return;

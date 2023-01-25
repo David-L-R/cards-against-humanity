@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { signIn, signOut, getProviders, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
-import { IoIosArrowBack, IoIosArrowDown } from "react-icons/Io";
+import { IoIosArrowBack, IoIosArrowDown } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { ImProfile } from "react-icons/im";
 import { BsBug } from "react-icons/bs";
@@ -105,16 +105,14 @@ function Navbar(props) {
         onMouseLeave={() => {
           setShowProfile(false);
           setShowSettings(false);
-        }}
-      >
+        }}>
         <ul>
           {session ? (
             <>
               <li id="sidebar-item">
                 <div
                   id="settingsToggle"
-                  onClick={() => setShowProfile((prev) => !prev)}
-                >
+                  onClick={() => setShowProfile((prev) => !prev)}>
                   <div className="navbarProfilePic">
                     <img
                       className="navIcon"
@@ -130,8 +128,7 @@ function Navbar(props) {
                         showProfile
                           ? "arrowDownIcon "
                           : "arrowDownIcon openArrow"
-                      }
-                    >
+                      }>
                       <IoIosArrowDown />
                     </span>
                   </div>
@@ -141,8 +138,7 @@ function Navbar(props) {
                 <ul className="settingsInputContainer">
                   <li
                     className="profileMenu"
-                    onClick={() => setShowProfileMenu(true)}
-                  >
+                    onClick={() => setShowProfileMenu(true)}>
                     <span className="profileMenuIcon">
                       <ImProfile />
                     </span>
@@ -173,8 +169,7 @@ function Navbar(props) {
               <li id="sidebar-item">
                 <div
                   id="settingsToggle"
-                  onClick={() => setShowSettings((prev) => !prev)}
-                >
+                  onClick={() => setShowSettings((prev) => !prev)}>
                   <div className="navbarIcons">
                     <FiSettings />
                   </div>
@@ -185,8 +180,7 @@ function Navbar(props) {
                         showSettings
                           ? "arrowDownIcon "
                           : "arrowDownIcon openArrow"
-                      }
-                    >
+                      }>
                       <IoIosArrowDown />
                     </span>
                   </div>

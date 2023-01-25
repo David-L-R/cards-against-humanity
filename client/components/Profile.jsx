@@ -1,5 +1,5 @@
 import React from "react";
-import { CgCloseO } from "react-icons/Cg";
+import { CgCloseO } from "react-icons/cg";
 
 function Profile({ showProfileMenu, setShowProfileMenu }) {
   if (!showProfileMenu) return;

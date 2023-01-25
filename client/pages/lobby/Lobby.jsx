@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import { BiCopy } from "react-icons/Bi";
-import { RiVipCrown2Fill } from "react-icons/Ri";
+import { BiCopy } from "react-icons/bi";
+import { RiVipCrown2Fill } from "react-icons/ri";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { motion as m } from "framer-motion";
 import randomInsult from "../../utils/randomInsult";

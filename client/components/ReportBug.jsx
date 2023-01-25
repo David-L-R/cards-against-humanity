@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CgCloseO } from "react-icons/Cg";
+import { CgCloseO } from "react-icons/cg";
 
 function ReportBug({ showBug, setShowBug }) {
   if (!showBug) return;
@@ -69,8 +69,7 @@ function ReportBug({ showBug, setShowBug }) {
               id="priority"
               name="priority"
               value={formData.priority}
-              onChange={handleInputChange}
-            >
+              onChange={handleInputChange}>
               <option value="low">Low</option>
               <option value="medium">Medium</option>
               <option value="high">High</option>

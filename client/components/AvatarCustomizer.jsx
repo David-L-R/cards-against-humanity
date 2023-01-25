@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { avataaars } from "@dicebear/collection";
-import { CgCloseO } from "react-icons/Cg";
+import { CgCloseO } from "react-icons/cg";
 import hexColors from "../utils/hexCodes";
 
 const AvatarCustomizer = ({
@@ -49,8 +49,7 @@ const AvatarCustomizer = ({
                     <select
                       onChange={(e) =>
                         handleSetAvatarOptions(e.target.value, entry[0])
-                      }
-                    >
+                      }>
                       {optionList &&
                         optionList.map((option) => {
                           return (
