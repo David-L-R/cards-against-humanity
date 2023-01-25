@@ -5,7 +5,7 @@ import { parseCookies } from "nookies";
 import { IoIosArrowBack, IoIosArrowDown } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { ImProfile } from "react-icons/im";
-import { BsBug } from "react-icons/bs";
+import { BsBug, BsFillChatRightTextFill } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
 import { BsCardChecklist } from "react-icons/bs";
 import { AiOutlineDollarCircle, AiOutlineMail } from "react-icons/ai";
@@ -17,14 +17,19 @@ import ReportBug from "./ReportBug";
 import Contact from "./Contact";
 import { BiLogOut } from "react-icons/bi";
 import Profile from "./Profile";
+import AdminMail from "./AdminMail";
 
 function Navbar(props) {
   const [showSettings, setShowSettings] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showMail, setShowMail] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showRules, setShowRules] = useState(false);
   const [showBug, setShowBug] = useState(false);
   const [showContact, setShowContact] = useState(false);
+
+  const [responseDataArray, setResponseDataArray] = useState([]);
+
   const { socket, setHandSize, setAmountOfRounds, handSize, amountOfRounds } =
     props;
   const { data: session } = useSession();
@@ -105,14 +110,16 @@ function Navbar(props) {
         onMouseLeave={() => {
           setShowProfile(false);
           setShowSettings(false);
-        }}>
+        }}
+      >
         <ul>
           {session ? (
             <>
               <li id="sidebar-item">
                 <div
                   id="settingsToggle"
-                  onClick={() => setShowProfile((prev) => !prev)}>
+                  onClick={() => setShowProfile((prev) => !prev)}
+                >
                   <div className="navbarProfilePic">
                     <img
                       className="navIcon"
@@ -121,6 +128,7 @@ function Navbar(props) {
                       referrerPolicy="no-referrer"
                     />
                   </div>
+
                   <div className="navBarText">
                     {session.user.name}
                     <span
@@ -128,7 +136,8 @@ function Navbar(props) {
                         showProfile
                           ? "arrowDownIcon "
                           : "arrowDownIcon openArrow"
-                      }>
+                      }
+                    >
                       <IoIosArrowDown />
                     </span>
                   </div>
@@ -138,7 +147,8 @@ function Navbar(props) {
                 <ul className="settingsInputContainer">
                   <li
                     className="profileMenu"
-                    onClick={() => setShowProfileMenu(true)}>
+                    onClick={() => setShowProfileMenu(true)}
+                  >
                     <span className="profileMenuIcon">
                       <ImProfile />
                     </span>
@@ -169,7 +179,8 @@ function Navbar(props) {
               <li id="sidebar-item">
                 <div
                   id="settingsToggle"
-                  onClick={() => setShowSettings((prev) => !prev)}>
+                  onClick={() => setShowSettings((prev) => !prev)}
+                >
                   <div className="navbarIcons">
                     <FiSettings />
                   </div>
@@ -180,7 +191,8 @@ function Navbar(props) {
                         showSettings
                           ? "arrowDownIcon "
                           : "arrowDownIcon openArrow"
-                      }>
+                      }
+                    >
                       <IoIosArrowDown />
                     </span>
                   </div>
@@ -230,10 +242,19 @@ function Navbar(props) {
             </div>
             <div className="navBarText">Contact us</div>
           </li>
+          {session && session.user.email === "dannimalka.iag@gmail.com" && (
+            <li onClick={() => setShowMail(true)}>
+              <div className="navbarIcons">
+                <BsFillChatRightTextFill />
+              </div>
+              <div className="navBarText">Admin mail</div>
+            </li>
+          )}
         </ul>
         <p className="copyright">
           Copyright © 2023 Man Makes Monster. All rights reserved.
         </p>
+
         <Profile
           setShowProfileMenu={setShowProfileMenu}
           showProfileMenu={showProfileMenu}
@@ -244,6 +265,8 @@ function Navbar(props) {
           setShowBug={setShowBug}
           showBug={showBug}
           className="gameRulesContent"
+          responseDataArray={responseDataArray}
+          setResponseDataArray={setResponseDataArray}
         />
         <GameRules
           setShowRules={setShowRules}
@@ -254,6 +277,13 @@ function Navbar(props) {
           setShowContact={setShowContact}
           showContact={showContact}
           className="gameRulesContent"
+        />
+        <AdminMail
+          setShowMail={setShowMail}
+          showMail={showMail}
+          className="gameRulesContent"
+          responseDataArray={responseDataArray}
+          setResponseDataArray={setResponseDataArray}
         />
       </div>
       <Error

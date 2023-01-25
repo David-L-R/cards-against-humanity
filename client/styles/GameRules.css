@@ -1,5 +1,4 @@
 .gameRules {
-  position: fixed;
   width: 800px;
   height: max-content;
   inset: 0;
@@ -23,11 +22,12 @@
 }
 .gameRulesBackdrop {
   position: fixed;
-
   width: 100%;
   height: 100%;
   inset: 0;
   backdrop-filter: blur(10px);
+  display: flex;
+  justify-content: center;
 }
 .closeMenuButton {
   position: absolute;

@@ -30,7 +30,7 @@ const Settings = ({
 
   const handleDecrement = () => {
     //-
-    if (handSize > 1) {
+    if (handSize > 3) {
       setHandSize(handSize - 1);
     }
   };
@@ -70,7 +70,7 @@ const Settings = ({
             className="settingsInput"
             type="number"
             value={handSize}
-            min="1"
+            min="3"
             max="10"
             placeholder="Default 10"
             onChange={(e) => handleChange(e.target.value)}

@@ -173,7 +173,8 @@ const Lobby = (props) => {
               x: -1300,
               rotate: -120,
               transition: { duration: 0.75 },
-            }}>
+            }}
+          >
             <div className="waitingLobbyTextWrapper">
               <h1 style={{ paddingTop: "20px" }}>
                 Waiting for players&nbsp;
@@ -228,7 +229,8 @@ const Lobby = (props) => {
                           width: "inherit",
                         }
                       : null
-                  }>
+                  }
+                >
                   <span>{isLoading ? "Loading..." : "Ready"}</span>
                 </button>
               )}
@@ -243,7 +245,8 @@ const Lobby = (props) => {
                     player.inactive || checkIfPlaying(player.id)
                       ? "inactive"
                       : null
-                  }>
+                  }
+                >
                   <h2
                     className={player.name.length > 9 ? "wrap-text" : null}
                     style={{
@@ -256,8 +259,10 @@ const Lobby = (props) => {
                           ? "14px"
                           : "20px",
                       whiteSpace: "pre-wrap",
+                      wordBreak: "break-all",
                       padding: "15px",
-                    }}>
+                    }}
+                  >
                     {player.name.toUpperCase() !== "DAVID" ? (
                       player.name.toUpperCase()
                     ) : (
