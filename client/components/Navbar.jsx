@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { parseCookies } from "nookies";
 import { IoIosArrowBack, IoIosArrowDown } from "react-icons/Io";
 import { CgProfile } from "react-icons/cg";
+import { ImProfile } from "react-icons/im";
 import { BsBug } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
 import { BsCardChecklist } from "react-icons/bs";
@@ -14,9 +15,13 @@ import Error from "./Error";
 import GameRules from "./GameRules";
 import ReportBug from "./ReportBug";
 import Contact from "./Contact";
+import { BiLogOut } from "react-icons/bi";
+import Profile from "./Profile";
 
 function Navbar(props) {
   const [showSettings, setShowSettings] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showRules, setShowRules] = useState(false);
   const [showBug, setShowBug] = useState(false);
   const [showContact, setShowContact] = useState(false);
@@ -95,21 +100,63 @@ function Navbar(props) {
           )}
         </div>
       </nav>
-      <div className="accountMenu" onMouseLeave={() => setShowSettings(false)}>
+      <div
+        className="accountMenu"
+        onMouseLeave={() => {
+          setShowProfile(false);
+          setShowSettings(false);
+        }}
+      >
         <ul>
           {session ? (
-            <li className="loggedInProfileContainer">
-              <div>
-                <img src={`${session.user.image}`} alt={session.user.name} />
-                {console.log(session.user.image, "session img")}
-              </div>
-
-              <div>
-                <p> {session.user.name}</p>
-                <button>Profile</button>
-                <button onClick={signOut}>Sign out</button>
-              </div>
-            </li>
+            <>
+              <li id="sidebar-item">
+                <div
+                  id="settingsToggle"
+                  onClick={() => setShowProfile((prev) => !prev)}
+                >
+                  <div className="navbarProfilePic">
+                    <img
+                      className="navIcon"
+                      src={session.user.image}
+                      alt={session.user.name}
+                      referrerpolicy="no-referrer"
+                    />
+                  </div>
+                  <div className="navBarText">
+                    {session.user.name}
+                    <span
+                      className={
+                        showProfile
+                          ? "arrowDownIcon "
+                          : "arrowDownIcon openArrow"
+                      }
+                    >
+                      <IoIosArrowDown />
+                    </span>
+                  </div>
+                </div>
+              </li>
+              <li id={showProfile ? "openSettings" : "closeSettings"}>
+                <ul className="settingsInputContainer">
+                  <li
+                    className="profileMenu"
+                    onClick={() => setShowProfileMenu(true)}
+                  >
+                    <span className="profileMenuIcon">
+                      <ImProfile />
+                    </span>
+                    Profile
+                  </li>
+                  <li className="profileMenu" onClick={signOut}>
+                    <span className="profileMenuIcon">
+                      <BiLogOut />
+                    </span>{" "}
+                    Sign out
+                  </li>
+                </ul>
+              </li>
+            </>
           ) : (
             <li className="loggedOutProfileContainer">
               <div className="navbarIcons">
@@ -126,7 +173,8 @@ function Navbar(props) {
               <li id="sidebar-item">
                 <div
                   id="settingsToggle"
-                  onClick={() => setShowSettings((prev) => !prev)}>
+                  onClick={() => setShowSettings((prev) => !prev)}
+                >
                   <div className="navbarIcons">
                     <FiSettings />
                   </div>
@@ -137,7 +185,8 @@ function Navbar(props) {
                         showSettings
                           ? "arrowDownIcon "
                           : "arrowDownIcon openArrow"
-                      }>
+                      }
+                    >
                       <IoIosArrowDown />
                     </span>
                   </div>
@@ -191,6 +240,11 @@ function Navbar(props) {
         <p className="copyright">
           Copyright © 2023 Man Makes Monster. All rights reserved.
         </p>
+        <Profile
+          setShowProfileMenu={setShowProfileMenu}
+          showProfileMenu={showProfileMenu}
+          className="gameRulesContent"
+        />
 
         <ReportBug
           setShowBug={setShowBug}
