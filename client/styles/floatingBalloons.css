@@ -9,7 +9,6 @@
   overflow: hidden;
   transition: opacity 500ms;
   position: fixed;
-  z-index: 20;
 }
 
 .balloon {

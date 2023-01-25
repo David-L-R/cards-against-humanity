@@ -1,12 +1,15 @@
 import NodeCache from "node-cache";
 import LobbyCollection from "../database/models/lobby.js";
 import GameCollection from "../database/models/game.js";
+import { colorToRgba } from "@react-spring/shared";
 
 //stdTTL = livetime, this will delte data after 48h
 export const serverCache = new NodeCache({ stdTTL: 86400 });
 
 export const storeToCache = async ({ lobbyId, currentLobby, currentGame }) => {
   let currentLobbyData = await getCache({ lobbyId });
+
+  if (!lobbyId) return console.error("no lobby ID!");
 
   currentLobby && (currentLobbyData.currentLobby = currentLobby);
   currentGame && (currentLobbyData.currentGame = currentGame);
@@ -33,12 +36,12 @@ export const getCache = async ({ lobbyId }) => {
 
   if (!currentLobbyData) {
     const lobbyFromDB = await LobbyCollection.findById(lobbyId);
-    const gameIdent = lobbyFromDB.games.length;
+    const gameIdent =
+      lobbyFromDB.games.length - 1 >= 0 ? lobbyFromDB.games.length - 1 : 0;
     const gameFromDb = await GameCollection.findOne({
       id: lobbyId,
       gameIdentifier: gameIdent,
     });
-
     const currentLobbyData = {
       currentLobby: lobbyFromDB ? lobbyFromDB : null,
       currentGame: gameFromDb ? gameFromDb : null,

@@ -49,7 +49,6 @@ const Game = ({ socket }) => {
       blackCards,
       gameId,
       lobbyId,
-      gameIdentifier,
     };
     // if czar leaved == timer runs out
     if (!selected)
@@ -67,7 +66,6 @@ const Game = ({ socket }) => {
       gameId,
       lobbyId,
       playedWhite: cards,
-      gameIdentifier,
     };
 
     //if timer runs out, submit random white cards based on black cards pick
@@ -113,7 +111,6 @@ const Game = ({ socket }) => {
       gameId,
       lobbyId,
       winningCards: cards,
-      gameIdentifier,
     };
 
     if (!cards) {
@@ -143,7 +140,6 @@ const Game = ({ socket }) => {
       stage: "completed",
       gameId,
       lobbyId,
-      gameIdentifier,
     };
 
     if (inactive) {
@@ -160,7 +156,6 @@ const Game = ({ socket }) => {
       playerId: cookies.socketId,
       gameId,
       lobbyId,
-      gameIdentifier,
     };
 
     if (cardsOnTable.player.cards.length < maxHandSize) {
@@ -181,7 +176,6 @@ const Game = ({ socket }) => {
         lobbyId: storeData.lobbyId,
         closeGame: true,
       };
-      console.log("playerData", playerData);
       socket.emit("changeGame", { ...playerData });
     }
   };
@@ -204,7 +198,13 @@ const Game = ({ socket }) => {
 
       //if error ocurred
       if (err || (!currentGame && !kicked)) {
-        return setShowErrMessage(err ? err : "You are not part of this game!");
+        setShowErrMessage(
+          err ? err : "You are not part of this game! Redirecting you back"
+        );
+        setTimeout(() => {
+          router.push("/");
+        }, 3000);
+        return;
       }
 
       //if game was closed, show Game end component
@@ -344,7 +344,6 @@ const Game = ({ socket }) => {
         lobbyId: router.query.lobbyId,
         playerName,
         id: cookies.socketId,
-        gameIdentifier,
       });
     }
   }, [lobbyId]);
@@ -371,7 +370,6 @@ const Game = ({ socket }) => {
           player: { hand, id: cookies.socketId },
           stage: "dealing",
           gameId,
-          gameIdentifier,
           lobbyId,
         });
       }

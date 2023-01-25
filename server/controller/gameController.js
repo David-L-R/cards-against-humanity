@@ -98,7 +98,7 @@ export const createGame = async ({
 };
 
 export const sendCurrentGame = async (data) => {
-  const { gameIdentifier, lobbyId, id, io, socket } = data;
+  const { lobbyId, id, io, socket } = data;
   if (!lobbyId || !id)
     return io.to(socket.id).emit("currentGame", { err: "Missing Lobby ID " });
 
@@ -137,7 +137,7 @@ export const sendCurrentGame = async (data) => {
       GameCollection.findOneAndUpdate(
         {
           id: lobbyId,
-          gameIdentifier: gameIdentifier,
+          gameIdentifier: currentGame.gameIdentifier,
         },
         currentGame
       ).exec();
@@ -154,7 +154,7 @@ export const sendCurrentGame = async (data) => {
     GameCollection.findOneAndUpdate(
       {
         id: lobbyId,
-        gameIdentifier: gameIdentifier,
+        gameIdentifier: currentGame.gameIdentifier,
       },
       currentGame
     ).exec();
@@ -167,12 +167,13 @@ export const sendCurrentGame = async (data) => {
 };
 
 export const changeGame = async (states) => {
-  const { playerId, stage, gameId, gameIdentifier, lobbyId, io } = states;
+  const { playerId, stage, gameId, lobbyId, io } = states;
 
   if (stage === "dealing") {
     try {
       const currentLobbyData = await getCache({ lobbyId });
       const { currentGame } = currentLobbyData;
+      const gameIdentifier = currentGame.gameIdentifier;
       const updatedGame = dealCards({ currentGame, playerId });
 
       io.to(lobbyId).emit("currentGame", { currentGame: updatedGame });
@@ -197,7 +198,7 @@ export const changeGame = async (states) => {
   try {
     const currentLobbyData = await getCache({ lobbyId });
     const { currentGame } = currentLobbyData;
-
+    const gameIdentifier = currentGame.gameIdentifier;
     const updatedGame = await updateTurn({ ...states, currentGame });
 
     if (!updatedGame) return "Server error, no game found";
@@ -208,7 +209,7 @@ export const changeGame = async (states) => {
     });
 
     //if game is finished, store into lobby/games
-    if (updatedGame.concluded) updateGameInLobby(updatedGame);
+    if (updatedGame.concluded) await updateGameInLobby(updatedGame);
     await storeToCache({ lobbyId, currentGame: updatedGame });
     GameCollection.findOneAndUpdate(
       {
