@@ -1,5 +1,7 @@
 #balloon-container {
   height: 100vh;
+  left: 50%;
+  transform: translate(-50%);
   padding: 1em;
   box-sizing: border-box;
   display: flex;
@@ -7,6 +9,7 @@
   overflow: hidden;
   transition: opacity 500ms;
   position: fixed;
+  z-index: 20;
 }
 
 .balloon {

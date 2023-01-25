@@ -12,7 +12,7 @@
   z-index: 20;
 }
 .whiteCardSlideIn {
-  animation: whiteSlideIn 1s 0.5s linear forwards;
+  /*animation: whiteSlideIn 1s 0.5s linear forwards;*/
 }
 .whiteCardContainer:hover {
   scale: 1.05;
