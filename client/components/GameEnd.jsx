@@ -84,6 +84,7 @@ function GameEnd({ currentGame }) {
               })}
           </div>
         </div>
+
         <div className="pedestal">
           <div className="linearGradient">
             <button
@@ -93,9 +94,11 @@ function GameEnd({ currentGame }) {
             >
               Back to Lobby
             </button>
+            <div className="crowd"></div>
           </div>
         </div>
       </div>
+
       <div className="shit11">
         <img src="/poopemoji.svg" />
       </div>
