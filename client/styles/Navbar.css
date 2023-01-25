@@ -161,3 +161,11 @@
   display: flex;
   font-size: 28px;
 }
+.diseabled {
+  cursor: not-allowed !important;
+  color: grey;
+}
+.diseabled:hover {
+  background-color: black !important;
+  color: grey !important;
+}

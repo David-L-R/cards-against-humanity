@@ -18,12 +18,15 @@ import Contact from "./Contact";
 import { BiLogOut } from "react-icons/bi";
 import Profile from "./Profile";
 import AdminMail from "./AdminMail";
+import SignIn from "../pages/api/auth/SignIn";
 
 function Navbar(props) {
+  const [providers, setProviders] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showMail, setShowMail] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
   const [showRules, setShowRules] = useState(false);
   const [showBug, setShowBug] = useState(false);
   const [showContact, setShowContact] = useState(false);
@@ -91,6 +94,14 @@ function Navbar(props) {
       return setLobbyId(router.query.lobbyId[0]);
     }
   }, [router.isReady, router, socket]);
+
+  useEffect(() => {
+    const fetchProviders = async () => {
+      const providers = await getProviders();
+      setProviders(providers);
+    };
+    fetchProviders();
+  }, []);
 
   return (
     <>
@@ -164,12 +175,19 @@ function Navbar(props) {
               </li>
             </>
           ) : (
-            <li className="loggedOutProfileContainer">
+            <li
+              className={!lobbyId && !gameIdentifier ? "" : "diseabled"}
+              onClick={
+                !lobbyId && !gameIdentifier ? () => setShowSignIn(true) : null
+              }
+            >
               <div className="navbarIcons">
                 <CgProfile />
               </div>
               <div className="navBarText">
-                <button onClick={signIn}>Sign In</button>
+                {!lobbyId && !gameIdentifier
+                  ? "Sign In"
+                  : "Can't sign in during a game"}
               </div>
             </li>
           )}
@@ -254,7 +272,14 @@ function Navbar(props) {
         <p className="copyright">
           Copyright © 2023 Man Makes Monster. All rights reserved.
         </p>
-
+        {providers && (
+          <SignIn
+            providers={providers}
+            showSignIn={showSignIn}
+            setShowSignIn={setShowSignIn}
+            className="gameRulesContent"
+          />
+        )}
         <Profile
           setShowProfileMenu={setShowProfileMenu}
           showProfileMenu={showProfileMenu}

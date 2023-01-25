@@ -1,0 +1,58 @@
+.signInContainer {
+  width: 400px;
+  height: 150px;
+  inset: 0;
+  padding: 0px;
+  margin: auto;
+  background-color: black;
+  color: white;
+
+  border-radius: 15px;
+  border: 2px solid white;
+  animation: entryAnimation 0.2s linear forwards;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.signInClose {
+  position: absolute;
+  top: 4%;
+  right: 1%;
+  width: 20px;
+  height: 20px;
+  font-size: 40px;
+  border-radius: 50%;
+  align-items: center;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  background-color: transparent;
+  padding: 0;
+}
+.signInClose:hover {
+  color: #eb455f;
+  transform: rotate(360deg);
+  transition: 0.3s;
+}
+.authProviderButton {
+  font-size: 20px;
+  width: 250px;
+  height: 70px;
+  background-color: white;
+  color: rgb(49, 49, 49);
+  font-weight: bold;
+  display: flex;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+.Google {
+  padding-right: 10px;
+  width: auto;
+  font-size: 30px;
+}
+.authProviderButton:hover {
+  background-color: rgb(49, 49, 49);
+  color: rgb(172, 169, 169);
+}
