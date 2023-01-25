@@ -53,9 +53,10 @@ function GameEnd({ currentGame }) {
       </div>
 
       <div className="gameEndContainer">
-        <BalloonContainer totalBaloon={4} style={{ width: "100%" }} />
+        {/*<BalloonContainer totalBaloon={4} style={{ width: "100%" }} />*/}
         <div className="gameEndTextField">
-          <h1 className="winnerh1Text">And the Winner is...</h1>
+          <h2 className="winnerh1Text">And the Winner is...</h2>
+          <h1>{`${overallWinner.name}!`}</h1>
 
           <div className="avatarsContainer">
             {winningPlayers &&
@@ -63,7 +64,6 @@ function GameEnd({ currentGame }) {
                 if (index === 0)
                   return (
                     <div className="winnerAvatarContainer">
-                      <h3>{`${player.name}!`}</h3>
                       <Avatar playerAvatar={player?.avatar} />
                     </div>
                   );
@@ -83,11 +83,16 @@ function GameEnd({ currentGame }) {
                   );
               })}
           </div>
-          <button onClick={backToLobby} style={{ zIndex: "1" }}>
-            Back to Lobby
-          </button>
         </div>
+
         <img src="/pedestal2.svg" alt="a Fucking Pedestal" />
+        <button
+          onClick={backToLobby}
+          style={{ zIndex: "1" }}
+          className="backToLobby"
+        >
+          Back to Lobby
+        </button>
       </div>
       <div className="shit11">
         <img src="/poopemoji.svg" />

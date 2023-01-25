@@ -7,13 +7,14 @@ function ReportBug({
   responseDataArray,
   setResponseDataArray,
 }) {
-  if (!showBug) return;
+  const [charCount, setCharCount] = useState(0);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     description: "",
     priority: "low",
   });
+  if (!showBug) return;
 
   const handleInputChange = (event) => {
     setFormData({
@@ -76,12 +77,18 @@ function ReportBug({
 
           <div className="form-group">
             <label htmlFor="description">Description:</label>
+
             <textarea
+              onInput={(e) => {
+                setCharCount(e.target.value.length);
+              }}
+              maxLength={200}
               id="description"
               name="description"
               value={formData.description}
               onChange={handleInputChange}
             />
+            <p>Characters: {charCount}/200</p>
           </div>
 
           <div className="form-group">

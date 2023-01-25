@@ -1,6 +1,8 @@
 .gameEndContainer {
   position: relative;
   display: flex;
+  max-width: 1000px;
+
   margin: auto;
   flex-direction: column;
   z-index: 0;
@@ -10,7 +12,7 @@
 }
 
 .gameEndContainer img {
-  width: 50%;
+  width: 90%;
   max-width: 500px;
   height: 100%;
   display: flex;
@@ -22,7 +24,10 @@
   padding-top: 50px;
   flex-direction: column;
   align-items: center;
-  gap: 50px;
+  /*gap: 50px;*/
+}
+.gameEndTextField h1 {
+  font-size: 70px;
 }
 .WinnnerName {
   font-size: 80px;
@@ -30,8 +35,9 @@
 .winnerAvatarContainer {
   position: absolute;
   left: 50%;
-  top: 20%;
-  transform: translate(-15%);
+  top: 80%;
+  transform: translate(-10%, -50%);
+
   /*padding: 50px;*/
   scale: 4;
 }
@@ -73,4 +79,24 @@
   height: 100%;
   top: 0;
   right: 0;
+}
+
+.backToLobby {
+  position: absolute;
+  bottom: 0%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: black;
+  width: 200px;
+  height: 60px;
+  border-radius: 30px;
+  border: 2px solid black;
+  font-size: 18px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+.backToLobby:hover {
+  background-color: white;
+  color: black;
+  transition: 0.3s;
 }

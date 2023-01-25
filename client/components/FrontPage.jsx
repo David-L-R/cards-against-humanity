@@ -22,8 +22,6 @@ function FrontPage() {
 
   return (
     <>
-      <Navbar />
-
       <m.div
         className="pageTransition"
         exit={{
