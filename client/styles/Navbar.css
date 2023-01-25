@@ -57,8 +57,7 @@
   right: 0;
   width: 300px;
   height: 100%;
-  background-color: black;
-  /*border-left: 2px solid rgba(255, 255, 255, 0.545);*/
+  background-color: rgba(0, 0, 0, 0.831);
   z-index: 20;
   flex-direction: column;
   display: flex;
@@ -66,8 +65,9 @@
   transition: all 0.3s ease-in-out;
   justify-content: center;
   color: rgba(255, 255, 255, 0.545);
-
+  backdrop-filter: blur(6px);
   margin-right: -230px;
+  z-index: 30;
 }
 
 .accountMenu:hover {
@@ -85,8 +85,7 @@
 }
 .accountMenu ul li {
   position: relative;
-  /*display: grid;
-  grid-template-columns: 0.4fr 1.7fr;*/
+
   display: flex;
   gap: 20px;
   min-height: 70px;

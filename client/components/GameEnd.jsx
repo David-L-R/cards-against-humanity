@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 import React from "react";
 import { useAppContext } from "../context";
-//import useWindowSize from "react-use/lib/useWindowSize";
 import Confetti from "react-confetti";
 import BalloonContainer from "./FloatingBalloons";
 import Avatar from "./Avatar.jsx";
@@ -11,6 +10,36 @@ function GameEnd({ currentGame }) {
   const maxRounds = currentGame.setRounds;
   const { storeData } = useAppContext();
   const router = useRouter();
+
+  const winningPlayers = currentGame.players
+    .sort((a, b) => b.points - a.points)
+    .filter((_, index) => index < 3);
+  console.log(winningPlayers, "winningPlayers");
+
+  // const sortedPlayers = players.sort((a, b) => b.points - a.points);
+
+  /*
+  function findSecondWinner(players) {
+    const sortedPlayers = players.sort((a, b) => b.points - a.points);
+    return sortedPlayers[1];
+  }
+  //map over the return statment players.map foreach player
+  const secondWinner = findSecondWinner(currentGame.players);
+  */
+
+  function findThirdWinner(players) {
+    if (players.length < 3) {
+      return null;
+    }
+    const sortedPlayers = players.sort((a, b) => b.points - a.points);
+    return sortedPlayers[2];
+  }
+  const thirdWinner = findThirdWinner(currentGame.players);
+  if (thirdWinner === null) {
+    console.log("can't find player");
+  } else {
+    console.log("player found");
+  }
 
   let overallWinner = 0;
   currentGame.players.forEach((player) => {
@@ -47,11 +76,45 @@ function GameEnd({ currentGame }) {
       <div className="gameEndContainer">
         <BalloonContainer totalBaloon={4} style={{ width: "100%" }} />
         <div className="gameEndTextField">
-          <h1>And the Winner is...</h1>
-          <h1 className="WinnnerName">{`${overallWinner.name}!`}</h1>
-          <div className="winnerAvatarContainer">
-            <Avatar className="avatarWinner" />
+          <h1 className="winnerh1Text">And the Winner is...</h1>
+
+          <div className="avatarsContainer">
+            {winningPlayers &&
+              winningPlayers.map((player, index) => {
+                if (index === 0)
+                  return (
+                    <div className="winnerAvatarContainer">
+                      <h3>{`${player.name}!`}</h3>
+                      <Avatar playerAvatar={player?.avatar} />
+                    </div>
+                  );
+                if (index === 1)
+                  return (
+                    <div className="avatar2nd">
+                      <Avatar playerAvatar={player?.avatar} />
+                      <h3>{`${player.name}`}</h3>
+                    </div>
+                  );
+                if (index === 2)
+                  return (
+                    <div className="avatar3rd">
+                      <Avatar playerAvatar={player?.avatar} />
+                      <h3>{`${player.name}`}</h3>
+                    </div>
+                  );
+              })}
           </div>
+          {/*<div className="winnerAvatarContainer">
+              <Avatar />
+            </div>
+            <div className="avatar2nd">
+              <Avatar />
+              <h3></h3>
+            </div>
+            <div className="avatar3rd">
+              <Avatar />
+              <h3></h3>
+  </div>*/}
         </div>
         <img src="/pedestal2.svg" alt="a Fucking Pedestal" />
       </div>

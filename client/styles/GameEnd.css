@@ -4,6 +4,9 @@
   margin: auto;
   flex-direction: column;
 }
+.winnerh1Text {
+  padding-bottom: 70px;
+}
 
 .gameEndContainer img {
   width: 50%;
@@ -11,6 +14,7 @@
   height: 100%;
   display: flex;
   margin: auto;
+  padding-top: 50px;
 }
 .gameEndTextField {
   display: flex;
@@ -23,8 +27,43 @@
   font-size: 80px;
 }
 .winnerAvatarContainer {
-  padding: 50px;
+  position: absolute;
+  left: 50%;
+  top: 20%;
+  transform: translate(-15%);
+  /*padding: 50px;*/
   scale: 4;
+}
+.avatar2nd {
+  position: absolute;
+  left: 0;
+  bottom: -20%;
+  transform: translate(40%);
+  display: flex;
+  font-size: 10px;
+  flex-direction: column;
+  scale: 3;
+}
+.avatar2nd h3,
+.avatar3rd h3 {
+  display: flex;
+  margin: auto;
+}
+.avatar3rd {
+  position: absolute;
+  right: 0;
+  bottom: -20%;
+  transform: translate(-40%);
+  display: flex;
+  font-size: 10px;
+  flex-direction: column;
+  scale: 3;
+}
+.avatarsContainer {
+  position: relative;
+  display: flex;
+  width: 30rem;
+  height: 15rem;
 }
 
 .confettiContainer {
