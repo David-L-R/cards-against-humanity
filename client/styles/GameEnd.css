@@ -5,13 +5,13 @@
 
   margin: auto;
   flex-direction: column;
-  z-index: 0;
 }
 .winnerh1Text {
   padding-bottom: 70px;
 }
 
 .gameEndContainer img {
+  position: relative;
   width: 90%;
   max-width: 500px;
   height: 100%;
@@ -19,6 +19,42 @@
   margin: auto;
   padding-top: 50px;
 }
+
+.pedestal {
+  background-image: url(../public/pedestal2.svg);
+  width: 90%;
+  max-width: 500px;
+  height: 500px;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: flex;
+  margin: auto;
+}
+.linearGradient {
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.8) 0%,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 1) 17%,
+    rgba(0, 0, 0, 0.849) 30%,
+    rgba(0, 0, 0, 0.328) 40%,
+    rgba(105, 105, 105, 0) 48%,
+    rgba(133, 133, 133, 0) 54%,
+    rgba(163, 163, 163, 0) 61%,
+    rgba(191, 191, 191, 0) 69%,
+    rgba(224, 224, 224, 0) 80%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 50px;
+}
+
 .gameEndTextField {
   display: flex;
   padding-top: 50px;
@@ -82,10 +118,6 @@
 }
 
 .backToLobby {
-  position: absolute;
-  bottom: 0%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   background-color: black;
   width: 200px;
   height: 60px;

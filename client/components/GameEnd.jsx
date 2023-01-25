@@ -53,7 +53,7 @@ function GameEnd({ currentGame }) {
       </div>
 
       <div className="gameEndContainer">
-        {/*<BalloonContainer totalBaloon={4} style={{ width: "100%" }} />*/}
+        <BalloonContainer totalBaloon={4} style={{ width: "100%" }} />
         <div className="gameEndTextField">
           <h2 className="winnerh1Text">And the Winner is...</h2>
           <h1>{`${overallWinner.name}!`}</h1>
@@ -84,15 +84,17 @@ function GameEnd({ currentGame }) {
               })}
           </div>
         </div>
-
-        <img src="/pedestal2.svg" alt="a Fucking Pedestal" />
-        <button
-          onClick={backToLobby}
-          style={{ zIndex: "1" }}
-          className="backToLobby"
-        >
-          Back to Lobby
-        </button>
+        <div className="pedestal">
+          <div className="linearGradient">
+            <button
+              onClick={backToLobby}
+              style={{ zIndex: "1" }}
+              className="backToLobby"
+            >
+              Back to Lobby
+            </button>
+          </div>
+        </div>
       </div>
       <div className="shit11">
         <img src="/poopemoji.svg" />
