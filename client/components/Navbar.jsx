@@ -120,7 +120,7 @@ function Navbar(props) {
                       className="navIcon"
                       src={session.user.image}
                       alt={session.user.name}
-                      referrerpolicy="no-referrer"
+                      referrerPolicy="no-referrer"
                     />
                   </div>
                   <div className="navBarText">

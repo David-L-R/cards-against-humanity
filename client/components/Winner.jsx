@@ -67,7 +67,13 @@ const Winner = ({
   return (
     <article className="winner-page-container">
       {children}
-      {youWon ? <BalloonContainer /> : isCzar ? "" : <ShitContainer />}
+      {youWon ? (
+        <BalloonContainer totalBaloon={3} />
+      ) : isCzar ? (
+        ""
+      ) : (
+        <ShitContainer />
+      )}
       {<h1>{youWon ? "You won!" : isCzar ? "You were Czar" : "You Lost"}</h1>}
       <ul className="winner-container">
         {winnerCards &&
@@ -78,7 +84,8 @@ const Winner = ({
                   card?.pick
                     ? `${style.cardTemplateContainer} ${style.black}`
                     : `${style.cardTemplateContainer}`
-                }>
+                }
+              >
                 {card.text}
               </div>
             </li>
@@ -90,7 +97,8 @@ const Winner = ({
             onClick={() => {
               setNoButtonAtAll(false);
               checkoutRound(cookies.socketId);
-            }}>
+            }}
+          >
             Ready
           </button>
         ) : (
