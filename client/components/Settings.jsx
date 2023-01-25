@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import { AiFillSetting, AiOutlinePlus } from "react-icons/ai";
 import {
   BsFillArrowDownSquareFill,
   BsFillArrowUpSquareFill,
-  BsPlusLg,
 } from "react-icons/bs";
-import { BiMinus } from "react-icons/bi";
 
 const Settings = ({
   setHandSize,
@@ -14,8 +11,6 @@ const Settings = ({
   handSize,
 }) => {
   const [error, setError] = useState(false);
-  const [value, setValue] = useState(10);
-  const [roundsValue, setRoundsValue] = useState(10);
 
   const handleChange = () => {
     if (handSize > 10) {
