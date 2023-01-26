@@ -170,7 +170,7 @@ const Lobby = (props) => {
 
   const handleJoyrideCallback = (data) => {
     const { action, index, status, type } = data;
-    console.log("EVENTS", EVENTS);
+
     if (
       stepIndex !== 3 &&
       [EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)
@@ -187,11 +187,14 @@ const Lobby = (props) => {
       setIsOpen(false);
     }
     if (index >= Steps.length - 1) {
-      setValue("DONE");
+      setTimeout(() => {
+        setValue("DONE");
+      }, 10000);
     }
   };
   return (
     <>
+      {console.log("stepIndex", stepIndex)}
       {isHost && (
         <JoyRide
           callback={handleJoyrideCallback}
@@ -208,7 +211,12 @@ const Lobby = (props) => {
       <main className="waitingLobbyContainer">
         {currentLobby && (
           <section className="scoreboard-container">
-            <Scoreboard currentLobby={currentLobby} socket={socket} />
+            <Scoreboard
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              currentLobby={currentLobby}
+              socket={socket}
+            />
           </section>
         )}
 
@@ -316,9 +324,6 @@ const Lobby = (props) => {
                     ) : (
                       <>
                         <TfiRocket className="rockt" />
-                        {/* <TfiRocket />
-                        <TfiRocket />
-                        <TfiRocket /> */}
                       </>
                     )}
                   </h2>

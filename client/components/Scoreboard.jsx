@@ -8,8 +8,7 @@ import KickButton from "./KickButton";
 import { parseCookies } from "nookies";
 import Avatar from "./Avatar.jsx";
 
-const Scoreboard = ({ currentLobby, socket }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
   const [showKick, setShowKick] = useState(false);
   const cookies = parseCookies();
   const { turns } = currentLobby;

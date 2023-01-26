@@ -15,6 +15,7 @@ import GameEnd from "../../../components/GameEnd";
 
 const Game = ({ socket }) => {
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
   const [lobbyId, setLobbyId] = useState(null);
   const cookies = parseCookies();
   const [isHost, setHost] = useState(false);
@@ -525,7 +526,11 @@ const Game = ({ socket }) => {
           </div>
           {currentLobby && (
             <section className="scoreboard-container">
-              <Scoreboard currentLobby={currentLobby} />
+              <Scoreboard
+                currentLobby={currentLobby}
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+              />
             </section>
           )}
 

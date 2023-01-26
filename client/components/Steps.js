@@ -12,20 +12,20 @@ export const Steps = [
     placement: "bottom",
   },
   {
-    title: "BEGIN",
+    title: "READY!",
     content:
       "When all your friends have joined you can press Ready to begin the game!",
     target: ".lobbyButton",
     placement: "bottom",
   },
   {
-    title: "SCORES",
+    title: "SCOREBOARD",
     content: "You can click here to see yours and your friends scores!",
     target: ".scoreButton",
     placement: "right",
   },
   {
-    title: "Avatar",
+    title: "Avatar Settings",
     content:
       "You can edit your avatar and express your feelings during the game by clicking on it",
     target: ".profileContainer",
@@ -42,6 +42,6 @@ export const Steps = [
     title: "Game Settings",
     content: "You can change the game settings here only if you're the Host",
     target: ".gameSettingsIcon",
-    placement: "bottom",
+    placement: "right",
   },
 ];
