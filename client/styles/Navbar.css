@@ -1,18 +1,20 @@
 .backButton {
-  font-size: 40px;
+  position: relative;
+  font-size: 30px;
   position: relative;
   background-color: black;
-  padding-left: 20px;
+  color: gray;
 }
+
 .backButton:hover:after {
   content: "Back to Lobby";
   color: white;
-  font-size: 30px;
+  font-size: 23px;
   position: absolute;
   transform: translate(10%, 6%);
   width: max-content;
   transition: all 0.5s ease-in-out;
-  animation: slide-in 0.5s ease-in-out forwards;
+  animation: slide-in 0.2s ease-in-out forwards;
   z-index: -1;
   opacity: 0;
 }
@@ -24,7 +26,7 @@
 
   100% {
     opacity: 1;
-    left: 42px;
+    left: 22px;
   }
 }
 
@@ -171,11 +173,16 @@
 }
 
 @media (max-width: 640px) {
+  .navContainer {
+    padding: 0.5rem 0 0;
+  }
   .accountMenu {
-    margin-right: -100vw;
+    margin-right: -50vw;
     font-size: 12px;
     height: 75vh;
-    width: 100vw;
+    width: 50vw;
+    z-index: 30;
+    overflow: auto;
   }
 
   .navContainer::before {
@@ -207,5 +214,19 @@
   .accountMenu ul li {
     gap: 10px;
     min-height: 50px;
+  }
+
+  .backButton::after {
+    content: "Back to lobby";
+    position: absolute;
+    width: max-content;
+    color: gray;
+    font-size: 14px;
+    top: 0;
+    left: 0;
+    transform: translate(30%, 35%);
+  }
+  .backButton:hover::after {
+    content: "";
   }
 }

@@ -35,7 +35,8 @@ function Navbar(props) {
   const [lobbyId, setLobbyId] = useState(null);
   const cookies = parseCookies();
   const [gameIdentifier, setGameIdentifier] = useState(null);
-  const backToLobby = () => {
+  const backToLobby = (e) => {
+    e.stopPropagation();
     if (lobbyId) {
       const playerData = {
         playerId: cookies.socketId,
@@ -90,15 +91,13 @@ function Navbar(props) {
   return (
     <>
       <nav className="navContainer">
-        <div className="backButtonContainer">
-          {lobbyId && gameIdentifier && (
-            <h2 className="backButton">
-              <button onClick={backToLobby}>
-                <IoIosArrowBack />
-              </button>
-            </h2>
-          )}
-        </div>
+        {lobbyId && gameIdentifier && (
+          <h2 className="backButton">
+            <button onClick={backToLobby}>
+              <IoIosArrowBack />
+            </button>
+          </h2>
+        )}
       </nav>
       <div
         className="accountMenu"

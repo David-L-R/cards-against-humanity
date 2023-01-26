@@ -6,6 +6,7 @@ import { parseCookies } from "nookies";
 import { socket } from "../pages/_app";
 import { useAppContext } from "../context";
 import { useRouter } from "next/router";
+import emotions from "../utils/avatarEmotions.js";
 
 const Avatar = ({ userName, playerId, playerAvatar }) => {
   const cookies = parseCookies();
@@ -16,40 +17,6 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
   const avatarOptions = {
     seed: userName,
     ...playerAvatar,
-  };
-  // setStoreData((prev) => ({ ...prev, avatar: avatarOptions }));
-
-  const emotions = {
-    happy: {
-      eyebrows: ["raisedExcitedNatural"],
-      eyes: ["happy"],
-      mouth: ["smile"],
-    },
-    sad: {
-      eyebrows: ["sadConcernedNatural"],
-      eyes: ["cry"],
-      mouth: ["sad"],
-    },
-    angry: {
-      eyebrows: ["angryNatural"],
-      eyes: ["surprised"],
-      mouth: ["grimace"],
-    },
-    love: {
-      eyebrows: ["raisedExcited"],
-      eyes: ["hearts"],
-      mouth: ["smile"],
-    },
-    wonder: {
-      eyebrows: ["upDownNatural"],
-      eyes: ["surprised"],
-      mouth: ["serious"],
-    },
-    dead: {
-      eyebrows: ["raisedExcitedNatural"],
-      eyes: ["xDizzy"],
-      mouth: ["screamOpen"],
-    },
   };
 
   const handleSetAvatarOptions = (value, key) => {
@@ -109,10 +76,8 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
   return (
     <div>
       <AvatarSVG avatarOptions={avatarOptions} />
-
       {showSettings && (
         <>
-          <div className="avatarBackground"></div>
           <AvatarCustomizer
             handleSetAvatarOptions={handleSetAvatarOptions}
             setShowSettings={setShowSettings}>
@@ -121,36 +86,16 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
               <div>
                 <h3>EMOTIONS</h3>
                 <ul>
-                  <li>
-                    <button onClick={() => handlEemotions(emotions.happy)}>
-                      happy
-                    </button>
-                  </li>
-                  <li>
-                    <button onClick={() => handlEemotions(emotions.angry)}>
-                      angry
-                    </button>
-                  </li>
-                  <li>
-                    <button onClick={() => handlEemotions(emotions.sad)}>
-                      sad
-                    </button>
-                  </li>
-                  <li>
-                    <button onClick={() => handlEemotions(emotions.wonder)}>
-                      wonder
-                    </button>
-                  </li>
-                  <li>
-                    <button onClick={() => handlEemotions(emotions.love)}>
-                      love
-                    </button>
-                  </li>
-                  <li>
-                    <button onClick={() => handlEemotions(emotions.dead)}>
-                      dead
-                    </button>
-                  </li>
+                  {emotions &&
+                    emotions.map((emotion) => (
+                      <li>
+                        <button
+                          style={{ textTransform: "uppercase" }}
+                          onClick={() => handlEemotions(emotion.settings)}>
+                          {emotion.label}
+                        </button>
+                      </li>
+                    ))}
                 </ul>
               </div>
             </div>
