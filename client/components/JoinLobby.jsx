@@ -1,13 +1,11 @@
 import useLocalStorage from "./useLocalStorage";
 import React, { useEffect, useRef, useState } from "react";
 import { parseCookies } from "nookies";
-import Error from "../components/Error.jsx";
 
 //Join a game
 const JoinGame = ({ roomKey, playerName, socket, setShowErrMessage }) => {
   let [value, setValue] = useLocalStorage("name", "");
   let [noButtonAtAll, setNoButtonAtAll] = useState(true);
-
   let [roomCode, setRoomeCode] = useState("");
   const cookies = parseCookies();
 
@@ -34,49 +32,42 @@ const JoinGame = ({ roomKey, playerName, socket, setShowErrMessage }) => {
     const endIndex = url.indexOf("?");
     const roomCode = url.slice(startIndex, endIndex);
     if (url.length <= 50) {
-      return setShowErrMessage("Wrong code. Check your link");
+      setShowErrMessage("Wrong code. Check your link");
+      return setRoomeCode("PASTE your code");
     }
 
     setRoomeCode(roomCode);
   };
 
-  useEffect(() => {
-    roomKey.current.focus();
-  }, []);
-
   return (
-    <div className="lobbyJoinFormContainer">
-      <h2>Join a Game.</h2>
-      <form onSubmit={(e) => handleSubmit(e)} className="lobbyJoinForm">
-        <p>Enter Your Name:</p>
-        <input
-          maxLength={15}
-          ref={playerName}
-          type="text"
-          placeholder="Name"
-          required
-          className="lobbyJoinInputField"
-          value={value}
-          onChange={(event) => setValue(event.target.value)}
-        />
-        <p>Enter Room Code:</p>
-        <input
-          ref={roomKey}
-          type="text"
-          placeholder="code"
-          required
-          value={roomCode}
-          className="lobbyJoinInputField"
-          onChange={(e) => displayRoomCode(e.target.value)}
-        />
+    <form onSubmit={(e) => handleSubmit(e)} className="lobbyForm">
+      <p>Enter Your Name:</p>
+      <input
+        maxLength={15}
+        ref={playerName}
+        type="text"
+        placeholder="Name"
+        required
+        className="lobbyJoinInputField"
+        value={value}
+        onChange={(event) => setValue(event.target.value)}
+      />
+      <p>Enter Room Code:</p>
+      <input
+        ref={roomKey}
+        type="text"
+        placeholder="code"
+        required
+        value={roomCode}
+        style={roomCode.length <= 20 ? { color: "red" } : null}
+        className="lobbyJoinInputField"
+        onChange={(e) => displayRoomCode(e.target.value)}
+      />
 
-        <div className="lobbyButtonWrapper">
-          <button type="submit" className="lobbyButton">
-            <span>Join Game</span>
-          </button>
-        </div>
-      </form>
-    </div>
+      <button type="submit" className="lobbyButton">
+        <span>Join Game</span>
+      </button>
+    </form>
   );
 };
 

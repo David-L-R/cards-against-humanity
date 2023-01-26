@@ -32,8 +32,8 @@
 .closeMenuButton {
   position: absolute;
   top: 2%;
-  right: 1%;
-  width: 45px;
+  right: 2%;
+  width: 35px;
   height: 45px;
   font-size: 40px;
   border-radius: 50%;
@@ -58,5 +58,11 @@
   to {
     transform: translateX(0);
     scale: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .closeMenuButton {
+    width: 30px;
   }
 }

@@ -43,7 +43,3 @@
   font-weight: bold;
   transition: 0.3s;
 }
-button[type="submit"]:hover {
-  text-decoration: underline;
-  transition: 0.3s;
-}

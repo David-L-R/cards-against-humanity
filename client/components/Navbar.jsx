@@ -35,7 +35,8 @@ function Navbar(props) {
   const [lobbyId, setLobbyId] = useState(null);
   const cookies = parseCookies();
   const [gameIdentifier, setGameIdentifier] = useState(null);
-  const backToLobby = () => {
+  const backToLobby = (e) => {
+    e.stopPropagation();
     if (lobbyId) {
       const playerData = {
         playerId: cookies.socketId,
@@ -90,15 +91,13 @@ function Navbar(props) {
   return (
     <>
       <nav className="navContainer">
-        <div className="backButtonContainer">
-          {lobbyId && gameIdentifier && (
-            <h2 className="backButton">
-              <button onClick={backToLobby}>
-                <IoIosArrowBack />
-              </button>
-            </h2>
-          )}
-        </div>
+        {lobbyId && gameIdentifier && (
+          <h2 className="backButton">
+            <button onClick={backToLobby}>
+              <IoIosArrowBack />
+            </button>
+          </h2>
+        )}
       </nav>
       <div
         className="accountMenu"
@@ -154,7 +153,11 @@ function Navbar(props) {
               </li>
             </>
           ) : (
-            <li className="loggedOutProfileContainer">
+            <li
+              className={!lobbyId && !gameIdentifier ? "" : "diseabled"}
+              onClick={
+                !lobbyId && !gameIdentifier ? () => setShowSignIn(true) : null
+              }>
               <div className="navbarIcons">
                 <CgProfile />
               </div>
@@ -231,10 +234,17 @@ function Navbar(props) {
             <div className="navBarText">Contact us</div>
           </li>
         </ul>
-        <div>
-          <p className="copyright">Copyright © 2023 Man Makes Monster.</p>
-          <p className="copyright">All rights reserved.</p>
-        </div>
+        <p className="copyright">
+          Copyright © 2023 Man Makes Monster. All rights reserved.
+        </p>
+        {providers && (
+          <SignIn
+            providers={providers}
+            showSignIn={showSignIn}
+            setShowSignIn={setShowSignIn}
+            className="gameRulesContent"
+          />
+        )}
         <Profile
           setShowProfileMenu={setShowProfileMenu}
           showProfileMenu={showProfileMenu}

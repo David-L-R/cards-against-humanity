@@ -27,6 +27,7 @@ const Lobby = (props) => {
   const [currentLobby, setCurrentLobby] = useState(null);
   const [listenersReady, setListenersReady] = useState(false);
   const { storeData, setStoreData } = useAppContext();
+
   const lobbyId = storeData.lobbyId;
 
   const handleGameCreation = () => {
@@ -74,7 +75,10 @@ const Lobby = (props) => {
         setIsloading(false);
         setCurrentLobby(currentLobby);
 
-        if (!player) return setShowErrMessage("Player not found");
+        if (!player) {
+          setCurrentLobby(null);
+          return setShowErrMessage("Player not found");
+        }
         const { waiting } = currentLobby;
         const { id, name, isHost, inactive } = player;
         //check if the host
@@ -159,9 +163,9 @@ const Lobby = (props) => {
     <>
       <main className="waitingLobbyContainer">
         {currentLobby && (
-          <section className="scoreboard-container">
+          <>
             <Scoreboard currentLobby={currentLobby} socket={socket} />
-          </section>
+          </>
         )}
         <h1></h1>
         <section className="waitingLobbyCard">
@@ -174,23 +178,20 @@ const Lobby = (props) => {
               rotate: -120,
               transition: { duration: 0.75 },
             }}>
-            <div className="waitingLobbyTextWrapper">
-              <h1 style={{ paddingTop: "20px" }}>
-                Waiting for players&nbsp;
-                <span className="loadingContainer">
-                  <div className="loader">
-                    <div className="circle" id="a" />
-                    <div className="circle" id="b" />
-                    <div className="circle" id="c" />
-                  </div>
-                </span>
-              </h1>
-            </div>
+            <h1>
+              Waiting for players&nbsp;
+              <span className="loadingContainer">
+                <div className="loader">
+                  <div className="circle" id="a" />
+                  <div className="circle" id="b" />
+                  <div className="circle" id="c" />
+                </div>
+              </span>
+            </h1>
+
             {isHost && (
               <div className="lobbyIdContainer">
-                <h3 style={{ paddingTop: "40px", paddingBottom: "8px" }}>
-                  Invite your Friends:{" "}
-                </h3>
+                <h3>Invite your Friends: </h3>
                 <div className="lobbyIdCopyField">
                   {copied ? (
                     <p className="tempCopyText">Copied to clipboard!</p>
@@ -204,35 +205,29 @@ const Lobby = (props) => {
                 </div>
               </div>
             )}
-            <div className="changeNameButtonWrapper">
-              <input
-                maxLength={15}
-                className="changeNameButton"
-                type="text"
-                onChange={(e) => changePLayerName(e.target.value)}
-                placeholder="Change name (Optional)"
-              />
-            </div>
-            <div className="waitingLobbyButtonWrapper">
-              {isHost && (
-                <button
-                  className={
-                    isLoading ? "lobbyButton isLoading" : "lobbyButton"
-                  }
-                  onClick={handleGameCreation}
-                  disabled={isLoading ? true : false}
-                  style={
-                    isLoading
-                      ? {
-                          transform: "scale(1)",
-                          width: "inherit",
-                        }
-                      : null
-                  }>
-                  <span>{isLoading ? "Loading..." : "Ready"}</span>
-                </button>
-              )}
-            </div>
+            <input
+              maxLength={15}
+              className="changeNameButton"
+              type="text"
+              onChange={(e) => changePLayerName(e.target.value)}
+              placeholder="Change name (Optional)"
+            />
+
+            {isHost && (
+              <button
+                className={isLoading ? "lobbyButton isLoading" : "lobbyButton"}
+                onClick={handleGameCreation}
+                disabled={isLoading ? true : false}
+                style={
+                  isLoading
+                    ? {
+                        transform: "scale(1)",
+                      }
+                    : null
+                }>
+                <span>{isLoading ? "Loading..." : "Ready"}</span>
+              </button>
+            )}
           </m.div>
           <ul className="dragContainer">
             {players &&
@@ -244,28 +239,12 @@ const Lobby = (props) => {
                       ? "inactive"
                       : null
                   }>
-                  <h2
-                    className={player.name.length > 9 ? "wrap-text" : null}
-                    style={{
-                      fontSize:
-                        player.name.length < 6
-                          ? "20px"
-                          : player.name.length < 10
-                          ? "16px"
-                          : player.name.length > 12
-                          ? "14px"
-                          : "20px",
-                      whiteSpace: "pre-wrap",
-                      padding: "15px",
-                    }}>
+                  <h2>
                     {player.name.toUpperCase() !== "DAVID" ? (
                       player.name.toUpperCase()
                     ) : (
                       <>
                         <TfiRocket className="rockt" />
-                        {/* <TfiRocket />
-                        <TfiRocket />
-                        <TfiRocket /> */}
                       </>
                     )}
                   </h2>

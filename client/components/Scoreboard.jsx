@@ -50,9 +50,8 @@ const Scoreboard = ({ currentLobby, socket }) => {
   return (
     <>
       <div
-        className="sideMenu"
+        className={!isOpen ? "sideMenu" : "sideMenu active"}
         style={{
-          marginLeft: isOpen ? "0" : "-350px",
           boxShadow: isOpen
             ? "20px 2px 31px 4px rgba(135,129,129,0.52)"
             : "none",
@@ -66,10 +65,10 @@ const Scoreboard = ({ currentLobby, socket }) => {
           }}>
           <p>SCORES</p>
         </div>
-        <button onClick={openMenu}>
-          <CgCloseO className="closeMenuButton" />
+        <button className="closeScorebutton" onClick={openMenu}>
+          <CgCloseO className="closeMenuButton " />
         </button>
-        <ul>
+        <ul className="scoreboardList">
           <h1>SCOREBOARD</h1>
 
           <li className="scoreboardTitles">
@@ -145,48 +144,3 @@ const Scoreboard = ({ currentLobby, socket }) => {
 };
 
 export default Scoreboard;
-/*
- return (
-    <>
-      <ul>
-        {turns?.length > 0 && (
-          <div className="fuckingClass">
-            <h4>
-              turn: {turns.length}/{currentLobby.setRounds}
-            </h4>
-            <h4>Players: {players.length}</h4>
-          </div>
-        )}
-        {players &&
-          players.map((player) => (
-            <li
-              key={player.id}
-              className={player.inactive ? "inactive-player" : null}
-            >
-              <div>
-                {czar && czar.id === player.id && (
-                  <div className={"crown-background"}>
-                    <RiVipCrown2Fill className="crown" />
-                  </div>
-                )}
-                {!player.inactive ? (
-                  <AiOutlineCheckCircle
-                    className={
-                      !submittedWhiteCards(player.id)
-                        ? "checkmark"
-                        : "checkmark active"
-                    }
-                  />
-                ) : (
-                  <VscDebugDisconnect className="disconnect-icon" />
-                )}
-                <img className="avatar" src="/favicon.ico" alt="" />
-                <span className="player-name">{player.name}</span>
-                <span className="player-points">{player.points}</span>
-              </div>
-            </li>
-          ))}
-      </ul>
-    </>
-  );
-  */

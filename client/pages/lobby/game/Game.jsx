@@ -421,9 +421,9 @@ const Game = ({ socket }) => {
       <main>
         <Loading />
         {currentLobby && (
-          <section className="scoreboard-container">
+          <>
             <Scoreboard currentLobby={currentLobby} socket={socket} />
-          </section>
+          </>
         )}
       </main>
     );
@@ -483,9 +483,9 @@ const Game = ({ socket }) => {
             Loadin:{loading ? "true" : "false"}
           </div>
           {currentLobby && (
-            <section className="scoreboard-container">
+            <>
               <Scoreboard currentLobby={currentLobby} />
-            </section>
+            </>
           )}
 
           <Winner
@@ -523,9 +523,9 @@ const Game = ({ socket }) => {
             Loadin:{loading ? "true" : "false"}
           </div>
           {currentLobby && (
-            <section className="scoreboard-container">
+            <>
               <Scoreboard currentLobby={currentLobby} />
-            </section>
+            </>
           )}
 
           {isInactive && (

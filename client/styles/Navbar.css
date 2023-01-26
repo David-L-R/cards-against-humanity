@@ -1,18 +1,20 @@
 .backButton {
-  font-size: 40px;
+  position: relative;
+  font-size: 30px;
   position: relative;
   background-color: black;
-  padding-left: 20px;
+  color: gray;
 }
+
 .backButton:hover:after {
   content: "Back to Lobby";
   color: white;
-  font-size: 30px;
+  font-size: 23px;
   position: absolute;
   transform: translate(10%, 6%);
   width: max-content;
   transition: all 0.5s ease-in-out;
-  animation: slide-in 0.5s ease-in-out forwards;
+  animation: slide-in 0.2s ease-in-out forwards;
   z-index: -1;
   opacity: 0;
 }
@@ -24,7 +26,7 @@
 
   100% {
     opacity: 1;
-    left: 42px;
+    left: 22px;
   }
 }
 
@@ -63,17 +65,14 @@
   transition: all 0.3s ease-in-out;
   justify-content: space-between;
   color: rgba(255, 255, 255, 0.545);
-  margin-right: -170px;
+  transform: translateX(80%);
 }
 
 .accountMenu:hover {
   background-color: rgba(0, 0, 0, 0.631);
-  margin-right: 0;
+  transform: translateX(0);
   color: white;
   border-left: 2px solid rgba(255, 255, 255, 0.767);
-}
-.accountMenu p:hover {
-  margin-right: 0px;
 }
 .navIcon {
   border-radius: 50%;
@@ -113,17 +112,16 @@
 
 .copyright {
   position: relative;
-  justify-content: center;
   display: flex;
   color: grey;
   text-align: center;
   font-size: 12px;
-  opacity: 0;
   display: block;
   padding: 0 0.75rem;
+  opacity: 0;
 }
-.accountMenu:hover .copyright,
-.navContainer:hover ~ .accountMenu .copyright {
+.navContainer:hover ~ .accountMenu,
+.accountMenu:hover .copyright {
   opacity: 1;
 }
 
@@ -171,11 +169,16 @@
 }
 
 @media (max-width: 640px) {
+  .navContainer {
+    padding: 0.5rem 0 0;
+  }
   .accountMenu {
-    margin-right: -100vw;
+    margin-right: -50vw;
     font-size: 12px;
     height: 75vh;
-    width: 100vw;
+    width: 50vw;
+    z-index: 30;
+    overflow: auto;
   }
 
   .navContainer::before {
@@ -194,12 +197,15 @@
 
   .navContainer:hover ~ .accountMenu,
   .accountMenu:hover {
-    backdrop-filter: blur(6px);
     background-color: rgba(0, 0, 0, 0.731);
-    margin-right: 0;
+    transform: translateX(-100%);
     color: white;
     border: 2px solid rgba(255, 255, 255, 0.315);
     border-right: none;
+  }
+  .navContainer:hover ~ .accountMenu .copyright,
+  .accountMenu:hover .copyright {
+    opacity: 1;
   }
   .navbarIcons {
     font-size: 25px;
@@ -207,5 +213,19 @@
   .accountMenu ul li {
     gap: 10px;
     min-height: 50px;
+  }
+
+  .backButton::after {
+    content: "Back to lobby";
+    position: absolute;
+    width: max-content;
+    color: gray;
+    font-size: 14px;
+    top: 0;
+    left: 0;
+    transform: translate(30%, 35%);
+  }
+  .backButton:hover::after {
+    content: "";
   }
 }
