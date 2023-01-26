@@ -7,11 +7,14 @@ import cors from "cors";
 import http from "http";
 import useQueue from "./utils/useQueue.js";
 import consoleSuccess from "./utils/consoleSuccess.js";
+import bodyParser from "body-parser";
+import { send } from "process";
 
 dotenv.config();
 connectDB();
 
 const app = express();
+app.use(bodyParser.json());
 app.use(cors());
 app.use(express.json());
 app.use("/", router);
@@ -32,6 +35,15 @@ const io = new Server(server, {
 
 server.listen(PORT, async (req, res) => {
   consoleSuccess(`Server running under ${PORT}`);
+});
+
+app.post("/submit-bug-report", (request, response) => {
+  if (!request.body)
+    return response
+      .status(400)
+      .send("ERROR 400 WHEN TRYING TO SEND BUG REPORT");
+  console.log(request.body);
+  response.status(200).json(request.body);
 });
 
 //Socket.io

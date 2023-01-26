@@ -65,18 +65,16 @@
   transition: all 0.3s ease-in-out;
   justify-content: space-between;
   color: rgba(255, 255, 255, 0.545);
-  margin-right: -170px;
+  transform: translateX(80%);
 }
 
 .accountMenu:hover {
   background-color: rgba(0, 0, 0, 0.631);
-  margin-right: 0;
+  transform: translateX(0);
   color: white;
   border-left: 2px solid rgba(255, 255, 255, 0.767);
 }
-.accountMenu p:hover {
-  margin-right: 0px;
-}
+
 .navIcon {
   border-radius: 50%;
   width: 50px;
@@ -84,7 +82,6 @@
 }
 .accountMenu ul li {
   position: relative;
-
   display: flex;
   gap: 20px;
   min-height: 70px;
@@ -109,23 +106,21 @@
 .navbarProfilePic {
   margin: auto;
   display: flex;
-
   padding-left: 5px;
 }
 
 .copyright {
   position: relative;
-  justify-content: center;
   display: flex;
   color: grey;
   text-align: center;
   font-size: 12px;
-  opacity: 0;
   display: block;
   padding: 0 0.75rem;
+  opacity: 0;
 }
-.accountMenu:hover .copyright,
-.navContainer:hover ~ .accountMenu .copyright {
+.navContainer:hover ~ .accountMenu,
+.accountMenu:hover .copyright {
   opacity: 1;
 }
 
@@ -201,12 +196,15 @@
 
   .navContainer:hover ~ .accountMenu,
   .accountMenu:hover {
-    backdrop-filter: blur(6px);
     background-color: rgba(0, 0, 0, 0.731);
-    margin-right: 0;
+    transform: translateX(-100%);
     color: white;
     border: 2px solid rgba(255, 255, 255, 0.315);
     border-right: none;
+  }
+  .navContainer:hover ~ .accountMenu .copyright,
+  .accountMenu:hover .copyright {
+    opacity: 1;
   }
   .navbarIcons {
     font-size: 25px;

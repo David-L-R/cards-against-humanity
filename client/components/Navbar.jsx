@@ -5,7 +5,7 @@ import { parseCookies } from "nookies";
 import { IoIosArrowBack, IoIosArrowDown } from "react-icons/io";
 import { CgProfile } from "react-icons/cg";
 import { ImProfile } from "react-icons/im";
-import { BsBug } from "react-icons/bs";
+import { BsBug, BsFillChatRightTextFill } from "react-icons/bs";
 import { FiSettings } from "react-icons/fi";
 import { BsCardChecklist } from "react-icons/bs";
 import { AiOutlineDollarCircle, AiOutlineMail } from "react-icons/ai";
@@ -17,14 +17,22 @@ import ReportBug from "./ReportBug";
 import Contact from "./Contact";
 import { BiLogOut } from "react-icons/bi";
 import Profile from "./Profile";
+import AdminMail from "./AdminMail";
+import SignIn from "../pages/api/auth/SignIn";
 
 function Navbar(props) {
+  const [providers, setProviders] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showMail, setShowMail] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
   const [showRules, setShowRules] = useState(false);
   const [showBug, setShowBug] = useState(false);
   const [showContact, setShowContact] = useState(false);
+
+  const [responseDataArray, setResponseDataArray] = useState([]);
+
   const { socket, setHandSize, setAmountOfRounds, handSize, amountOfRounds } =
     props;
   const { data: session } = useSession();
@@ -88,6 +96,14 @@ function Navbar(props) {
     }
   }, [router.isReady, router, socket]);
 
+  useEffect(() => {
+    const fetchProviders = async () => {
+      const providers = await getProviders();
+      setProviders(providers);
+    };
+    fetchProviders();
+  }, []);
+
   return (
     <>
       <nav className="navContainer">
@@ -120,6 +136,7 @@ function Navbar(props) {
                       referrerPolicy="no-referrer"
                     />
                   </div>
+
                   <div className="navBarText">
                     {session.user.name}
                     <span
@@ -153,12 +170,18 @@ function Navbar(props) {
               </li>
             </>
           ) : (
-            <li className="loggedOutProfileContainer">
+            <li
+              className={!lobbyId && !gameIdentifier ? "" : "diseabled"}
+              onClick={
+                !lobbyId && !gameIdentifier ? () => setShowSignIn(true) : null
+              }>
               <div className="navbarIcons">
                 <CgProfile />
               </div>
               <div className="navBarText">
-                <button onClick={signIn}>Sign In</button>
+                {!lobbyId && !gameIdentifier
+                  ? "Sign In"
+                  : "Can't sign in during a game"}
               </div>
             </li>
           )}
@@ -229,11 +252,26 @@ function Navbar(props) {
             </div>
             <div className="navBarText">Contact us</div>
           </li>
+          {session && session.user.email === "dannimalka.iag@gmail.com" && (
+            <li onClick={() => setShowMail(true)}>
+              <div className="navbarIcons">
+                <BsFillChatRightTextFill />
+              </div>
+              <div className="navBarText">Admin mail</div>
+            </li>
+          )}
         </ul>
-        <div>
-          <p className="copyright">Copyright © 2023 Man Makes Monster.</p>
-          <p className="copyright">All rights reserved.</p>
-        </div>
+        <p className="copyright">
+          Copyright © 2023 Man Makes Monster. All rights reserved.
+        </p>
+        {providers && (
+          <SignIn
+            providers={providers}
+            showSignIn={showSignIn}
+            setShowSignIn={setShowSignIn}
+            className="gameRulesContent"
+          />
+        )}
         <Profile
           setShowProfileMenu={setShowProfileMenu}
           showProfileMenu={showProfileMenu}
@@ -244,6 +282,8 @@ function Navbar(props) {
           setShowBug={setShowBug}
           showBug={showBug}
           className="gameRulesContent"
+          responseDataArray={responseDataArray}
+          setResponseDataArray={setResponseDataArray}
         />
         <GameRules
           setShowRules={setShowRules}
@@ -254,6 +294,13 @@ function Navbar(props) {
           setShowContact={setShowContact}
           showContact={showContact}
           className="gameRulesContent"
+        />
+        <AdminMail
+          setShowMail={setShowMail}
+          showMail={showMail}
+          className="gameRulesContent"
+          responseDataArray={responseDataArray}
+          setResponseDataArray={setResponseDataArray}
         />
       </div>
       <Error
