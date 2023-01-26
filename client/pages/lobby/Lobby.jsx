@@ -12,9 +12,9 @@ import Loading from "../../components/Loading";
 import PageNotFound from "../../components/PageNotFound";
 import { useAppContext } from "../../context";
 import { TfiRocket } from "react-icons/tfi";
-
 import JoyRide, { ACTIONS, EVENTS, STATUS } from "react-joyride";
 import { Steps } from "../../components/Steps.js";
+import useLocalStorage from "../../components/useLocalStorage";
 
 const Lobby = (props) => {
   const { socket, handSize, amountOfRounds } = props;
@@ -31,8 +31,10 @@ const Lobby = (props) => {
   const [currentLobby, setCurrentLobby] = useState(null);
   const [listenersReady, setListenersReady] = useState(false);
   const [useJoyRide, setuseJoyRide] = useState(false);
-  const [stepIndex, setStepIndex] = useState(0);
 
+  let [value, setValue] = useLocalStorage("tutorial");
+
+  const [stepIndex, setStepIndex] = useState(0);
   const { storeData, setStoreData } = useAppContext();
   const lobbyId = storeData.lobbyId;
 
@@ -165,24 +167,6 @@ const Lobby = (props) => {
         <PageNotFound />
       </main>
     );
-  /*
-  const handleJoyRide = (data) => {
-    console.log("data :>> ", data);
-    const listen = data.action;
-
-    console.log("ACTIONS", ACTIONS);
-    console.log("STATUS :>> ", STATUS);
-    console.log("EVENTS", EVENTS);
-    //if (listen === "next") setUseJoyIndex((prev) => (prev += 1));
-    //setUseJoyIndex((prev) => (prev += 1));
-    if (useJoyIndex === 4) {
-      setIsOpen(true);
-      setTimeout(() => {
-        setUseJoyIndex((prev) => prev++);
-      }, 2000);
-    }
-  }
-*/
 
   const handleJoyrideCallback = (data) => {
     const { action, index, status, type } = data;
@@ -202,6 +186,9 @@ const Lobby = (props) => {
     if (stepIndex === 6) {
       setIsOpen(false);
     }
+    if (index >= Steps.length - 1) {
+      setValue("DONE");
+    }
   };
   return (
     <>
@@ -215,7 +202,7 @@ const Lobby = (props) => {
           showProgress
           showSkipButton
           steps={Steps}
-          run={useJoyRide}
+          run={value == "DONE" ? false : useJoyRide}
         />
       )}
       <main className="waitingLobbyContainer">

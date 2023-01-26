@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 
 function getSavedValue(key, initialValue) {
-  const savedValue = JSON.parse(localStorage.getItem(key));
-  if (savedValue) {
-    return savedValue;
-  } else {
-    return initialValue;
+  if (typeof window !== "undefined") {
+    const savedValue = localStorage?.getItem(key);
+    console.log("savedValue", savedValue);
+    const storeData =
+      savedValue !== "undefined" ? JSON.parse(savedValue) : null;
+    if (storeData) {
+      return storeData;
+    } else {
+      return initialValue;
+    }
   }
 }
 
