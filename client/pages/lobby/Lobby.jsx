@@ -208,12 +208,7 @@ const Lobby = (props) => {
       <main className="waitingLobbyContainer">
         {currentLobby && (
           <section className="scoreboard-container">
-            <Scoreboard
-              currentLobby={currentLobby}
-              socket={socket}
-              isOpen={isOpen}
-              setIsOpen={setIsOpen}
-            />
+            <Scoreboard currentLobby={currentLobby} socket={socket} />
           </section>
         )}
 

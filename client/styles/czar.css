@@ -10,12 +10,6 @@
   gap: 1rem;
   z-index: 0;
 }
-.testClass {
-  transition: none !important;
-  animation: flyOut 2s linear;
-  animation-fill-mode: forwards !important;
-  background-color: red;
-}
 
 .selectedCard {
   z-index: 1000;
@@ -87,13 +81,11 @@
   position: fixed;
   top: 30%;
   left: 43%;
-  /* z-index: 90000 !important;*/
 }
 .highest {
   position: fixed;
   top: 30%;
   left: 58%;
-  /*z-index: 90000 !important;*/
 }
 
 .czarPickingH1 {
@@ -101,6 +93,7 @@
   font-weight: 800;
   letter-spacing: 2px;
 }
+/*
 @keyframes flyOut {
   0% {
     position: absolute !important;
@@ -113,3 +106,5 @@
     transform: translate(0%, 0%);
   }
 }
+
+*/
