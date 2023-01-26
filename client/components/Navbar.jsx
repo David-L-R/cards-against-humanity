@@ -199,7 +199,7 @@ function Navbar(props) {
                   id="settingsToggle"
                   onClick={() => setShowSettings((prev) => !prev)}
                 >
-                  <div className="navbarIcons">
+                  <div className="navbarIcons gameSettingsIcon">
                     <FiSettings />
                   </div>
                   <div className="navBarText">
