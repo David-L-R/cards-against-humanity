@@ -200,7 +200,7 @@ export const changeGame = async (states) => {
     const { currentGame } = currentLobbyData;
     const gameIdentifier = currentGame.gameIdentifier;
     const updatedGame = await updateTurn({ ...states, currentGame });
-
+    console.log("updatedgame", updatedGame);
     if (!updatedGame) return "Server error, no game found";
 
     io.to(lobbyId).emit("currentGame", {
