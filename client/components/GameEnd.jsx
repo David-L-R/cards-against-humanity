@@ -49,7 +49,7 @@ function GameEnd({ currentGame }) {
   return (
     <>
       <div className="confettiContainer">
-        <Confetti />
+        <Confetti numberOfPieces={100} width={window.innerWidth} />
       </div>
 
       <div className="gameEndContainer">
