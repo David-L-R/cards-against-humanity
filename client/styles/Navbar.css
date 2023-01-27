@@ -168,6 +168,20 @@
   font-size: 28px;
 }
 
+.burgerMenue {
+  position: absolute;
+  top: -0.5%;
+  left: -2%;
+  background-image: url("/burgerMenue.svg");
+  transform: rotateZ(180deg) translateX(100%);
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 40px;
+  height: 40px;
+  transition: all 250ms;
+  display: none;
+}
+
 @media (max-width: 640px) {
   .navContainer {
     padding: 0.5rem 0 0;
@@ -177,26 +191,20 @@
     height: max-content;
     gap: 2rem;
     width: 50vw;
-    z-index: 30;
-    overflow: auto;
-    right: -150px;
+    z-index: 20;
+    right: -160px;
+    border: 2px solid transparent;
   }
 
-  .navContainer::before {
-    content: "";
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    top: 0;
-    right: 0;
-    color: white;
-    background-image: url("/burgerMenue.svg");
-    background-size: contain;
-    transform: rotateZ(180deg);
-    margin: 0.5rem;
+  .burgerMenue {
+    display: block;
+    opacity: 1;
+  }
+  .burgerMenue:hover {
+    opacity: 0;
   }
 
-  .navContainer:hover ~ .accountMenu,
+  .burgerMenue ~ .accountMenu,
   .accountMenu:hover {
     background-color: rgba(0, 0, 0, 0.731);
     right: 0;
@@ -204,10 +212,7 @@
     border: 2px solid rgba(255, 255, 255, 0.315);
     border-right: none;
   }
-  .navContainer:hover ~ .accountMenu .copyright,
-  .accountMenu:hover .copyright {
-    opacity: 1;
-  }
+
   .navbarIcons {
     font-size: 25px;
   }

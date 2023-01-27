@@ -100,7 +100,6 @@ function Navbar(props) {
 
   return (
     <>
-      {console.log("providers", providers)}
       <nav className="navContainer">
         {lobbyId && gameIdentifier && (
           <h2 className="backButton">
@@ -116,6 +115,7 @@ function Navbar(props) {
           setShowProfile(false);
           setShowSettings(false);
         }}>
+        <button className="burgerMenue"></button>
         <ul>
           {session ? (
             <>
