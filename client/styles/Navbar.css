@@ -65,7 +65,7 @@
   transition: all 0.3s ease-in-out;
   justify-content: space-between;
   color: rgba(255, 255, 255, 0.545);
-  right: -280px;
+  right: -270px;
 }
 
 .accountMenu:hover {
