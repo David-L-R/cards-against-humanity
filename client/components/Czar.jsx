@@ -57,7 +57,7 @@ const Czar = ({
   return (
     <section className="czarSelectionContainer">
       <div>
-        <h1 className="czarPickingH1">You are the Czar!</h1>
+        <h1 className="czarPickingH1">You are the Czar!!!</h1>
         <h2>Select a Card </h2>
       </div>
       <div>
