@@ -1,22 +1,26 @@
 import LobbyCollection from "../database/models/lobby.js";
 import GameCollection from "../database/models/game.js";
-import consoleSuccess from "../utils/consoleSuccess.js";
-import cardDecksData from "../data/allCards.json" assert { type: "json" };
+import randomName from "../utils/randomName.js";
+import {
+  getCache,
+  getLobbyIdFromCache,
+  storeToCache,
+} from "../cache/useCache.js";
 
-export const createNewLobby = async ({ socket, data }) => {
-  const { hostName } = data;
+export const createNewLobby = async (data) => {
+  const { hostName, id, socket } = data;
   const lobby = {
     games: [],
-    waiting: [],
-    players: [{ name: hostName, id: socket.id }],
+    waiting: [{ name: hostName, id, isHost: true, inactive: false, points: 0 }],
+    players: [],
   };
 
   try {
     const newLobby = await LobbyCollection.create({
       ...lobby,
     });
-
     const lobbyId = newLobby._id.toString();
+    await storeToCache({ lobbyId, currentLobby: newLobby });
 
     socket.emit("LobbyCreated", { lobbyId, hostName });
     socket.join(lobbyId);
@@ -25,108 +29,180 @@ export const createNewLobby = async ({ socket, data }) => {
   }
 };
 
-export const createNewGame = async ({ socket, data }) => {
-  const { hostName } = data;
-  // const randomRoomCode = await checkRooms();
-  const gameData = {
-    ...data,
-    // roomId: randomRoomCode,
-    // round: 0,
-    players: [{ playerName: hostName, playerId: socket.id }],
-  };
+export const findRoomToJoin = async ({
+  lobbyId,
+  newPlayerName,
+  socket,
+  id,
+  io,
+}) => {
+  const player = { name: newPlayerName, id, inactive: false, isHost: false };
 
-  //Create game object and store in DB
-  const newGame = await GameCollection.create({
-    ...gameData,
-    cardDecks: cardDecksData,
-  });
-
-  if (!newGame) return console.error("creating game Object failed");
-  consoleSuccess("Game created: ", newGame);
-
-  // return room ID to client
-  const roomId = newGame.roomId;
-  socket.emit("roomCreated", { roomId, hostName });
-  socket.join(roomId);
-};
-
-export const findRoomToJoin = async ({ lobbyId, newPlayerName, socket }) => {
-  const player = { name: newPlayerName, id: socket.id };
   // searche game in MongoDb
-
   try {
-    const lobby = await LobbyCollection.findById(lobbyId);
+    const { currentLobby } = await getCache({ lobbyId });
 
     // update player list in DB
-    lobby.players.push(player);
-    const updatedLobby = await lobby.save();
-    if (!updatedLobby)
-      return socket.emit("findRoom", {
-        noRoom: true,
-        message: "Can't join game",
-      });
+    currentLobby.players.push(player);
 
     //join player into room and send lobbyId back
     socket.join(lobbyId);
-    socket.emit("findRoom", {
+    socket.emit("foundRoom", {
       noRoom: false,
       lobbyId,
       playerName: newPlayerName,
-      message: "Joining romm",
     });
 
     //updateing room
-    socket.to(lobbyId).emit("updateRoom", { playerList: updatedLobby.players });
+    io.to(lobbyId).emit("updateRoom", { currentLobby });
+    await storeToCache({ lobbyId, currentLobby });
   } catch (error) {
-    return socket.emit("findRoom", {
+    return socket.emit("foundRoom", {
       noRoom: true,
       err: "Can't find game",
     });
   }
 };
 
-export const updateClient = async ({ lobbyId, socket, name }) => {
-  if (!lobbyId)
-    return socket.emit("updateRoom", { message: "Cant find game to join!" });
-
-  const currentLobby = await LobbyCollection.findOne({ _id: lobbyId });
-  if (!currentLobby)
+export const updateClient = async (data) => {
+  const { lobbyId, socket, joinGame, id, io, newPLayerName, avatar } = data;
+  socket.userId = id;
+  if (!lobbyId || !id)
     return socket.emit("updateRoom", {
-      err: "cant update Client",
-      message: "Cant find game to join!",
+      err: "Cant find game to join. Wrong lobby id or player id",
     });
-
-  const foundPLayer = currentLobby.players.find(
-    (player) => player.id === socket.id
-  );
-
-  if (!foundPLayer) currentLobby.players.push({ id: socket.id, name: name });
-  currentLobby.save();
-
-  socket.emit("updateRoom", { playerList: currentLobby.players });
-};
-
-export const deletePlayerFromDb = async ({ reason, io, socket }) => {
-  //delte player by disconnect
+  // socket.join(lobbyId);
 
   try {
-    const currentLobby = await LobbyCollection.findOne({
-      "players.id": socket.id,
-    });
+    const { currentLobby } = await getCache({ lobbyId });
 
-    //delete player from players list
+    if (!currentLobby) throw Error();
+
+    const foundPLayer = currentLobby.waiting.find((player) => player.id === id);
+    // delte players from lobby.players to be available for a game rejoining  lobby
     currentLobby.players = currentLobby.players.filter(
-      (player) => player.id !== socket.id
+      (currPlayer) => currPlayer.id !== id
     );
 
-    //update channel
-    currentLobby.save();
-    return {
-      playerList: currentLobby.players,
-      lobbyId: currentLobby._id,
-      err: false,
-    };
+    if (newPLayerName) foundPLayer.name = newPLayerName;
+
+    if (foundPLayer) {
+      foundPLayer.inactive = false;
+      foundPLayer.avatar = avatar && avatar;
+      const playerIndex = currentLobby.waiting.findIndex(
+        (player) => player.id === id
+      );
+      if (playerIndex === 0) {
+        foundPLayer.isHost = true;
+        //change alle other player to be not the host
+        currentLobby.waiting = currentLobby.waiting.map((player, index) => {
+          if (index === 0) return player;
+          player.isHost = false;
+          return player;
+        });
+      }
+    }
+
+    // join new player after using invitation link
+    if (!foundPLayer && joinGame) {
+      const newPLayer = {
+        id,
+        isHost: false,
+        inactive: false,
+        name: randomName(),
+        points: 0,
+      };
+      currentLobby.waiting.push(newPLayer);
+    }
+
+    io.to(lobbyId).emit("updateRoom", {
+      currentLobby,
+    });
+
+    const currentLobbyData = await storeToCache({ lobbyId, currentLobby });
+    LobbyCollection.findByIdAndUpdate(
+      lobbyId,
+      currentLobbyData.currentLobby
+    ).exec();
+  } catch (err) {
+    console.error(err);
+    socket.emit("updateRoom", {
+      err: "cant update Client",
+    });
+  }
+};
+
+export const setPlayerInactive = async ({ io, userId }) => {
+  //set player inactive on disconnect
+  try {
+    const lobbyId = getLobbyIdFromCache({ userId });
+    const currentLobbyData = await getCache({ lobbyId });
+    const { currentLobby, currentGame } = currentLobbyData;
+    if (!currentLobby)
+      return console.error("No lobby found to delete player from");
+
+    //set leaving player inactive if they are in a running game
+    if (currentGame) {
+      const currentTurn = currentGame.turns[currentGame.turns.length - 1];
+      const currenCzar = currentTurn?.czar;
+      currentGame.players = currentGame.players.map((player) => {
+        if (player.id === userId) player.inactive = true;
+        return player;
+      });
+
+      // if czar leaves, assign a new one
+      if (currenCzar?.id === userId) {
+        currentTurn.czar = currentGame.players.find(
+          (player) => !player.inactive
+        );
+        //reset the current turn and start with a new czar
+        currentTurn.stage = ["start", "dealing", "black"];
+        currentTurn.white_cards = currentTurn.white_cards.map((player) => ({
+          ...player,
+          played_card: [],
+        }));
+        currentTurn.black_card = null;
+      }
+      io.to(lobbyId).emit("currentGame", { currentGame });
+
+      await storeToCache({ lobbyId, currentGame });
+      GameCollection.findOneAndUpdate(
+        {
+          id: lobbyId,
+          gameIdentifier: currentGame.gameIdentifier,
+        },
+        currentGame
+      ).exec();
+    }
+    //search for player that needs to be set inactive from lobby
+
+    currentLobby.waiting = currentLobby.waiting.map((player) => {
+      if (player.id === userId) player.inactive = true;
+      if (player.isHost) player.isHost = false;
+      return player;
+    });
+
+    //find actuall host
+    let findHost = currentLobby.waiting.find((player) => {
+      return player.isHost && !player.inactive;
+    });
+
+    //if no host inside game, make the next PLayer to host
+    if (!findHost) {
+      const activePlayerIndex = currentLobby.waiting.findIndex(
+        (player) => !player.inactive
+      );
+      if (activePlayerIndex >= 0) {
+        currentLobby.waiting[activePlayerIndex].isHost = true;
+        findHost = currentLobby.waiting[activePlayerIndex];
+      }
+    }
+    await storeToCache({ lobbyId, currentLobby });
+    LobbyCollection.findByIdAndUpdate(lobbyId, currentLobby).exec();
+
+    if (lobbyId) io.to(lobbyId).emit("updateRoom", { currentLobby });
   } catch (error) {
+    console.error(error);
     return { err: "Cant find player to remove" };
   }
 };

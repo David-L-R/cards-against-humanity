@@ -1,10 +1,9 @@
-import Home from "./Home";
-import Card from "../components/card";
+import FrontPage from "../components/FrontPage";
 
 export default function index() {
   return (
     <main>
-      <Home />
+      <FrontPage />
     </main>
   );
 }

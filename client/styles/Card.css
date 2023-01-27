@@ -1,13 +1,18 @@
 .cardContainer {
-  position: absolute;
-  top: 30%;
-  left: 45%;
+  margin: auto;
+  display: flex;
   height: 400px;
   width: 250px;
   background-color: black;
   border-radius: 15px;
   color: rgb(188, 183, 183);
   perspective: 1000px;
+}
+.linkElement {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 .card {
   width: 100%;
@@ -45,6 +50,11 @@
   width: 75%;
   color: white;
   font-size: 36px;
+  margin: 0;
+}
+.cardFace--front h3 {
+  color: white;
+  letter-spacing: 2px;
 }
 
 .cardFace--back {

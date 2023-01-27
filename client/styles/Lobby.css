@@ -7,41 +7,46 @@
   overflow: hidden;
 }
 .waitingLobbyCard {
-  margin: auto;
-  height: 400px;
-  width: 250px;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 0;
+}
+.framerContainer {
+  max-width: 240px;
+  width: 70vw;
+  aspect-ratio: 0.65/1;
   border: 2px solid white;
   box-shadow: 0 0px 18px 0px rgba(255, 255, 255, 0.2);
   border-radius: 15px;
   padding: 0;
   z-index: 1;
-}
-.waitingLobbyTextWrapper {
-  position: relative;
-  width: 210px;
-  height: 100px;
-  padding-bottom: 35px;
-  padding-left: 25px;
-}
-.waitingLobbyButtonWrapper {
+  background: black;
+  margin: auto;
   display: flex;
-  margin-top: 50px;
-
-  justify-content: center;
-}
-.loadingContainer {
-  padding-top: 25px;
-  position: absolute;
-  top: 28%;
-  right: 27%;
-  display: flex;
-  max-width: max-content;
   flex-direction: column;
+  gap: 2rem;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0.5rem 1rem;
+}
+
+.framerContainer h1 {
+  text-align: center;
+}
+
+.loadingContainer {
+  display: inline-block;
 }
 .icon {
   font-size: 16px;
-  padding-left: 15px;
   cursor: pointer;
+  z-index: 2;
+
+  width: 20px;
+  height: 20px;
 }
 .icon:hover {
   color: #a0d68a;
@@ -64,37 +69,74 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  width: 100%;
 }
+.lobbyIdContainer div:hover {
+  cursor: pointer;
+}
+
 .lobbyIdCopyField {
-  border: 2px solid white;
   border-radius: 10px;
-  width: 210px;
+  background-color: rgb(41, 40, 40);
+  width: 100%;
   position: relative;
 }
+
+.input-icon-wrapper {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  transition: 0.5s;
+  font-weight: bold;
+  border-radius: 10px;
+}
+.input-icon-wrapper:hover {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: rgb(175, 173, 173);
+  color: black;
+  transition: 0.5s;
+}
+.input-icon-wrapper:active {
+  background-color: green;
+}
+
 .lobbyIdContainer p {
   font-size: 12px;
   padding-left: 10px;
+  overflow: hidden;
+  max-width: 80%;
 }
 
 .tempCopyText {
   position: absolute;
   color: #a0d68a;
-  top: -10px;
   font-weight: 600;
   width: auto;
-  padding: 10px;
   margin: auto;
-  /* animation: hideAnimation 0s ease-in 3s;
-  animation-fill-mode: forwards; */
+  border-radius: 30px;
+}
+.hostCrown {
+  display: flex;
+  position: absolute;
+  font-size: 38px;
+  color: orange;
+  top: -20px;
+  left: -20px;
+  transform: rotate(-40deg);
 }
 
-.dragContainer ul {
+.dragContainer {
+  width: 100%;
   list-style: none;
   display: flex;
-  justify-content: center;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  padding: 0 3rem;
 }
 
-.dragContainer ul li {
+.dragContainer li {
   width: 110px;
   height: 170px;
   border-radius: 10px;
@@ -103,83 +145,90 @@
   border: 1px solid black;
 }
 
-.dragContainer ul li h2 {
+.dragContainer li h2 {
   padding-left: 10px;
   padding-right: 10px;
-
-  word-break: break-all;
-  display: flex;
-  justify-content: center;
+  overflow-wrap: break-word;
+  text-align: center;
+  padding-top: 0.5rem;
+}
+.wrap-text {
+  white-space: normal;
+  word-wrap: break-word;
 }
 
-.dragContainer ul li:nth-child(1) {
-  position: absolute;
+.dragContainer li:nth-child(1) {
   animation: moveCard 0.5s linear;
   bottom: 10%;
   left: 5%;
   transform: rotate(-20deg);
 }
-.dragContainer ul li:nth-child(2) {
-  position: absolute;
+.dragContainer li:nth-child(2) {
   animation: moveCard 0.5s linear;
   bottom: 10%;
   left: 15%;
   transform: rotate(20deg);
 }
-.dragContainer ul li:nth-child(3) {
-  position: absolute;
+.dragContainer li:nth-child(3) {
   animation: moveCard 0.5s linear;
   bottom: 10%;
   left: 25%;
   transform: rotate(-10deg);
 }
-.dragContainer ul li:nth-child(4) {
-  position: absolute;
+.dragContainer li:nth-child(4) {
   animation: moveCard 0.4s linear;
   bottom: 8%;
   left: 35%;
   transform: rotate(20deg);
 }
-.dragContainer ul li:nth-child(5) {
-  position: absolute;
+.dragContainer li:nth-child(5) {
   animation: moveCard 0.35s linear;
   bottom: 8%;
   left: 45%;
   transform: rotate(10deg);
 }
-.dragContainer ul li:nth-child(6) {
-  position: absolute;
+.dragContainer li:nth-child(6) {
   animation: moveCard 0.35s linear;
   bottom: 8%;
   left: 56%;
   transform: rotate(-10deg);
 }
-.dragContainer ul li:nth-child(7) {
-  position: absolute;
+.dragContainer li:nth-child(7) {
   animation: moveCard 0.35s linear;
   bottom: 8%;
   left: 64%;
   transform: rotate(10deg);
 }
-.dragContainer ul li:nth-child(8) {
-  position: absolute;
+.dragContainer li:nth-child(8) {
   animation: moveCard 0.35s linear;
   bottom: 8%;
   left: 75%;
   transform: rotate(-13deg);
 }
-.dragContainer ul li:nth-child(9) {
-  position: absolute;
+.dragContainer li:nth-child(9) {
   bottom: 10%;
   left: 86%;
   transform: rotate(13deg);
 }
-.dragContainer ul li:nth-child(10) {
-  position: absolute;
+.dragContainer li:nth-child(10) {
   bottom: 10%;
   left: 90%;
   transform: rotate(-13deg);
 }
+.changeNameButton {
+  width: 100%;
+  height: 35px;
+  display: flex;
+  border-radius: 10px;
+  background-color: rgb(41, 40, 40);
+  color: white;
+  text-align: center;
+}
+
+.inactive {
+  opacity: 0.7;
+}
+
 @keyframes hideAnimation {
   to {
     visibility: hidden;
@@ -190,13 +239,13 @@
 
 @keyframes jump {
   0% {
-    margin-top: 0;
+    transform: translateY(0);
   }
   35% {
-    margin-top: -7px;
+    transform: translateY(-7px);
   }
   70% {
-    margin-top: 0px;
+    transform: translateY(0);
   }
 }
 
@@ -209,9 +258,39 @@
 
 @keyframes moveCard {
   0% {
-    transform: translateX(1000px) rotate(1turn);
+    transform: translateX(1500px) rotate(1turn);
   }
   100% {
     transform: translateX(0px);
+  }
+}
+
+@media (max-width: 640px) {
+  .hostCrown {
+    font-size: 25px;
+    top: 0;
+    left: 0;
+    transform: translate(-30%, -30%) rotate(-40deg);
+  }
+  .dragContainer {
+    margin-top: auto;
+    padding: 0 1.25rem;
+  }
+  .dragContainer li {
+    width: 55px;
+    height: 80px;
+  }
+  .framerContainer {
+    margin: 0;
+    margin-top: auto;
+  }
+  .waitingLobbyCard {
+    justify-content: space-evenly;
+  }
+  .dragContainer h2 {
+    font-size: 12px;
+  }
+  .waitingLobbyContainer {
+    padding-bottom: 1.5rem;
   }
 }

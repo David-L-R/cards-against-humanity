@@ -1,29 +1,148 @@
-import { route } from "express/lib/router";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
-import { socket } from "../Home";
-import { BiCopy } from "react-icons/Bi";
+import React, { useEffect, useRef, useState } from "react";
+import { BiCopy } from "react-icons/bi";
+import { RiVipCrown2Fill } from "react-icons/ri";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import { motion as m } from "framer-motion";
+import randomInsult from "../../utils/randomInsult";
+import Error from "../../components/Error";
+import Scoreboard from "../../components/Scoreboard";
+import { parseCookies } from "nookies";
+import Loading from "../../components/Loading";
+import PageNotFound from "../../components/PageNotFound";
+import { useAppContext } from "../../context";
+import { TfiRocket } from "react-icons/tfi";
+import JoyRide, { ACTIONS, EVENTS, STATUS } from "react-joyride";
+import { Steps } from "../../components/Steps.js";
+import useLocalStorage from "../../components/useLocalStorage";
 
-const Lobby = () => {
+const Lobby = (props) => {
+  const { socket, handSize, amountOfRounds } = props;
   const router = useRouter();
-  const { lobbyId, name } = router.query;
+  const { joinGame } = router.query;
+  const cookies = parseCookies();
+  const [showErrMessage, setShowErrMessage] = useState(null);
   const [players, setPlayers] = useState([]);
   const [copied, setCopied] = useState(false);
+  const [isHost, setHost] = useState(false);
+  const [linkInvation, setlinkInvation] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [isLoading, setIsloading] = useState(true);
+  const [currentLobby, setCurrentLobby] = useState(null);
+  const [listenersReady, setListenersReady] = useState(false);
+  const [useJoyRide, setuseJoyRide] = useState(false);
 
-  //listener to update page from server after DB entry changed
-  socket.on("updateRoom", ({ playerList, err }) => {
-    if (err) return console.warn(err);
+  let [value, setValue] = useLocalStorage("tutorial");
 
-    setPlayers((pre) => (pre = playerList));
+  const [stepIndex, setStepIndex] = useState(0);
+  const { storeData, setStoreData } = useAppContext();
 
-    console.error(err);
-  });
+  const lobbyId = storeData.lobbyId;
+
+  setTimeout(() => {
+    setuseJoyRide(true);
+  }, 1000);
+
+  const handleGameCreation = () => {
+    setIsloading(true);
+    socket.emit("createGameObject", {
+      lobbyId,
+      setRounds: amountOfRounds,
+      maxHandSize: handSize,
+    });
+  };
+
+  const changePLayerName = (newPLayerName) => {
+    socket.emit("updateLobby", {
+      lobbyId,
+      id: cookies.socketId,
+      newPLayerName,
+    });
+  };
+
+  const checkIfPlaying = (playerId) => {
+    return currentLobby.players.find((player) => player.id === playerId);
+  };
 
   useEffect(() => {
-    //self update page after got redirected, use room lobby from query
-    socket.emit("selfUpdate", { lobbyId, name });
+    if (lobbyId) {
+      socket.on("updateRoom", ({ currentLobby, err, kicked }) => {
+        if (!currentLobby || err) {
+          setIsloading(false);
+          return setShowErrMessage(
+            "Can not find Lobby, please check our invatation link"
+          );
+        }
+        const player = currentLobby.waiting.find(
+          (player) => player.id === cookies.socketId
+        );
+        //if player got kicket
+        if (kicked && !player)
+          return (
+            setShowErrMessage("You got kicked! Redirecting you back"),
+            setTimeout(() => {
+              router.push("/");
+            }, 3500)
+          );
+
+        setIsloading(false);
+        setCurrentLobby(currentLobby);
+
+        if (!player) {
+          setCurrentLobby(null);
+          return setShowErrMessage("Player not found");
+        }
+        const { waiting } = currentLobby;
+        const { id, name, isHost, inactive } = player;
+        //check if the host
+        isHost
+          ? (setHost(true), setStoreData((prev) => ({ ...prev, isHost: true })))
+          : setHost(false);
+
+        if (err) return console.warn(err);
+
+        setStoreData((prev) => ({ ...prev, playerName: player.name }));
+        setPlayers((pre) => waiting);
+      });
+
+      // creates new game if host and redirect everyone to game
+      socket.on("newgame", ({ newGameData, err }) => {
+        if (!newGameData || err) {
+          setIsloading(false);
+          return setShowErrMessage(err);
+        }
+        const stage = newGameData.turns[0].stage[0];
+        const gameId = newGameData.gameIdentifier;
+        if (lobbyId) {
+          if (stage === "start") {
+            let gamePath = {
+              pathname: `/lobby/game/${gameId}`,
+              query: { lobbyId: lobbyId },
+            };
+            router.push(gamePath);
+          }
+        }
+      });
+    }
+    setListenersReady(true);
+    return () => {
+      socket.removeAllListeners();
+    };
   }, [lobbyId]);
+
+  useEffect(() => {
+    //self update page after got redirected, use key from query as lobby id
+    if (lobbyId && listenersReady) {
+      socket.emit("updateLobby", { lobbyId, id: cookies.socketId, joinGame });
+    }
+  }, [listenersReady, lobbyId]);
+
+  useEffect(() => {
+    if (router.query.lobbyId) {
+      setlinkInvation(`${window?.location.href}?joinGame=true`);
+      setStoreData((prev) => ({ ...prev, lobbyId: router.query.lobbyId[0] }));
+    }
+  }, [router.isReady]);
 
   //hello David :) WE good at naming conventions😘😘
   const toggleSomething = () => {
@@ -33,68 +152,180 @@ const Lobby = () => {
     }, 3000);
   };
 
+  if (isLoading && !currentLobby)
+    return (
+      <main>
+        <Loading />
+      </main>
+    );
+
+  if (!currentLobby)
+    return (
+      <main>
+        {showErrMessage && (
+          <Error
+            showErrMessage={showErrMessage}
+            setShowErrMessage={setShowErrMessage}
+          />
+        )}
+        <PageNotFound />
+      </main>
+    );
+
+  const handleJoyrideCallback = (data) => {
+    const { action, index, status, type } = data;
+
+    if (
+      stepIndex !== 3 &&
+      [EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)
+    ) {
+      // Update state to advance the tour
+      setStepIndex((prev) => (prev += 1));
+    } else if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
+      setIsOpen(true);
+      setTimeout(() => {
+        setStepIndex((prev) => (prev += 1));
+      }, 300);
+    }
+    if (stepIndex === 6) {
+      setIsOpen(false);
+    }
+    if (index >= Steps.length - 1) {
+      setTimeout(() => {
+        setValue("DONE");
+      }, 10000);
+    }
+  };
   return (
     <>
-      <div className="waitingLobbyContainer">
-        <div className="waitingLobbyCard">
-          <div className="waitingLobbyTextWrapper">
+      {console.log("stepIndex", stepIndex)}
+      {isHost && (
+        <JoyRide
+          callback={handleJoyrideCallback}
+          continuous
+          stepIndex={stepIndex}
+          hideCloseButton
+          scrollToFirstStep
+          showProgress
+          showSkipButton
+          steps={Steps}
+          run={value == "DONE" ? false : useJoyRide}
+        />
+      )}
+      <main className="waitingLobbyContainer">
+        {currentLobby && (
+          <section className="scoreboard-container">
+            <Scoreboard
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              currentLobby={currentLobby}
+              socket={socket}
+            />
+          </section>
+        )}
+
+        <section className="waitingLobbyCard">
+          <m.div
+            className="framerContainer"
+            initial={{ y: -500, rotate: -30 }}
+            animate={{ y: 0, rotate: 0 }}
+            exit={{
+              x: -1300,
+              rotate: -120,
+              transition: { duration: 0.75 },
+            }}>
             <h1>
-              Waiting for players
-              <div className="loadingContainer">
+              Waiting for players&nbsp;
+              <span className="loadingContainer">
                 <div className="loader">
-                  <div class="circle" id="a"></div>
-                  <div class="circle" id="b"></div>
-                  <div class="circle" id="c"></div>
+                  <div className="circle" id="a" />
+                  <div className="circle" id="b" />
+                  <div className="circle" id="c" />
+                </div>
+              </span>
+            </h1>
+
+            {isHost && (
+              <div className="lobbyIdContainer">
+                <h3>Invite your Friends: </h3>
+                <div className="lobbyIdCopyField">
+                  {copied ? (
+                    <p className="tempCopyText">Copied to clipboard!</p>
+                  ) : null}
+                  <CopyToClipboard text={linkInvation} onCopy={toggleSomething}>
+                    <div className="input-icon-wrapper">
+                      <p>Click to copy invitation link</p>
+                      <BiCopy className="icon" />
+                    </div>
+                  </CopyToClipboard>
                 </div>
               </div>
-            </h1>
-          </div>
-          <div className="lobbyIdContainer">
-            <h3>Game code: </h3>
-            <div className="lobbyIdCopyField">
-              {copied ? <p className="tempCopyText">Copied!</p> : null}
-              <CopyToClipboard text={lobbyId} onCopy={toggleSomething}>
-                <p>
-                  {lobbyId}
-                  <BiCopy className="icon" />
-                </p>
-              </CopyToClipboard>
-            </div>
-          </div>
-          <div className="waitingLobbyButtonWrapper">
-            <button className="lobbyButton">
-              <span>Ready</span>
-            </button>
-          </div>
-          <div className="dragContainer">
-            <ul>
-              {players &&
-                players.map((player) => (
-                  <li key={player.name}>
-                    <h2>{player.name.toUpperCase()}</h2>
-                  </li>
-                ))}
-            </ul>
-          </div>
-        </div>
-      </div>
+            )}
+            <input
+              maxLength={15}
+              className="changeNameButton"
+              type="text"
+              onChange={(e) => changePLayerName(e.target.value)}
+              placeholder="Change name (Optional)"
+            />
+
+            {isHost && (
+              <button
+                className={isLoading ? "lobbyButton isLoading" : "lobbyButton"}
+                onClick={handleGameCreation}
+                disabled={isLoading ? true : false}
+                style={
+                  isLoading
+                    ? {
+                        transform: "scale(1)",
+                      }
+                    : null
+                }>
+                <span>{isLoading ? "Loading..." : "Ready"}</span>
+              </button>
+            )}
+          </m.div>
+          <ul className="dragContainer">
+            {players &&
+              players.map((player) => (
+                <li
+                  key={player.name}
+                  className={
+                    player.inactive || checkIfPlaying(player.id)
+                      ? "inactive"
+                      : null
+                  }>
+                  <h2>
+                    {player.name.toUpperCase() !== "DAVID" ? (
+                      player.name.toUpperCase()
+                    ) : (
+                      <>
+                        <TfiRocket className="rockt" />
+                      </>
+                    )}
+                  </h2>
+                  {player.inactive && (
+                    <p>is disconnected and {randomInsult()}</p>
+                  )}
+                  {checkIfPlaying(player.id) && <p>Currently in a Game...</p>}
+                  {player.isHost && (
+                    <div className="hostCrown">
+                      <RiVipCrown2Fill />
+                    </div>
+                  )}
+                </li>
+              ))}
+          </ul>
+        </section>
+        {showErrMessage && (
+          <Error
+            showErrMessage={showErrMessage}
+            setShowErrMessage={setShowErrMessage}
+          />
+        )}
+      </main>
     </>
   );
 };
 
 export default Lobby;
-
-/*
-<h1>Lobby, waiting for players</h1>
-      <h2>Lobby code: {lobbyId}</h2>
-      <ul>
-        {players &&
-          players.map((player) => (
-            <li key={player.name}>
-              <p>Player Name : {player.name}</p>
-              <p>Player ID : {player.id}</p>
-            </li>
-          ))}
-      </ul>
-
-*/

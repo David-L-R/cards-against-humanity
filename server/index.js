@@ -5,13 +5,8 @@ import { Server } from "socket.io";
 import express from "express";
 import cors from "cors";
 import http from "http";
-import {
-  createNewGame,
-  createNewLobby,
-  deletePlayerFromDb,
-  findRoomToJoin,
-  updateClient,
-} from "./controller/socketControllers.js";
+import useQueue from "./utils/useQueue.js";
+import consoleSuccess from "./utils/consoleSuccess.js";
 
 dotenv.config();
 connectDB();
@@ -25,47 +20,73 @@ app.use(
     extended: true,
   })
 );
-
+export const queue = {}; // {lobby: {lobby: lobbyId, loading:Boolean, data:[{states to process, channelname}]}}
 const PORT = process.env.PORT || 5555;
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
 
 server.listen(PORT, async (req, res) => {
-  console.log(`Server running under ${PORT}`);
+  consoleSuccess(`Server running under ${PORT}`);
 });
 
 //Socket.io
 io.on("connection", (socket) => {
   console.log(`user connected: ${socket.id}`);
 
-  socket.on("createNewLobby", (data) => createNewLobby({ socket, data }));
+  socket.on("createNewLobby", (data) => {
+    socket.join(data.lobbyId);
+    useQueue({ data, socket, io, channelName: "createNewLobby" });
+  });
 
-  socket.on("createNewGame", (data) => createNewGame({ socket, data }));
+  socket.on("updateLobby", (data) => {
+    socket.join(data.lobbyId),
+      useQueue({ data, socket, io, channelName: "updateLobby" });
+  });
 
-  socket.on("selfUpdate", ({ lobbyId, name }) =>
-    updateClient({ lobbyId, socket, name })
-  );
-
-  socket.on("findRoom", ({ lobbyId, newPlayerName }) =>
-    findRoomToJoin({ lobbyId, newPlayerName, socket })
-  );
+  socket.on("findRoom", (data) => {
+    socket.join(data.lobbyId),
+      useQueue({ data, socket, io, channelName: "findRoom" });
+  });
 
   socket.on("disconnect", async (reason) => {
-    const { playerList, lobbyId, err } = await deletePlayerFromDb({
-      reason,
+    const userId = socket.userId;
+    useQueue({
+      userId,
       io,
-      socket,
+      channelName: "disconnect",
+      data: { lobbyId: reason.replace(" ", "") },
     });
-    if (playerList && lobbyId)
-      io.to(lobbyId.toString()).emit("updateRoom", { playerList });
   });
 
-  socket.on("reconnect", async () => {
-    console.log("Reconnectetd!, Socket id: ", socket.id);
+  socket.on("createGameObject", (data) => {
+    socket.join(data.lobbyId);
+    useQueue({ data, socket, io, channelName: "createGameObject" });
+  });
+
+  socket.on("getUpdatedGame", (data) => {
+    socket.join(data.lobbyId);
+    useQueue({ data, socket, io, channelName: "getUpdatedGame" });
+  });
+
+  socket.on("changeGame", async (data) => {
+    socket.join(data.lobbyId),
+      useQueue({ data, socket, io, channelName: "changeGame" });
   });
 });
+
+/*
+
+lobbyId:{
+lobby: lobbyId
+loading:Boolean
+data:[{data to precess}]
+channel: function
+}
+
+
+*/
