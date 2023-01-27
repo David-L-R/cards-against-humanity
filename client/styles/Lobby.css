@@ -9,6 +9,7 @@
 .waitingLobbyCard {
   display: flex;
   width: 100%;
+
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -19,22 +20,22 @@
   width: 70vw;
   aspect-ratio: 0.65/1;
   border: 2px solid white;
-  box-shadow: 0 0px 18px 0px rgba(255, 255, 255, 0.2);
+  /*box-shadow: 0 0px 18px 0px rgba(255, 255, 255, 0.2);*/
   border-radius: 15px;
-  padding: 0;
+
   z-index: 1;
-  background: black;
+  background: rgb(0, 0, 0);
   margin: auto;
   display: flex;
   flex-direction: column;
   gap: 2rem;
   justify-content: space-around;
   align-items: center;
-  padding: 0.5rem 1rem;
+  padding: 1rem 1rem 2rem 1rem;
 }
 
 .framerContainer h1 {
-  text-align: center;
+  padding-left: 1rem;
 }
 
 .loadingContainer {
@@ -68,8 +69,8 @@
 .lobbyIdContainer {
   display: flex;
   flex-wrap: wrap;
+  gap: 15px;
   justify-content: center;
-  width: 100%;
 }
 .lobbyIdContainer div:hover {
   cursor: pointer;
@@ -223,6 +224,20 @@
   background-color: rgb(41, 40, 40);
   color: white;
   text-align: center;
+}
+.inputEnterIconContainer {
+  width: 100%;
+  position: relative;
+}
+.enterIcon {
+  position: absolute;
+  top: 50%;
+  right: 0%;
+  transform: translate(-50%, -50%);
+  font-size: 20px;
+  font-weight: 800;
+  stroke-width: 50px;
+  height: 100%;
 }
 
 .inactive {

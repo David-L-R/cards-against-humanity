@@ -52,9 +52,10 @@ function WhiteCard({ getNewWhiteCard, setCardsOnTable }) {
     <div className="whiteCardContainer">
       <div
         className={isActive ? "whiteCard whiteIsFlipped" : "whiteCard"}
-        onClick={handleClick}>
+        onClick={handleClick}
+      >
         <div className="whiteCardFace whiteCardFace--front">
-          <h2>Cards Against Humanity.</h2>
+          <h2>Man Makes Monster.</h2>
 
           <div className="whiteCardFaceButton">
             <p>Click To Reveal</p>

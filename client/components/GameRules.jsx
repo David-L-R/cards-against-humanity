@@ -13,11 +13,11 @@ function GameRules({ setShowRules, showRules }) {
         <div className="gameRulesText">
           <div>
             <p>
-              Cards Against Humanity is a party game in which players complete
-              fill-in-the-blank statements using words or phrases typically
-              deemed as offensive, risqué or politically incorrect printed on
-              playing cards. The game is simple to play, but can be highly
-              entertaining and irreverent.
+              Man Makes Monster is a Cards Against Humanity replica. It is a
+              party game in which players complete fill-in-the-blank statements
+              using words or phrases typically deemed as offensive, risqué or
+              politically incorrect printed on playing cards. The game is simple
+              to play, but can be highly entertaining and irreverent.
             </p>
             <p>
               Note: The game can be played with any number of players and it is

@@ -6,6 +6,7 @@ const calc = (x, y) => [
   (x - window.innerWidth / 2) / 20,
   1.1,
 ];
+
 const trans = (x, y, s) =>
   `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${s})`;
 
@@ -31,7 +32,7 @@ function Card() {
         onClick={handleClick}
       >
         <div className="cardFace cardFace--front">
-          <h2>Cards Against Humanity.</h2>
+          <h2>Man Makes Monster.</h2>
         </div>
         <div className="cardFace cardFace--back">
           <div className="cardContent">

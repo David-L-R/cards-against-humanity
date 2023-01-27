@@ -15,6 +15,7 @@ import { TfiRocket } from "react-icons/tfi";
 import JoyRide, { ACTIONS, EVENTS, STATUS } from "react-joyride";
 import { Steps } from "../../components/Steps.js";
 import useLocalStorage from "../../components/useLocalStorage";
+import { AiOutlineEnter } from "react-icons/ai";
 
 const Lobby = (props) => {
   const { socket, handSize, amountOfRounds } = props;
@@ -196,6 +197,7 @@ const Lobby = (props) => {
       }, 10000);
     }
   };
+
   return (
     <>
       {console.log("stepIndex", stepIndex)}
@@ -233,7 +235,8 @@ const Lobby = (props) => {
               x: -1300,
               rotate: -120,
               transition: { duration: 0.75 },
-            }}>
+            }}
+          >
             <h1>
               Waiting for players&nbsp;
               <span className="loadingContainer">
@@ -261,13 +264,20 @@ const Lobby = (props) => {
                 </div>
               </div>
             )}
-            <input
-              maxLength={15}
-              className="changeNameButton"
-              type="text"
-              onChange={(e) => changePLayerName(e.target.value)}
-              placeholder="Change name (Optional)"
-            />
+            <div className="inputEnterIconContainer">
+              <input
+                maxLength={15}
+                className="changeNameButton"
+                type="text"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    changePLayerName(e.target.value);
+                  }
+                }}
+                placeholder="Change name"
+              />
+              <AiOutlineEnter className="enterIcon" />
+            </div>
 
             {isHost && (
               <button
@@ -280,7 +290,8 @@ const Lobby = (props) => {
                         transform: "scale(1)",
                       }
                     : null
-                }>
+                }
+              >
                 <span>{isLoading ? "Loading..." : "Ready"}</span>
               </button>
             )}
@@ -294,7 +305,8 @@ const Lobby = (props) => {
                     player.inactive || checkIfPlaying(player.id)
                       ? "inactive"
                       : null
-                  }>
+                  }
+                >
                   <h2>
                     {player.name.toUpperCase() !== "DAVID" ? (
                       player.name.toUpperCase()

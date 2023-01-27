@@ -3,7 +3,7 @@ export const Steps = [
     title: "You're Hosting!",
     content: "this Crown will later show who is the Czar of each turn",
     target: ".hostCrown",
-    placement: "top-end",
+    placement: "right",
   },
   {
     title: "Invite your Friends",
@@ -42,6 +42,6 @@ export const Steps = [
     title: "Game Settings",
     content: "You can change the game settings here only if you're the Host",
     target: ".gameSettingsIcon",
-    placement: "right",
+    placement: "right end",
   },
 ];
