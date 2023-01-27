@@ -493,7 +493,8 @@ const Game = ({ socket }) => {
             currentTurn={currentTurn}
             checkoutRound={checkoutRound}
             isCzar={isCzar}
-            currentLobby={currentLobby}>
+            currentLobby={currentLobby}
+          >
             {isInactive && (
               <div className="errMessage">
                 {"You are inactive, you are able to turn back in each stage"}
@@ -563,7 +564,8 @@ const Game = ({ socket }) => {
               confirmed={confirmed}
               setConfirmed={setConfirmed}
               stage={gameStage}
-              maxHandSize={maxHandSize}>
+              maxHandSize={maxHandSize}
+            >
               {playedWhite && isCzar && (
                 <ul className={"cardDisplay playedWhite"}>
                   {playedWhite.map(
@@ -572,14 +574,16 @@ const Game = ({ socket }) => {
                         <li
                           onMouseEnter={() => handleMouseOver(cards)}
                           onMouseLeave={() => handleMouseLeave(cards)}
-                          key={cards[0].text + cards[0].pack + index}>
+                          key={cards[0].text + cards[0].pack + index}
+                        >
                           {cards.map((card) => (
                             <PlayedWhite card={card} key={card.text} />
                           ))}
                           <button
                             onClick={() => submitWinner(cards)}
                             className="choose-button"
-                            disabled={gameStage === "deciding" ? false : true}>
+                            disabled={gameStage === "deciding" ? false : true}
+                          >
                             {gameStage === "deciding"
                               ? "Choose as the Winner"
                               : "wait for palyers...."}
@@ -607,7 +611,8 @@ const Game = ({ socket }) => {
       )}
       <button
         style={{ color: "red", textDecoration: "underline" }}
-        onClick={() => handleClosingGame()}>
+        onClick={() => handleClosingGame()}
+      >
         <h1>CLOSE GAME TO CHECK "GAME END" PAGE</h1>
       </button>
     </main>
