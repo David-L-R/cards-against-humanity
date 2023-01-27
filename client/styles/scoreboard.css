@@ -1,7 +1,8 @@
 .crown-background {
   position: absolute;
-  top: 1%;
-  left: 22%;
+  top: -30%;
+  left: 10%;
+  z-index: 0;
 }
 .crown-background::after {
   content: "";
@@ -19,7 +20,7 @@
   color: gold;
   height: 25px;
   width: auto;
-  transform: rotateZ(-42deg);
+  transform: rotate(20deg);
 }
 .sideMenu {
   height: 100%;

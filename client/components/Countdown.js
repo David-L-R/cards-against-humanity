@@ -16,7 +16,7 @@ function Countdown({ timer, setTimer }) {
   if (!timer) return false;
   return (
     <div className="timer-wrapper">
-      {/*<CountdownCircleTimer
+      <CountdownCircleTimer
         isPlaying
         size={100}
         strokeWidth={17}
@@ -25,9 +25,10 @@ function Countdown({ timer, setTimer }) {
         duration={timer}
         colors={["#fff", "#EB455F", "#EB455F"]}
         colorsTime={[10, 5, 0]}
-        onComplete={() => ({ shouldRepeat: false, delay: 1 })}>
+        onComplete={() => ({ shouldRepeat: false, delay: 1 })}
+      >
         {renderTime}
-      </CountdownCircleTimer>*/}
+      </CountdownCircleTimer>
     </div>
   );
 }

@@ -8,8 +8,7 @@ import KickButton from "./KickButton";
 import { parseCookies } from "nookies";
 import Avatar from "./Avatar.jsx";
 
-const Scoreboard = ({ currentLobby, socket }) => {
-  const [isOpen, setIsOpen] = useState(false);
+const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
   const [showKick, setShowKick] = useState(false);
   const cookies = parseCookies();
   const { turns } = currentLobby;
@@ -55,14 +54,16 @@ const Scoreboard = ({ currentLobby, socket }) => {
           boxShadow: isOpen
             ? "20px 2px 31px 4px rgba(135,129,129,0.52)"
             : "none",
-        }}>
+        }}
+      >
         <div
           className="scoreButton"
           onClick={openMenu}
           style={{
             opacity: isOpen ? "0" : "1",
             cursor: isOpen ? "default" : "pointer",
-          }}>
+          }}
+        >
           <p>SCORES</p>
         </div>
         <button className="closeScorebutton" onClick={openMenu}>
@@ -72,7 +73,7 @@ const Scoreboard = ({ currentLobby, socket }) => {
           <h1>SCOREBOARD</h1>
 
           <li className="scoreboardTitles">
-            <div>Status</div>
+            <div className="lastStep">Status</div>
             <div>Name</div>
             <div>Score</div>
           </li>
@@ -83,7 +84,8 @@ const Scoreboard = ({ currentLobby, socket }) => {
                 className={player.inactive ? "inactive-player" : null}
                 onMouseEnter={(e) => setShowKick(e.target.dataset.id)}
                 onMouseLeave={showKick ? () => setShowKick(false) : null}
-                data-id={player.id}>
+                data-id={player.id}
+              >
                 <div>
                   {storeData.isHost &&
                   showKick === player.id &&

@@ -12,6 +12,9 @@ import Loading from "../../components/Loading";
 import PageNotFound from "../../components/PageNotFound";
 import { useAppContext } from "../../context";
 import { TfiRocket } from "react-icons/tfi";
+import JoyRide, { ACTIONS, EVENTS, STATUS } from "react-joyride";
+import { Steps } from "../../components/Steps.js";
+import useLocalStorage from "../../components/useLocalStorage";
 
 const Lobby = (props) => {
   const { socket, handSize, amountOfRounds } = props;
@@ -23,12 +26,22 @@ const Lobby = (props) => {
   const [copied, setCopied] = useState(false);
   const [isHost, setHost] = useState(false);
   const [linkInvation, setlinkInvation] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsloading] = useState(true);
   const [currentLobby, setCurrentLobby] = useState(null);
   const [listenersReady, setListenersReady] = useState(false);
+  const [useJoyRide, setuseJoyRide] = useState(false);
+
+  let [value, setValue] = useLocalStorage("tutorial");
+
+  const [stepIndex, setStepIndex] = useState(0);
   const { storeData, setStoreData } = useAppContext();
 
   const lobbyId = storeData.lobbyId;
+
+  setTimeout(() => {
+    setuseJoyRide(true);
+  }, 1000);
 
   const handleGameCreation = () => {
     setIsloading(true);
@@ -159,15 +172,58 @@ const Lobby = (props) => {
       </main>
     );
 
+  const handleJoyrideCallback = (data) => {
+    const { action, index, status, type } = data;
+
+    if (
+      stepIndex !== 3 &&
+      [EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)
+    ) {
+      // Update state to advance the tour
+      setStepIndex((prev) => (prev += 1));
+    } else if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
+      setIsOpen(true);
+      setTimeout(() => {
+        setStepIndex((prev) => (prev += 1));
+      }, 300);
+    }
+    if (stepIndex === 6) {
+      setIsOpen(false);
+    }
+    if (index >= Steps.length - 1) {
+      setTimeout(() => {
+        setValue("DONE");
+      }, 10000);
+    }
+  };
   return (
     <>
+      {console.log("stepIndex", stepIndex)}
+      {isHost && (
+        <JoyRide
+          callback={handleJoyrideCallback}
+          continuous
+          stepIndex={stepIndex}
+          hideCloseButton
+          scrollToFirstStep
+          showProgress
+          showSkipButton
+          steps={Steps}
+          run={value == "DONE" ? false : useJoyRide}
+        />
+      )}
       <main className="waitingLobbyContainer">
         {currentLobby && (
-          <>
-            <Scoreboard currentLobby={currentLobby} socket={socket} />
-          </>
+          <section className="scoreboard-container">
+            <Scoreboard
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+              currentLobby={currentLobby}
+              socket={socket}
+            />
+          </section>
         )}
-        <h1></h1>
+
         <section className="waitingLobbyCard">
           <m.div
             className="framerContainer"

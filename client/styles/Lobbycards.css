@@ -13,14 +13,14 @@
   position: relative;
   transform: rotateY(180deg) scale(1.1) translateX(-205px);
   border-radius: 15px;
-  box-shadow: 2px 3px 10px 2px rgba(255, 255, 255, 0.7);
+
   z-index: 2;
 }
 .lobbyJoinCardRotate {
   position: relative;
   transform: rotateY(180deg) scale(1.1) translateX(200px);
   border-radius: 15px;
-  box-shadow: 2px 3px 10px 2px rgba(255, 255, 255, 0.7);
+
   z-index: 2;
 }
 #lobbyHidden {
@@ -51,7 +51,6 @@
   border-radius: 15px;
   position: absolute;
   border: 2px solid white;
-  box-shadow: 0 0px 10px 0px rgba(255, 255, 255, 0.2);
 }
 
 .lobbyFront {
@@ -62,7 +61,7 @@
 
 .lobbyFront:hover,
 .lobbyBack:hover {
-  box-shadow: 0 0px 15px 15px rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0px 15px 8px rgba(255, 255, 255, 0.2);
 }
 .lobbyjoinhidden {
   z-index: 0;

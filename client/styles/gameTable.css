@@ -81,10 +81,12 @@
 
 .cardDisplay.playedWhite {
   display: flex;
-  width: 100%;
-  gap: 0.5rem;
+  width: max-content;
+  margin: auto;
+  gap: 2rem;
   background-color: transparent;
-  padding: 0 1rem;
+  justify-content: space-between;
+  padding: 1rem 1rem;
 }
 
 .cardDisplay.playedWhite li {

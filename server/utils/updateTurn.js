@@ -238,13 +238,15 @@ const updateTurn = async ({
         );
       const lastPlayerIndex =
         Game.players.filter((player) => !player.inactive).length - 1;
-      //if cazr is last palyer in array, take the first player
+      //if czar is the last palyer in an array, take the first player
       const nextCzar =
         currCzarIndex === lastPlayerIndex
-          ? Game.players[0]
-          : Game.players[currCzarIndex + 1];
+          ? Game.players.find((player) => !player.inactive)
+          : Game.players.find(
+              (player, index) => !player.inactive && index === currCzarIndex + 1
+            );
 
-      // create new turn
+      // create a new turn
       const newTurn = {
         turn: currentTurn.turn + 1,
         czar: nextCzar,

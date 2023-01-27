@@ -15,6 +15,7 @@ import GameEnd from "../../../components/GameEnd";
 
 const Game = ({ socket }) => {
   const router = useRouter();
+  const [isOpen, setIsOpen] = useState(false);
   const [lobbyId, setLobbyId] = useState(null);
   const cookies = parseCookies();
   const [isHost, setHost] = useState(false);
@@ -50,7 +51,7 @@ const Game = ({ socket }) => {
       gameId,
       lobbyId,
     };
-    // if czar leaved == timer runs out
+    // if czar left == timer runs out
     if (!selected)
       return socket.emit("changeGame", { ...playerData, leavedGame: true });
 
@@ -375,19 +376,19 @@ const Game = ({ socket }) => {
       }
 
       if (gameStage === "black" && timerTrigger) {
-        setTimer(10);
+        setTimer(45);
       }
 
       if (gameStage === "white" && timerTrigger) {
-        setTimer(30);
+        setTimer(60);
       }
 
       if (gameStage === "deciding" && timerTrigger) {
-        setTimer(10);
+        setTimer(60);
       }
 
       if (gameStage === "winner" && timerTrigger) {
-        setTimer(12);
+        setTimer(30);
       }
 
       if (gameStage === "black") setConfirmed(false);
@@ -523,9 +524,13 @@ const Game = ({ socket }) => {
             Loadin:{loading ? "true" : "false"}
           </div>
           {currentLobby && (
-            <>
-              <Scoreboard currentLobby={currentLobby} />
-            </>
+            <section className="scoreboard-container">
+              <Scoreboard
+                currentLobby={currentLobby}
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+              />
+            </section>
           )}
 
           {isInactive && (
