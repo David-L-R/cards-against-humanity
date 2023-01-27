@@ -46,6 +46,10 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
     setIsOpen(!isOpen);
   };
 
+  function calculateFontSize(name) {
+    return 30 - (name.length + 1.5) + "px";
+  }
+
   return (
     <>
       <div
@@ -119,7 +123,12 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
                     playerAvatar={player.avatar}
                   />
 
-                  <span className="player-name">{player.name}</span>
+                  <span
+                    className="player-name"
+                    style={{ fontSize: `${calculateFontSize(player.name)}` }}
+                  >
+                    {player.name}
+                  </span>
                 </div>
                 <div>
                   <span className="player-points">{player.points}</span>

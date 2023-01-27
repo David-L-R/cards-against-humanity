@@ -16,6 +16,7 @@ import JoyRide, { ACTIONS, EVENTS, STATUS } from "react-joyride";
 import { Steps } from "../../components/Steps.js";
 import useLocalStorage from "../../components/useLocalStorage";
 import { AiOutlineEnter } from "react-icons/ai";
+import { VscDebugDisconnect } from "react-icons/vsc";
 
 const Lobby = (props) => {
   const { socket, handSize, amountOfRounds } = props;
@@ -60,6 +61,10 @@ const Lobby = (props) => {
       newPLayerName,
     });
   };
+
+  function calculateFontSize(name) {
+    return 30 - name.length + "px";
+  }
 
   const checkIfPlaying = (playerId) => {
     return currentLobby.players.find((player) => player.id === playerId);
@@ -307,7 +312,7 @@ const Lobby = (props) => {
                       : null
                   }
                 >
-                  <h2>
+                  <h2 style={{ fontSize: `${calculateFontSize(player.name)}` }}>
                     {player.name.toUpperCase() !== "DAVID" ? (
                       player.name.toUpperCase()
                     ) : (
@@ -317,7 +322,10 @@ const Lobby = (props) => {
                     )}
                   </h2>
                   {player.inactive && (
-                    <p>is disconnected and {randomInsult()}</p>
+                    <>
+                      <VscDebugDisconnect className="disconectIcon" />
+                      <p>Lost Connection: {randomInsult()}</p>
+                    </>
                   )}
                   {checkIfPlaying(player.id) && <p>Currently in a Game...</p>}
                   {player.isHost && (
