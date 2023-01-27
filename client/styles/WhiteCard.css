@@ -84,8 +84,11 @@
 }
 .whiteCardHeader {
   position: relative;
-  padding: 30px 30px 40px;
+  /*padding: 30px 30px 40px;*/
   cursor: default;
+  font-weight: bolder;
+  font-size: 18px;
+  padding: 15px;
 }
 .whiteCardHeader:after {
   content: "";
