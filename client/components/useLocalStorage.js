@@ -3,7 +3,6 @@ import React, { useState, useEffect } from "react";
 function getSavedValue(key, initialValue) {
   if (typeof window !== "undefined") {
     const savedValue = localStorage?.getItem(key);
-    console.log("savedValue", savedValue);
     const storeData =
       savedValue !== "undefined" ? JSON.parse(savedValue) : null;
     if (storeData) {
