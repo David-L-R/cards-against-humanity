@@ -65,12 +65,12 @@
   transition: all 0.3s ease-in-out;
   justify-content: space-between;
   color: rgba(255, 255, 255, 0.545);
-  transform: translateX(80%);
+  right: -280px;
 }
 
 .accountMenu:hover {
   background-color: rgba(0, 0, 0, 0.631);
-  transform: translateX(0);
+  right: 0;
   color: white;
   border-left: 2px solid rgba(255, 255, 255, 0.767);
 }
@@ -79,7 +79,7 @@
   width: 50px;
   height: 50px;
 }
-.accountMenu ul li {
+.accountMenu > ul li {
   position: relative;
 
   display: flex;
@@ -173,12 +173,13 @@
     padding: 0.5rem 0 0;
   }
   .accountMenu {
-    margin-right: -50vw;
     font-size: 12px;
-    height: 75vh;
+    height: max-content;
+    gap: 2rem;
     width: 50vw;
     z-index: 30;
     overflow: auto;
+    right: -150px;
   }
 
   .navContainer::before {
@@ -198,7 +199,7 @@
   .navContainer:hover ~ .accountMenu,
   .accountMenu:hover {
     background-color: rgba(0, 0, 0, 0.731);
-    transform: translateX(-100%);
+    right: 0;
     color: white;
     border: 2px solid rgba(255, 255, 255, 0.315);
     border-right: none;
@@ -210,7 +211,7 @@
   .navbarIcons {
     font-size: 25px;
   }
-  .accountMenu ul li {
+  .accountMenu > ul li {
     gap: 10px;
     min-height: 50px;
   }

@@ -17,8 +17,11 @@ import ReportBug from "./ReportBug";
 import Contact from "./Contact";
 import { BiLogOut } from "react-icons/bi";
 import Profile from "./Profile";
+import SignIn from "../pages/api/auth/SignIn";
 
 function Navbar(props) {
+  const [providers, setProviders] = useState(null);
+  const [showSignIn, setShowSignIn] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -87,9 +90,17 @@ function Navbar(props) {
       return setLobbyId(router.query.lobbyId[0]);
     }
   }, [router.isReady, router, socket]);
+  useEffect(() => {
+    !providers &&
+      (async () => {
+        let providers = await getProviders();
+        setProviders(providers);
+      })();
+  }, []);
 
   return (
     <>
+      {console.log("providers", providers)}
       <nav className="navContainer">
         {lobbyId && gameIdentifier && (
           <h2 className="backButton">
@@ -146,7 +157,7 @@ function Navbar(props) {
                   <li className="profileMenu" onClick={signOut}>
                     <span className="profileMenuIcon">
                       <BiLogOut />
-                    </span>{" "}
+                    </span>
                     Sign out
                   </li>
                 </ul>
@@ -162,7 +173,7 @@ function Navbar(props) {
                 <CgProfile />
               </div>
               <div className="navBarText">
-                <button onClick={signIn}>Sign In</button>
+                <button>Sign In</button>
               </div>
             </li>
           )}
