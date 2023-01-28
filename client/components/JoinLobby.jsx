@@ -64,7 +64,7 @@ const JoinGame = ({ roomKey, playerName, socket, setShowErrMessage }) => {
         onChange={(e) => displayRoomCode(e.target.value)}
       />
 
-      <button type="submit" className="lobbyButton">
+      <button type="submit" className="waitingLobbyButton">
         <span>Join Game</span>
       </button>
     </form>

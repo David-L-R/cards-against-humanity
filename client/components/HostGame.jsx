@@ -26,7 +26,7 @@ const HostGame = ({ playerName, socket }) => {
         value={value}
         onChange={(event) => setValue(event.target.value)}
       />
-      <button type="submit" className="lobbyButton">
+      <button type="submit" className="waitingLobbyButton">
         Host Game
       </button>
     </form>

@@ -12,10 +12,10 @@ export const Steps = [
     placement: "bottom",
   },
   {
-    title: "READY!",
+    title: "START GAME!",
     content:
       "When all your friends have joined you can press Ready to begin the game!",
-    target: ".lobbyButton",
+    target: ".waitingLobbyButton",
     placement: "bottom",
   },
   {

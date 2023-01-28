@@ -59,7 +59,11 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
       <div
         onClick={() => playerId === cookies.socketId && setShowSettings(true)}
         className={"avatar-image"}
-        style={playerId === cookies.socketId ? { cursor: "pointer" } : null}
+        style={
+          playerId === cookies.socketId
+            ? { cursor: "pointer", border: "2px solid gold" }
+            : null
+        }
         dangerouslySetInnerHTML={{ __html: svg }}
       ></div>
     );
@@ -93,7 +97,8 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
                       <li>
                         <button
                           style={{ textTransform: "uppercase" }}
-                          onClick={() => handlEemotions(emotion.settings)}>
+                          onClick={() => handlEemotions(emotion.settings)}
+                        >
                           {emotion.label}
                         </button>
                       </li>

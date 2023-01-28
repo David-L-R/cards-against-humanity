@@ -20,7 +20,7 @@
   width: 70vw;
   aspect-ratio: 0.65/1;
   border: 2px solid white;
-  /*box-shadow: 0 0px 18px 0px rgba(255, 255, 255, 0.2);*/
+
   border-radius: 15px;
 
   z-index: 1;
@@ -312,7 +312,7 @@
     justify-content: space-evenly;
   }
   .dragContainer h2 {
-    font-size: 12px;
+    font-size: 12px !important;
   }
   .waitingLobbyContainer {
     padding-bottom: 1.5rem;

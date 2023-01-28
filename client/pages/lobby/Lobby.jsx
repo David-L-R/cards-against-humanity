@@ -205,7 +205,6 @@ const Lobby = (props) => {
 
   return (
     <>
-      {console.log("stepIndex", stepIndex)}
       {isHost && (
         <JoyRide
           callback={handleJoyrideCallback}
@@ -286,7 +285,11 @@ const Lobby = (props) => {
 
             {isHost && (
               <button
-                className={isLoading ? "lobbyButton isLoading" : "lobbyButton"}
+                className={
+                  isLoading
+                    ? "waitingLobbyButton isLoading"
+                    : "waitingLobbyButton"
+                }
                 onClick={handleGameCreation}
                 disabled={isLoading ? true : false}
                 style={
@@ -297,7 +300,7 @@ const Lobby = (props) => {
                     : null
                 }
               >
-                <span>{isLoading ? "Loading..." : "Ready"}</span>
+                <span>{isLoading ? "Loading..." : "Start Game"}</span>
               </button>
             )}
           </m.div>
