@@ -182,6 +182,7 @@ const Game = ({ socket }) => {
   };
 
   const processGame = ({ currentGame, err, kicked }) => {
+    console.log("currentGame", currentGame);
     //if player got kicket
     const player = currentGame?.players.find(
       (player) => player.id === cookies.socketId
@@ -303,14 +304,6 @@ const Game = ({ socket }) => {
         !cardsOnTable ||
         cardsOnTable?.table?.cards[0]?.text !== playedBlackFromCzar?.text
       ) {
-        console.log("cardsOnTable", cardsOnTable);
-        console.log("cardsOnTable", !cardsOnTable);
-        console.log(
-          "third",
-          cardsOnTable?.table?.cards[0]?.text !== playedBlackFromCzar?.text
-        );
-        console.log("current black", cardsOnTable?.table?.cards[0]?.text);
-        console.log("income black", playedBlackFromCzar?.text);
         setCardsOnTable({
           table: {
             label: "table",
@@ -341,7 +334,7 @@ const Game = ({ socket }) => {
     return () => {
       socket.removeAllListeners();
     };
-  }, [router.isReady]);
+  }, [router.isReady, gameStage]);
 
   //self update page after got redirected, use key from query as lobby id
   useEffect(() => {
