@@ -14,11 +14,6 @@ function GameEnd({ currentGame }) {
   const winningPlayers = currentGame.players
     .sort((a, b) => b.points - a.points)
     .filter((_, index) => index < 3);
-
-  let overallWinner = 0;
-  currentGame.players.forEach((player) => {
-    if (player.points > overallWinner) overallWinner = player;
-  });
   const allPLayersWithStats = currentGame.players.map((player) => ({
     playerName: player.name,
     points: player.points,
@@ -56,8 +51,7 @@ function GameEnd({ currentGame }) {
         <BalloonContainer totalBaloon={4} style={{ width: "100%" }} />
         <div className="gameEndTextField">
           <h2 className="winnerh1Text">And the Winner is...</h2>
-          <h1>{`${overallWinner.name}!`}</h1>
-
+          <h1>{`${winningPlayers[0].name}!`}</h1>
           <div className="avatarsContainer">
             {winningPlayers &&
               winningPlayers.map((player, index) => {
@@ -90,8 +84,7 @@ function GameEnd({ currentGame }) {
             <button
               onClick={backToLobby}
               style={{ zIndex: "1" }}
-              className="backToLobby"
-            >
+              className="backToLobby">
               Back to Lobby
             </button>
             <div className="crowd"></div>
