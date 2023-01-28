@@ -11,9 +11,7 @@
 
   z-index: 20;
 }
-.whiteCardSlideIn {
-  /*animation: whiteSlideIn 1s 0.5s linear forwards;*/
-}
+
 .whiteCardContainer:hover {
   scale: 1.05;
   transition: 0.5s;
@@ -29,7 +27,7 @@
 .whiteCard {
   width: 100%;
   height: 100%;
-  transition: transform 1s;
+  transition: transform 250ms;
   transform-style: preserve-3d;
   cursor: pointer;
   position: relative;

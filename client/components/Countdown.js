@@ -5,7 +5,7 @@ function Countdown({ timer, setTimer }) {
   const renderTime = ({ remainingTime }) => {
     if (remainingTime === 0) {
       setTimer(null);
-      return <div className="timer">Time's up!</div>;
+      // return <div className="timer">Time's up!</div>;
     } else
       return (
         <div className="timer">
@@ -13,7 +13,7 @@ function Countdown({ timer, setTimer }) {
         </div>
       );
   };
-  if (!timer) return false;
+  if (!timer) return null;
   return (
     <div className="timer-wrapper">
       <CountdownCircleTimer
@@ -25,8 +25,7 @@ function Countdown({ timer, setTimer }) {
         duration={timer}
         colors={["#fff", "#EB455F", "#EB455F"]}
         colorsTime={[10, 5, 0]}
-        onComplete={() => ({ shouldRepeat: false, delay: 1 })}
-      >
+        onComplete={() => ({ shouldRepeat: false, delay: 1 })}>
         {renderTime}
       </CountdownCircleTimer>
     </div>

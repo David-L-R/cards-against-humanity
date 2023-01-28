@@ -107,8 +107,7 @@ export const sendCurrentGame = async (data) => {
   socket.join(lobbyId);
   try {
     const currentLobbyData = await getCache({ lobbyId });
-    const { currentGame } = currentLobbyData;
-
+    const { currentGame, currentLobby } = currentLobbyData;
     const currentTurnIndex = currentGame.turns.length - 1;
     if (currentTurnIndex < 0) currentTurnIndex = 0;
     const czar = currentGame.turns[currentTurnIndex]?.czar;
@@ -168,7 +167,6 @@ export const sendCurrentGame = async (data) => {
 
 export const changeGame = async (states) => {
   const { playerId, stage, gameId, lobbyId, io } = states;
-
   if (stage === "dealing") {
     try {
       const currentLobbyData = await getCache({ lobbyId });
@@ -200,7 +198,6 @@ export const changeGame = async (states) => {
     const { currentGame } = currentLobbyData;
     const gameIdentifier = currentGame.gameIdentifier;
     const updatedGame = await updateTurn({ ...states, currentGame });
-    console.log("updatedgame", updatedGame);
     if (!updatedGame) return "Server error, no game found";
 
     io.to(lobbyId).emit("currentGame", {

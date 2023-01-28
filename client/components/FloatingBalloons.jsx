@@ -41,7 +41,11 @@ function BalloonContainer(props) {
     for (let i = num; i > 0; i--) {
       setBalloons((prevBalloons) => [
         ...prevBalloons,
-        <div className="balloon" style={getRandomStyles()} />,
+        <div
+          key={getRandomStyles().margin + i}
+          className="balloon"
+          style={getRandomStyles()}
+        />,
       ]);
     }
   }

@@ -181,162 +181,160 @@ const Game = ({ socket }) => {
     }
   };
 
+  const processGame = ({ currentGame, err, kicked }) => {
+    console.log("currentGame", currentGame);
+    //if player got kicket
+    const player = currentGame?.players.find(
+      (player) => player.id === cookies.socketId
+    );
+    if (kicked && !player && currentGame)
+      setShowErrMessage("You got kicked! Redirecting you back"),
+        setTimeout(() => {
+          router.push("/");
+        }, 3500);
+
+    //if error ocurred
+    if (err || (!currentGame && !kicked)) {
+      setShowErrMessage(
+        err ? err : "You are not part of this game! Redirecting you back"
+      );
+      setTimeout(() => {
+        router.push("/");
+      }, 3000);
+      return;
+    }
+
+    //if game was closed, show Game end component
+    if (currentGame.concluded) {
+      setGameEnds(true);
+      setTimer(false);
+    }
+
+    //if less then 3 players, let host decide to close the game
+    // if (currentGame.players.filter((player) => !player.inactive).length < 3)
+    //   setClosingGame(true);
+
+    //if less then 2 players, close the game after 3.5s, else abort the closing function
+    if (
+      currentGame.players.filter((player) => !player.inactive).length < 2 &&
+      !currentGame.concluded
+    ) {
+      setShowErrMessage(
+        "Not enough Players left, game will be closed within 3 seconds"
+      );
+      handleClosingGame({ force: true });
+
+      setTimeout(() => {
+        router.push(`/lobby/${storeData.lobbyId}`);
+      }, 3500);
+      return;
+    }
+
+    // if players cookie is not stored inside game Object = player is not part of the game, redirect to hompage
+    if (!currentGame.players.find((player) => player.id === cookies.socketId)) {
+      setShowErrMessage("Your are not part of this game, redirecting you back");
+      return setTimeout(() => {
+        router.push(`/`);
+      }, 3000);
+    }
+
+    const lastTurnIndex = currentGame.turns.length - 1;
+    const lastTurn = currentGame.turns[lastTurnIndex];
+    playedBlackFromCzar = lastTurn.black_card;
+    const currentCzarId = lastTurn?.czar?.id;
+    const playerId = cookies.socketId;
+    const currentPlayer = currentGame.players?.find(
+      (player) => player.id === playerId
+    );
+    const confirmedWhiteCards =
+      currentCzarId !== cookies.socketId &&
+      lastTurn.white_cards.length > 0 &&
+      lastTurn.white_cards.find((player) => player.player === playerId)
+        ?.played_card;
+    const currentTurnIndex = currentGame.turns.length - 1;
+    const currentStageIndex =
+      currentGame.turns[currentTurnIndex].stage.length - 1;
+    if (currentPlayer) {
+      // get game stage and player cards from current game wich is response from server
+      const stage =
+        currentGame.turns[currentTurnIndex].stage[currentStageIndex];
+      let { hand, isHost } = currentPlayer;
+      const { black_cards } = currentGame.deck;
+
+      //set inactive state if player missed a round and display it as error
+      currentPlayer.inactive ? setIsInactive(true) : setIsInactive(false);
+
+      //check if the host
+      if (isHost)
+        setHost(true), setStoreData((prev) => ({ ...prev, isHost: true }));
+
+      //skipp dealing phase because of rerender
+      if (stage === "dealing") return setGameStage(stage);
+
+      //check is czar
+      currentCzarId === cookies.socketId
+        ? (setIsCzar(true),
+          currentCzarId === cookies.socketId &&
+            gameStage !== "winner" &&
+            setTimer(false))
+        : setIsCzar(false);
+
+      //if czar and stage white is is currently runnning, display white cards from users
+      if (stage === "white" || stage === "deciding") {
+        const playerList = lastTurn.white_cards
+          .map((player) => player.played_card)
+          .filter((cards) => cards.length > 0);
+        setPlayedWhite(playerList.length > 0 ? playerList : null);
+      }
+
+      // during white stage, only update players screen if incoming black card differs from current one or already white cards where submitted
+      if (confirmedWhiteCards?.length > 0 && !isCzar && currentPlayer) {
+        setConfirmed(true);
+        setCardsOnTable({
+          table: {
+            label: "table",
+            cards: playedBlackFromCzar
+              ? [playedBlackFromCzar, ...confirmedWhiteCards]
+              : [],
+          },
+          player: { label: "player", cards: hand },
+        });
+      } else if (
+        cardsOnTable?.table?.cards?.length < 1 ||
+        !cardsOnTable ||
+        cardsOnTable?.table?.cards[0]?.text !== playedBlackFromCzar?.text
+      ) {
+        setCardsOnTable({
+          table: {
+            label: "table",
+            cards: playedBlackFromCzar ? [playedBlackFromCzar] : [],
+          },
+          player: { label: "player", cards: hand },
+        });
+      }
+      setMaxHandSize(currentGame.handSize);
+      setCurrentLobby(currentGame);
+      setPlayerName(currentPlayer.name);
+      setCurrentTurn(lastTurn);
+      setBlackCards((prev) => (prev = black_cards));
+      setHand(hand);
+      setGameId(currentGame.id);
+      setTimerTrigger(currentGame.timerTrigger);
+      setGameStage(stage);
+    }
+  };
+
   useEffect(() => {
     //getting whole game infos, also rejoin player to socket io
     socket.on("currentGame", ({ currentGame, err, kicked }) => {
-      console.log("currentGame", currentGame);
       setLoading(false);
-
-      //if player got kicket
-      const player = currentGame?.players.find(
-        (player) => player.id === cookies.socketId
-      );
-      if (kicked && !player && currentGame)
-        setShowErrMessage("You got kicked! Redirecting you back"),
-          setTimeout(() => {
-            router.push("/");
-          }, 3500);
-
-      //if error ocurred
-      if (err || (!currentGame && !kicked)) {
-        setShowErrMessage(
-          err ? err : "You are not part of this game! Redirecting you back"
-        );
-        setTimeout(() => {
-          router.push("/");
-        }, 3000);
-        return;
-      }
-
-      //if game was closed, show Game end component
-      if (currentGame.concluded) {
-        setGameEnds(true);
-        setTimer(false);
-      }
-
-      //if less then 3 players, let host decide to close the game
-      // if (currentGame.players.filter((player) => !player.inactive).length < 3)
-      //   setClosingGame(true);
-
-      //if less then 2 players, close the game after 3.5s, else abort the closing function
-      if (
-        currentGame.players.filter((player) => !player.inactive).length < 2 &&
-        !currentGame.concluded
-      ) {
-        setShowErrMessage(
-          "Not enough Players left, game will be closed within 3 seconds"
-        );
-        handleClosingGame({ force: true });
-
-        setTimeout(() => {
-          router.push(`/lobby/${storeData.lobbyId}`);
-        }, 3500);
-        return;
-      }
-
-      // if players cookie is not stored inside game Object = player is not part of the game, redirect to hompage
-      if (
-        !currentGame.players.find((player) => player.id === cookies.socketId)
-      ) {
-        setShowErrMessage(
-          "Your are not part of this game, redirecting you back"
-        );
-        return setTimeout(() => {
-          router.push(`/`);
-        }, 3000);
-      }
-
-      const lastTurnIndex = currentGame.turns.length - 1;
-      const lastTurn = currentGame.turns[lastTurnIndex];
-      playedBlackFromCzar = lastTurn.black_card;
-      const currentCzarId = lastTurn?.czar?.id;
-      const playerId = cookies.socketId;
-      const currentPlayer = currentGame.players?.find(
-        (player) => player.id === playerId
-      );
-      const confirmedWhiteCards =
-        currentCzarId !== cookies.socketId &&
-        lastTurn.white_cards.length > 0 &&
-        lastTurn.white_cards.find((player) => player.player === playerId)
-          ?.played_card;
-      const currentTurnIndex = currentGame.turns.length - 1;
-      const currentStageIndex =
-        currentGame.turns[currentTurnIndex].stage.length - 1;
-      if (currentPlayer) {
-        // get game stage and player cards from current game wich is response from server
-        const stage =
-          currentGame.turns[currentTurnIndex].stage[currentStageIndex];
-        let { hand, isHost } = currentPlayer;
-        const { black_cards } = currentGame.deck;
-
-        //set inactive state if player missed a round and display it as error
-        currentPlayer.inactive ? setIsInactive(true) : setIsInactive(false);
-
-        //check if the host
-        if (isHost)
-          setHost(true), setStoreData((prev) => ({ ...prev, isHost: true }));
-
-        //skipp dealing phase because of rerender
-        if (stage === "dealing") return setGameStage(stage);
-
-        //check is czar
-        currentCzarId === cookies.socketId
-          ? (setIsCzar(true),
-            currentCzarId === cookies.socketId &&
-              gameStage !== "winner" &&
-              setTimer(false))
-          : setIsCzar(false);
-
-        //if czar and stage white is is currently runnning, display white cards from users
-        if (stage === "white" || stage === "deciding") {
-          const playerList = lastTurn.white_cards
-            .map((player) => player.played_card)
-            .filter((cards) => cards.length > 0);
-          setPlayedWhite(playerList.length > 0 ? playerList : null);
-        }
-
-        // during white stage, only update players screen if incoming black card differs from current one or already white cards where submitted
-        if (confirmedWhiteCards?.length > 0 && !isCzar && currentPlayer) {
-          setConfirmed(true);
-          setCardsOnTable({
-            table: {
-              label: "table",
-              cards: playedBlackFromCzar
-                ? [playedBlackFromCzar, ...confirmedWhiteCards]
-                : [],
-            },
-            player: { label: "player", cards: hand },
-          });
-        } else if (
-          cardsOnTable?.table?.cards?.length < 1 ||
-          !cardsOnTable ||
-          cardsOnTable?.table?.cards[0]?.text !== playedBlackFromCzar?.text
-        ) {
-          setCardsOnTable({
-            table: {
-              label: "table",
-              cards: playedBlackFromCzar ? [playedBlackFromCzar] : [],
-            },
-            player: { label: "player", cards: hand },
-          });
-        }
-        setMaxHandSize(currentGame.handSize);
-        setCurrentLobby(currentGame);
-        setPlayerName(currentPlayer.name);
-        setCurrentTurn(lastTurn);
-        setBlackCards((prev) => (prev = black_cards));
-        setHand(hand);
-        setGameId(currentGame.id);
-        setTimerTrigger(currentGame.timerTrigger);
-        setGameStage(stage);
-        setLoading(false);
-      }
+      processGame({ currentGame, err, kicked });
     });
 
     return () => {
       socket.removeAllListeners();
     };
-  }, [router.isReady]);
+  }, [router.isReady, gameStage]);
 
   //self update page after got redirected, use key from query as lobby id
   useEffect(() => {
@@ -390,6 +388,21 @@ const Game = ({ socket }) => {
       if (gameStage === "winner" && timerTrigger) {
         setTimer(30);
       }
+      // if (gameStage === "black" && timerTrigger) {
+      //   setTimer(5);
+      // }
+
+      // if (gameStage === "white" && timerTrigger) {
+      //   setTimer(5);
+      // }
+
+      // if (gameStage === "deciding" && timerTrigger) {
+      //   setTimer(5);
+      // }
+
+      // if (gameStage === "winner" && timerTrigger) {
+      //   setTimer(5);
+      // }
 
       if (gameStage === "black") setConfirmed(false);
     }

@@ -139,6 +139,7 @@ const updateTurn = async ({
       return player;
     });
     io.to(socket.id).emit("newWhiteCard", { newWhite });
+    await storeToCache({ lobbyId, currentGame });
     return;
   }
 
