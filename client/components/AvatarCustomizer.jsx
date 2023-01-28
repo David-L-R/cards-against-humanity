@@ -43,17 +43,26 @@ const AvatarCustomizer = ({
                 const optionList = entry[1].default;
                 const title = entry[0];
                 const value = entry[1].items;
+                entry;
                 return (
-                  <li>
+                  <li key={entry[1] + index}>
                     <h3>{title}</h3>
+
                     <select
                       onChange={(e) =>
                         handleSetAvatarOptions(e.target.value, entry[0])
                       }>
+                      {(entry[0] === "accessories" ||
+                        entry[0] === "facialHair") && (
+                        <option value="none">none</option>
+                      )}
                       {optionList &&
                         optionList.map((option) => {
                           return (
-                            <option propertie={entry[0]} value={option}>
+                            <option
+                              propertie={entry[0]}
+                              value={option}
+                              key={option}>
                               {title.toLocaleLowerCase().includes("color")
                                 ? hexColors[option]
                                 : option}

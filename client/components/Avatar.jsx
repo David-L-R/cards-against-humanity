@@ -19,8 +19,19 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
     ...playerAvatar,
   };
 
+  const addAccessories = ({ key, value, newOptions }) => {
+    // active accessories/beard/... probability if one of those is selected
+
+    if (key === "accessories" || key === "facialHair")
+      return value === "none"
+        ? (newOptions[`${key}Probability`] = 0)
+        : (newOptions[`${key}Probability`] = 100);
+  };
+
   const handleSetAvatarOptions = (value, key) => {
     const newOptions = { ...avatarOptions };
+    addAccessories({ key, value, newOptions });
+
     newOptions[key] = [value];
     storeAvatarSettings(newOptions);
   };
@@ -64,8 +75,7 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
             ? { cursor: "pointer", border: "2px solid gold" }
             : null
         }
-        dangerouslySetInnerHTML={{ __html: svg }}
-      ></div>
+        dangerouslySetInnerHTML={{ __html: svg }}></div>
     );
   };
 
@@ -85,8 +95,7 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
         <>
           <AvatarCustomizer
             handleSetAvatarOptions={handleSetAvatarOptions}
-            setShowSettings={setShowSettings}
-          >
+            setShowSettings={setShowSettings}>
             <div className="avatar-preview">
               <AvatarSVG avatarOptions={avatarOptions} />
               <div>
@@ -94,11 +103,10 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
                 <ul>
                   {emotions &&
                     emotions.map((emotion) => (
-                      <li>
+                      <li key={emotion.label}>
                         <button
                           style={{ textTransform: "uppercase" }}
-                          onClick={() => handlEemotions(emotion.settings)}
-                        >
+                          onClick={() => handlEemotions(emotion.settings)}>
                           {emotion.label}
                         </button>
                       </li>
