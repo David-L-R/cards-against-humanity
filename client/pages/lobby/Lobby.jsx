@@ -198,7 +198,6 @@ const Lobby = (props) => {
   };
   return (
     <>
-      {console.log("stepIndex", stepIndex)}
       {isHost && (
         <JoyRide
           callback={handleJoyrideCallback}

@@ -66,7 +66,7 @@ const Czar = ({
             showBlackCards.map((cardItem, blackIndex) =>
               cardItem.index === activeIndex ? (
                 <m.li
-                  key={cardItem.card.text}
+                  key={cardItem.card.text + blackIndex}
                   data-index={cardItem.index}
                   initial={
                     blackIndex === (showBlackCards.length - 1) / 2
@@ -95,8 +95,7 @@ const Czar = ({
                       : blackIndex === showBlackCards.length - 1
                       ? "highest"
                       : "lowest"
-                  }
-                >
+                  }>
                   <div
                     key={cardItem.card.text + blackIndex}
                     className={` ${style.black} czarPicking`}
@@ -105,13 +104,12 @@ const Czar = ({
                         index: cardItem.index,
                         event: e,
                       });
-                    }}
-                  >
+                    }}>
                     {cardItem.card.text}
                   </div>
                 </m.li>
               ) : (
-                <li>
+                <li key={cardItem.card.text + blackIndex}>
                   <div
                     className={` ${style.black} czarPicking`}
                     onClick={(e) => {
@@ -119,8 +117,7 @@ const Czar = ({
                         index: cardItem.index,
                         event: e,
                       });
-                    }}
-                  >
+                    }}>
                     {cardItem.card.text}
                   </div>
                 </li>

@@ -57,20 +57,22 @@ function GameEnd({ currentGame }) {
               winningPlayers.map((player, index) => {
                 if (index === 0)
                   return (
-                    <div className="winnerAvatarContainer">
+                    <div
+                      key={player.name + index}
+                      className="winnerAvatarContainer">
                       <Avatar playerAvatar={player?.avatar} />
                     </div>
                   );
                 if (index === 1)
                   return (
-                    <div className="avatar2nd">
+                    <div key={player.name + index} className="avatar2nd">
                       <Avatar playerAvatar={player?.avatar} />
                       <h3>{`${player.name}`}</h3>
                     </div>
                   );
                 if (index === 2)
                   return (
-                    <div className="avatar3rd">
+                    <div key={player.name + index} className="avatar3rd">
                       <Avatar playerAvatar={player?.avatar} />
                       <h3>{`${player.name}`}</h3>
                     </div>

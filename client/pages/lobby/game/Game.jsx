@@ -388,6 +388,21 @@ const Game = ({ socket }) => {
       if (gameStage === "winner" && timerTrigger) {
         setTimer(30);
       }
+      // if (gameStage === "black" && timerTrigger) {
+      //   setTimer(5);
+      // }
+
+      // if (gameStage === "white" && timerTrigger) {
+      //   setTimer(5);
+      // }
+
+      // if (gameStage === "deciding" && timerTrigger) {
+      //   setTimer(5);
+      // }
+
+      // if (gameStage === "winner" && timerTrigger) {
+      //   setTimer(5);
+      // }
 
       if (gameStage === "black") setConfirmed(false);
     }
