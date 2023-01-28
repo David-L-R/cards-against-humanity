@@ -212,8 +212,8 @@ const Game = ({ socket }) => {
     }
 
     //if less then 3 players, let host decide to close the game
-    // if (currentGame.players.filter((player) => !player.inactive).length < 3)
-    //   setClosingGame(true);
+    if (currentGame.players.filter((player) => !player.inactive).length < 3)
+      setClosingGame(true);
 
     //if less then 2 players, close the game after 3.5s, else abort the closing function
     if (
