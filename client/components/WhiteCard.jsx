@@ -17,17 +17,18 @@ function WhiteCard({ getNewWhiteCard, setCardsOnTable }) {
   //listens for a new white card, set state to activate the animation
   useEffect(() => {
     socket.on("newWhiteCard", ({ newWhite }) => {
-      setNewWhiteCard(newWhite);
+      setNewWhiteCard((prev) => ({ ...newWhite }));
     });
     return () => {
       socket.removeListener("newWhiteCard");
     };
-  }, []);
+  }, [loading]);
 
   //wiats for 1 second before add new white card to hand
   useEffect(() => {
     if (isActive && newWhiteCard) {
       setTimeout(() => {
+        setIsActive(false);
         setCardsOnTable((prev) => {
           return {
             ...prev,
@@ -38,14 +39,14 @@ function WhiteCard({ getNewWhiteCard, setCardsOnTable }) {
           };
         });
         setNewWhiteCard(null);
-      }, 1000);
+      }, 500);
     }
     setLoading(false);
   }, [isActive]);
 
   //start animation after receiving a card from socket listener
   useEffect(() => {
-    newWhiteCard ? setIsActive(true) : setIsActive(false);
+    newWhiteCard && setIsActive(true);
   }, [newWhiteCard]);
 
   return (
