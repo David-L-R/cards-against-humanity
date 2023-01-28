@@ -31,12 +31,9 @@ const Lobby = (props) => {
   const [currentLobby, setCurrentLobby] = useState(null);
   const [listenersReady, setListenersReady] = useState(false);
   const [useJoyRide, setuseJoyRide] = useState(false);
-
   let [value, setValue] = useLocalStorage("tutorial");
-
   const [stepIndex, setStepIndex] = useState(0);
   const { storeData, setStoreData } = useAppContext();
-
   const lobbyId = storeData.lobbyId;
 
   setTimeout(() => {
@@ -67,6 +64,7 @@ const Lobby = (props) => {
   useEffect(() => {
     if (lobbyId) {
       socket.on("updateRoom", ({ currentLobby, err, kicked }) => {
+        console.log("currentLobby", currentLobby);
         if (!currentLobby || err) {
           setIsloading(false);
           return setShowErrMessage(
@@ -123,10 +121,11 @@ const Lobby = (props) => {
           }
         }
       });
+      setListenersReady(true);
     }
-    setListenersReady(true);
     return () => {
       socket.removeAllListeners();
+      setListenersReady(false);
     };
   }, [lobbyId]);
 
@@ -134,8 +133,9 @@ const Lobby = (props) => {
     //self update page after got redirected, use key from query as lobby id
     if (lobbyId && listenersReady) {
       socket.emit("updateLobby", { lobbyId, id: cookies.socketId, joinGame });
+      setListenersReady(false);
     }
-  }, [listenersReady, lobbyId]);
+  }, [listenersReady]);
 
   useEffect(() => {
     if (router.query.lobbyId) {

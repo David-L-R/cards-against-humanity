@@ -22,7 +22,6 @@ export const storeToCache = async ({ lobbyId, currentLobby, currentGame }) => {
         JSON.stringify(currentLobbyData.currentLobby._id)
       )
     );
-
   const success = serverCache.set(lobbyId, JSON.stringify(currentLobbyData));
   if (!success) throw new Error("Store to cache failed!");
   return currentLobbyData;

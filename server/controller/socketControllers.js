@@ -14,7 +14,6 @@ export const createNewLobby = async (data) => {
     waiting: [{ name: hostName, id, isHost: true, inactive: false, points: 0 }],
     players: [],
   };
-
   try {
     const newLobby = await LobbyCollection.create({
       ...lobby,
@@ -43,7 +42,7 @@ export const findRoomToJoin = async ({
     const { currentLobby } = await getCache({ lobbyId });
 
     // update player list in DB
-    currentLobby.players.push(player);
+    currentLobby.waiting.push(player);
 
     //join player into room and send lobbyId back
     socket.join(lobbyId);
@@ -75,14 +74,14 @@ export const updateClient = async (data) => {
 
   try {
     const { currentLobby } = await getCache({ lobbyId });
-
     if (!currentLobby) throw Error();
 
     const foundPLayer = currentLobby.waiting.find((player) => player.id === id);
-    // delte players from lobby.players to be available for a game rejoining  lobby
-    currentLobby.players = currentLobby.players.filter(
-      (currPlayer) => currPlayer.id !== id
-    );
+    // delte players from lobby.players ONLY if to avatars requests for update to be available for a game rejoining  lobby
+    if (!avatar)
+      currentLobby.players = currentLobby.players.filter(
+        (currPlayer) => currPlayer.id !== id
+      );
 
     if (newPLayerName) foundPLayer.name = newPLayerName;
 
@@ -119,11 +118,9 @@ export const updateClient = async (data) => {
       currentLobby,
     });
 
-    const currentLobbyData = await storeToCache({ lobbyId, currentLobby });
-    LobbyCollection.findByIdAndUpdate(
-      lobbyId,
-      currentLobbyData.currentLobby
-    ).exec();
+    await storeToCache({ lobbyId, currentLobby });
+
+    LobbyCollection.findByIdAndUpdate(lobbyId, currentLobby).exec();
   } catch (err) {
     console.error(err);
     socket.emit("updateRoom", {

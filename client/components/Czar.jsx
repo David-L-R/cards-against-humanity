@@ -52,6 +52,8 @@ const Czar = ({
     randomBlackCards();
   }, []);
 
+  {
+  }
   if (!showBlackCards || gameStage !== "black") return;
 
   return (
