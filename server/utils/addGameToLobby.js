@@ -10,11 +10,14 @@ export const updateGameInLobby = async (game) => {
   if (currentGameIndex < 0) currentGameIndex = 0;
 
   if (currentLobby.games[currentGameIndex]?.concluded) {
-    currentLobby.games.push(game);
+    const copyedGame = { ...game, deck: null };
+    currentLobby.games.push(copyedGame);
     await storeToCache({ lobbyId, currentLobby });
     return LobbyCollection.findByIdAndUpdate(lobbyId, currentLobby).exec();
   }
-  currentLobby.games[currentGameIndex] = game;
+
+  const copyedGame = { ...game, deck: null };
+  currentLobby.games[currentGameIndex] = copyedGame;
   await storeToCache({ lobbyId, currentLobby });
   return LobbyCollection.findByIdAndUpdate(lobbyId, currentLobby).exec();
 };

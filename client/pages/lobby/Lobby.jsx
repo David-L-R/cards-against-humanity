@@ -30,6 +30,7 @@ const Lobby = (props) => {
   const [linkInvation, setlinkInvation] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsloading] = useState(true);
+  const [reconnect, setReconnect] = useState(false);
   const [currentLobby, setCurrentLobby] = useState(null);
   const [listenersReady, setListenersReady] = useState(false);
   const [useJoyRide, setuseJoyRide] = useState(false);
@@ -128,12 +129,13 @@ const Lobby = (props) => {
         }
       });
       setListenersReady(true);
+      setReconnect(false);
     }
     return () => {
       socket.removeAllListeners();
       setListenersReady(false);
     };
-  }, [lobbyId]);
+  }, [lobbyId, reconnect]);
 
   useEffect(() => {
     //self update page after got redirected, use key from query as lobby id
@@ -148,6 +150,9 @@ const Lobby = (props) => {
       setlinkInvation(`${window?.location.href}?joinGame=true`);
       setStoreData((prev) => ({ ...prev, lobbyId: router.query.lobbyId[0] }));
     }
+    socket.io.on("reconnect", () => {
+      setReconnect(true);
+    });
   }, [router.isReady]);
 
   //hello David :) WE good at naming conventions😘😘

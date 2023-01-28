@@ -41,6 +41,7 @@ const Game = ({ socket }) => {
   const [closingGame, setClosingGame] = useState(false);
   const [gameEnds, setGameEnds] = useState(false);
   const { storeData, setStoreData } = useAppContext();
+  const [reconnect, setReconnect] = useState(false);
 
   const chooseBlackCard = (selected) => {
     const playerData = {
@@ -334,7 +335,7 @@ const Game = ({ socket }) => {
     return () => {
       socket.removeAllListeners();
     };
-  }, [router.isReady, gameStage]);
+  }, [router.isReady, gameStage, reconnect]);
 
   //self update page after got redirected, use key from query as lobby id
   useEffect(() => {
@@ -358,6 +359,10 @@ const Game = ({ socket }) => {
         gameIdentifier: router.query.gameId[0],
       }));
     }
+
+    socket.io.on("reconnect", () => {
+      setReconnect(true);
+    });
   }, [router.isReady]);
 
   // start dealing phase automalicly after game starts
