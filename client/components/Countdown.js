@@ -37,6 +37,8 @@ function Countdown({ timer, setTimer, lobbyId, socket, isCzar }) {
     }
   };
 
+  if (timer) synchronizeTimer({ timer });
+
   useEffect(() => {
     //start timer wich is send from czar
     socket.on("getTimer", ({ timer, requestSync }) => {
@@ -45,10 +47,11 @@ function Countdown({ timer, setTimer, lobbyId, socket, isCzar }) {
         synchronizeTimer({ timer: "sendSync" });
       }
     });
-    synchronizeTimer({ requestSync: true });
+    if (!isCzar) synchronizeTimer({ requestSync: true });
 
     return () => {};
   }, []);
+
   if (!timer) return null;
 
   return (
