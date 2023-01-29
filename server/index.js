@@ -77,16 +77,11 @@ io.on("connection", (socket) => {
     socket.join(data.lobbyId),
       useQueue({ data, socket, io, channelName: "changeGame" });
   });
+  socket.on("sendTimer", async (data) => {
+    console.log("timer", data.timer);
+    socket.join(data.lobbyId),
+      io
+        .to(data.lobbyId)
+        .emit("getTimer", { timer: data.timer, requestSync: data.requestSync });
+  });
 });
-
-/*
-
-lobbyId:{
-lobby: lobbyId
-loading:Boolean
-data:[{data to precess}]
-channel: function
-}
-
-
-*/

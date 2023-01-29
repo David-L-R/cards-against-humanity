@@ -68,6 +68,31 @@ const Lobby = (props) => {
     return currentLobby.players.find((player) => player.id === playerId);
   };
 
+  const handleJoyrideCallback = (data) => {
+    const { action, index, status, type } = data;
+
+    if (
+      stepIndex !== 3 &&
+      [EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)
+    ) {
+      // Update state to advance the tour
+      setStepIndex((prev) => (prev += 1));
+    } else if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
+      setIsOpen(true);
+      setTimeout(() => {
+        setStepIndex((prev) => (prev += 1));
+      }, 300);
+    }
+    if (stepIndex === 6) {
+      setIsOpen(false);
+    }
+    if (index >= Steps.length - 1) {
+      setTimeout(() => {
+        setValue("DONE");
+      }, 10000);
+    }
+  };
+
   useEffect(() => {
     if (lobbyId) {
       socket.on("updateRoom", ({ currentLobby, err, kicked }) => {
@@ -182,31 +207,6 @@ const Lobby = (props) => {
         <PageNotFound />
       </main>
     );
-
-  const handleJoyrideCallback = (data) => {
-    const { action, index, status, type } = data;
-
-    if (
-      stepIndex !== 3 &&
-      [EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)
-    ) {
-      // Update state to advance the tour
-      setStepIndex((prev) => (prev += 1));
-    } else if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
-      setIsOpen(true);
-      setTimeout(() => {
-        setStepIndex((prev) => (prev += 1));
-      }, 300);
-    }
-    if (stepIndex === 6) {
-      setIsOpen(false);
-    }
-    if (index >= Steps.length - 1) {
-      setTimeout(() => {
-        setValue("DONE");
-      }, 10000);
-    }
-  };
 
   return (
     <>

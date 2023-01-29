@@ -1,11 +1,18 @@
 import React from "react";
+import { useState } from "react";
+import { useEffect } from "react";
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import { useAppContext } from "../context";
 
-function Countdown({ timer, setTimer }) {
+function Countdown({ timer, setTimer, lobbyId, socket, isCzar }) {
+  const { storeData, setStoreData } = useAppContext();
+  let currentTimer = timer;
+
   const renderTime = ({ remainingTime }) => {
+    currentTimer = remainingTime;
     if (remainingTime === 0) {
       setTimer(null);
-      // return <div className="timer">Time's up!</div>;
+      currentTimer = null;
     } else
       return (
         <div className="timer">
@@ -13,7 +20,37 @@ function Countdown({ timer, setTimer }) {
         </div>
       );
   };
+
+  const synchronizeTimer = ({ timer, requestSync }) => {
+    // console.log("currentTimer", currentTimer);
+    if (timer === "sendSync" && isCzar) {
+      return socket.emit("sendTimer", {
+        timer: currentTimer,
+        lobbyId: storeData.lobbyId,
+      });
+    }
+    if (isCzar) {
+      return socket.emit("sendTimer", { timer, lobbyId: storeData.lobbyId });
+    }
+    if (requestSync && !isCzar) {
+      socket.emit("sendTimer", { requestSync, lobbyId: storeData.lobbyId });
+    }
+  };
+
+  useEffect(() => {
+    //start timer wich is send from czar
+    socket.on("getTimer", ({ timer, requestSync }) => {
+      setTimer(timer);
+      if (requestSync) {
+        synchronizeTimer({ timer: "sendSync" });
+      }
+    });
+    synchronizeTimer({ requestSync: true });
+
+    return () => {};
+  }, []);
   if (!timer) return null;
+
   return (
     <div className="timer-wrapper">
       <CountdownCircleTimer

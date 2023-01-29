@@ -42,6 +42,7 @@ const Game = ({ socket }) => {
   const [gameEnds, setGameEnds] = useState(false);
   const { storeData, setStoreData } = useAppContext();
   const [reconnect, setReconnect] = useState(false);
+  let currentTimer = false;
 
   const chooseBlackCard = (selected) => {
     const playerData = {
@@ -212,24 +213,27 @@ const Game = ({ socket }) => {
     }
 
     //if less then 3 players, let host decide to close the game
-    if (currentGame.players.filter((player) => !player.inactive).length < 3)
-      setClosingGame(true);
+    // if (
+    //   currentGame.players.filter((player) => !player.inactive).length < 3 &&
+    //   closingGame !== null
+    // )
+    //   setClosingGame(true);
 
     //if less then 2 players, close the game after 3.5s, else abort the closing function
-    if (
-      currentGame.players.filter((player) => !player.inactive).length < 2 &&
-      !currentGame.concluded
-    ) {
-      setShowErrMessage(
-        "Not enough Players left, game will be closed within 3 seconds"
-      );
-      handleClosingGame({ force: true });
+    // if (
+    //   currentGame.players.filter((player) => !player.inactive).length < 2 &&
+    //   !currentGame.concluded
+    // ) {
+    //   setShowErrMessage(
+    //     "Not enough Players left, game will be closed within 3 seconds"
+    //   );
+    //   handleClosingGame({ force: true });
 
-      setTimeout(() => {
-        router.push(`/lobby/${storeData.lobbyId}`);
-      }, 3500);
-      return;
-    }
+    //   setTimeout(() => {
+    //     router.push(`/lobby/${storeData.lobbyId}`);
+    //   }, 3500);
+    //   return;
+    // }
 
     // if players cookie is not stored inside game Object = player is not part of the game, redirect to hompage
     if (!currentGame.players.find((player) => player.id === cookies.socketId)) {
@@ -359,7 +363,6 @@ const Game = ({ socket }) => {
         gameIdentifier: router.query.gameId[0],
       }));
     }
-
     socket.io.on("reconnect", () => {
       setReconnect(true);
     });
@@ -378,24 +381,24 @@ const Game = ({ socket }) => {
         });
       }
 
-      if (gameStage === "black" && timerTrigger) {
-        setTimer(45);
-      }
-
-      if (gameStage === "white" && timerTrigger) {
-        setTimer(60);
-      }
-
-      if (gameStage === "deciding" && timerTrigger) {
-        setTimer(60);
-      }
-
-      if (gameStage === "winner" && timerTrigger) {
-        setTimer(30);
-      }
       // if (gameStage === "black" && timerTrigger) {
-      //   setTimer(5);
+      //   setTimer(45);
       // }
+
+      // if (gameStage === "white" && timerTrigger) {
+      //   setTimer(60);
+      // }
+
+      // if (gameStage === "deciding" && timerTrigger) {
+      //   setTimer(60);
+      // }
+
+      // if (gameStage === "winner" && timerTrigger) {
+      //   setTimer(30);
+      // }
+      if (gameStage === "black" && timerTrigger && isCzar) {
+        setTimer(60);
+      }
 
       // if (gameStage === "white" && timerTrigger) {
       //   setTimer(5);
@@ -463,24 +466,24 @@ const Game = ({ socket }) => {
 
   if (gameEnds) return <GameEnd currentGame={currentLobby} />;
 
-  if (closingGame && !gameEnds)
-    return (
-      <main>
-        <h1>{"To less players, continue with game anyway?"}</h1>
-        {isHost && closingGame >= 2 && (
-          <ul>
-            <li>
-              <button onClick={() => setClosingGame(false)}>Continue</button>
-            </li>
-            <li>
-              <button onClick={handleClosingGame}>
-                Close and back to lobby
-              </button>
-            </li>
-          </ul>
-        )}
-      </main>
-    );
+  // if (closingGame && !gameEnds)
+  //   return (
+  //     <main>
+  //       <h1>"To less players, continue with game anyway?"</h1>
+  //       {isHost && closingGame <= 2 && (
+  //         <ul>
+  //           <li>
+  //             <button onClick={() => setClosingGame(null)}>Continue</button>
+  //           </li>
+  //           <li>
+  //             <button onClick={handleClosingGame}>
+  //               Close and back to lobby
+  //             </button>
+  //           </li>
+  //         </ul>
+  //       )}
+  //     </main>
+  //   );
 
   return (
     <main className="game">
@@ -567,7 +570,6 @@ const Game = ({ socket }) => {
               setTimer={setTimer}
             />
           )}
-
           {(isCzar && gameStage !== "black") || !isCzar ? (
             <DragAndDropContainer
               data={cardsOnTable}
@@ -611,7 +613,13 @@ const Game = ({ socket }) => {
           ) : null}
           {timerTrigger && (
             <div className="timerContainer">
-              <Countdown timer={timer} setTimer={setTimer} />
+              <Countdown
+                timer={timer}
+                setTimer={setTimer}
+                socket={socket}
+                lobbyId={lobbyId}
+                isCzar={isCzar}
+              />
             </div>
           )}
 
