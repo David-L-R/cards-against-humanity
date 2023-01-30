@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { parseCookies, setCookie } from "nookies";
 import { ContextWrapper } from "../context";
 
-export const socket = io("http://192.168.178.20:5555/", {
+export const socket = io("http://192.168.1.22:5555/", {
   reconnection: true, // enable reconnection
   reconnectionAttempts: 5, // try to reconnect 5 times
   reconnectionDelay: 3000, // increase the delay between reconnection attempts to 3 seconds
@@ -31,7 +31,8 @@ function MyApp({ Component, router, pageProps: { session, ...pageProps } }) {
           setHandSize={setHandSize}
           setAmountOfRounds={setAmountOfRounds}
           handSize={handSize}
-          amountOfRounds={amountOfRounds}>
+          amountOfRounds={amountOfRounds}
+        >
           <AnimatePresence mode="wait" initial={false}>
             <Component
               key={router.pathname}

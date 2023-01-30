@@ -7,6 +7,7 @@ import { socket } from "../pages/_app";
 import { useAppContext } from "../context";
 import { useRouter } from "next/router";
 import emotions from "../utils/avatarEmotions.js";
+import { GoSettings } from "react-icons/go";
 
 const Avatar = ({ userName, playerId, playerAvatar }) => {
   const cookies = parseCookies();
@@ -70,12 +71,9 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
       <div
         onClick={() => playerId === cookies.socketId && setShowSettings(true)}
         className={"avatar-image"}
-        style={
-          playerId === cookies.socketId
-            ? { cursor: "pointer", border: "2px solid gold" }
-            : null
-        }
-        dangerouslySetInnerHTML={{ __html: svg }}></div>
+        style={playerId === cookies.socketId ? { cursor: "pointer" } : null}
+        dangerouslySetInnerHTML={{ __html: svg }}
+      ></div>
     );
   };
 
@@ -90,12 +88,16 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
 
   return (
     <div>
+      {playerId === cookies.socketId && (
+        <GoSettings className="customiseIcon" />
+      )}
       <AvatarSVG avatarOptions={avatarOptions} />
       {showSettings && (
         <>
           <AvatarCustomizer
             handleSetAvatarOptions={handleSetAvatarOptions}
-            setShowSettings={setShowSettings}>
+            setShowSettings={setShowSettings}
+          >
             <div className="avatar-preview">
               <AvatarSVG avatarOptions={avatarOptions} />
               <div>
@@ -106,7 +108,8 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
                       <li key={emotion.label}>
                         <button
                           style={{ textTransform: "uppercase" }}
-                          onClick={() => handlEemotions(emotion.settings)}>
+                          onClick={() => handlEemotions(emotion.settings)}
+                        >
                           {emotion.label}
                         </button>
                       </li>
