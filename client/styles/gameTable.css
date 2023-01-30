@@ -291,3 +291,66 @@
     transform: translateY(0px);
   }
 }
+
+@media (max-width: 640px) {
+  .whiteCardTable {
+    width: 100vw;
+    overflow: hidden;
+    gap: 0 !important;
+    transition: 2s;
+    margin: 0;
+  }
+  .whiteCardTable ul {
+    display: flex;
+    width: max-content;
+    overflow: none;
+    gap: 10px;
+    padding-top: 50px;
+    transform: translateX(300px);
+    align-items: flex-end;
+  }
+  .carusselButton1 {
+    position: absolute;
+    top: 69%;
+    left: 0;
+    width: 13%;
+    height: 80%;
+    z-index: 50;
+    transform: translateY(-50%);
+    box-shadow: inset 25px -20px 15px rgb(0, 0, 0);
+  }
+  .carusselButton2 {
+    position: absolute;
+    box-shadow: inset -25px -20px 15px rgb(0, 0, 0);
+    width: 13%;
+    height: 80%;
+    top: 69%;
+    right: 0;
+    z-index: 50;
+    transform: translateY(-50%);
+  }
+  .arrowIcon {
+    display: flex;
+    font-size: 38px;
+    margin: auto;
+  }
+  .droppable-container {
+    flex-basis: 50%;
+    /* display: flex; */
+    flex-direction: column;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+    margin: auto;
+    padding: 0;
+  }
+  .cardDisplay {
+    padding-bottom: 20px;
+  }
+  .waitText {
+    top: 50%;
+    width: 80%;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

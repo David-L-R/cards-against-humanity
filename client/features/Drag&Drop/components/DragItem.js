@@ -53,7 +53,8 @@ export function DragItem(props) {
               setClassName("");
             }
           : null
-      }>
+      }
+    >
       {element ? (
         <CustomComponent
           {...props}

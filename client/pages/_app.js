@@ -25,6 +25,7 @@ function MyApp({ Component, router, pageProps: { session, ...pageProps } }) {
 
   return (
     <ContextWrapper>
+      <meta name="theme-color" content="#171717" />
       <SessionProvider session={session}>
         <Layout
           socket={socket}

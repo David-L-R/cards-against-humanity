@@ -54,3 +54,12 @@
     opacity: 0;
   }
 }
+
+@media (max-width: 640px) {
+  #balloon-container {
+    width: 100%;
+    left: 0;
+    transform: translate(0);
+    padding: 0;
+  }
+}

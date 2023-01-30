@@ -92,3 +92,12 @@
   color: black;
   transition: 0.3s;
 }
+
+@media (max-width: 640px) {
+  .winner-page-container h1 {
+    padding-top: 10%;
+
+    font-size: 36px;
+    letter-spacing: 1px;
+  }
+}

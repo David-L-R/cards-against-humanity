@@ -111,3 +111,20 @@
     opacity: 1;
   }
 }
+@media (max-width: 640px) {
+  .shit2 {
+    display: none;
+  }
+
+  .shit4 {
+    display: none;
+  }
+
+  .shit6 {
+    display: none;
+  }
+
+  .shit8 {
+    display: none;
+  }
+}
