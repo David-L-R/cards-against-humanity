@@ -65,12 +65,11 @@ export const findRoomToJoin = async ({
 
 export const updateClient = async (data) => {
   const { lobbyId, socket, joinGame, id, io, newPLayerName, avatar } = data;
-  socket.userId = id;
+
   if (!lobbyId || !id)
     return socket.emit("updateRoom", {
       err: "Cant find game to join. Wrong lobby id or player id",
     });
-  // socket.join(lobbyId);
 
   try {
     const { currentLobby } = await getCache({ lobbyId });

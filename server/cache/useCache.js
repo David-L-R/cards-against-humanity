@@ -17,10 +17,7 @@ export const storeToCache = async ({ lobbyId, currentLobby, currentGame }) => {
   // store user id combared to lobbyID
   if (currentLobbyData.currentLobby)
     currentLobbyData.currentLobby.waiting.forEach((player) =>
-      serverCache.set(
-        player.id,
-        JSON.stringify(currentLobbyData.currentLobby._id)
-      )
+      serverCache.set(player.id, currentLobbyData.currentLobby._id)
     );
   const success = serverCache.set(lobbyId, JSON.stringify(currentLobbyData));
   if (!success) throw new Error("Store to cache failed!");
@@ -58,5 +55,16 @@ export const getLobbyIdFromCache = ({ userId }) => {
   if (!userId) throw new Error("no userId to search for lobby id");
   const lobbyId = serverCache.take(userId);
   if (!lobbyId) throw new Error("cand find lobby id in 'getLobbyIdFromCache");
-  return JSON.parse(lobbyId);
+  return lobbyId;
+};
+
+export const cachUser = ({ id, socketId }) => {
+  if (!id) return serverCache.set(socketId, socketId);
+  serverCache.set(socketId, id);
+};
+
+export const getCachedUser = ({ socketId }) => {
+  const userId = serverCache.get(socketId);
+  if (!userId) console.error("No user id found!");
+  return userId;
 };

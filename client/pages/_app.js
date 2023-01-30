@@ -23,6 +23,10 @@ function MyApp({ Component, router, pageProps: { session, ...pageProps } }) {
       setCookie(null, "socketId", socket.id, { path: "/" });
   }, [socket.id]);
 
+  useEffect(() => {
+    socket.emit("cachUser", { cookieId: cookies.socketId });
+  }, [cookies.socketId]);
+
   return (
     <ContextWrapper>
       <SessionProvider session={session}>

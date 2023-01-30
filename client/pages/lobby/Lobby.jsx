@@ -96,7 +96,6 @@ const Lobby = (props) => {
   useEffect(() => {
     if (lobbyId) {
       socket.on("updateRoom", ({ currentLobby, err, kicked }) => {
-        console.log("currentLobby", currentLobby);
         if (!currentLobby || err) {
           setIsloading(false);
           return setShowErrMessage(

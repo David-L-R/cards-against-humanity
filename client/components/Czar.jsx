@@ -2,16 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import style from "../styles/cardTemplate.module.css";
 import { motion as m } from "framer-motion";
 
-const Czar = ({
-  blackCards,
-  chooseBlackCard,
-  setCardsOnTable,
-  setBlackCards,
-  gameStage,
-  timer,
-  setTimer,
-  startStopTimer,
-}) => {
+const Czar = ({ blackCards, chooseBlackCard, setBlackCards, gameStage }) => {
   const [showBlackCards, setshowBlackCards] = useState([]);
   const [activeIndex, setActiveIndex] = useState(false);
 
