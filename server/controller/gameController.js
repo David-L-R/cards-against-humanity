@@ -206,17 +206,17 @@ export const changeGame = async (states) => {
       kicked: updatedGame.kicked,
     });
     if (updatedGame.kicked) delete updatedGame.kicked;
+
     //if game is finished, store into lobby/games
     if (updatedGame.concluded) await updateGameInLobby(updatedGame);
     await storeToCache({ lobbyId, currentGame: updatedGame });
-    gameIdentifier &&
-      GameCollection.findOneAndUpdate(
-        {
-          id: lobbyId,
-          gameIdentifier: gameIdentifier,
-        },
-        updatedGame
-      ).exec();
+    GameCollection.findOneAndUpdate(
+      {
+        id: lobbyId,
+        gameIdentifier: gameIdentifier,
+      },
+      updatedGame
+    ).exec();
     return;
   } catch (error) {
     console.error("error", error);
