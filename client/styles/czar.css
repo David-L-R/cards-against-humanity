@@ -108,3 +108,21 @@
 }
 
 */
+@media (max-width: 640px) {
+  .czarPicking {
+    width: 140px;
+    font-size: 16px;
+    padding: 10px !important;
+  }
+  .czarSelectionContainer {
+    gap: 0;
+  }
+  .czarPickingH1 {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 1px;
+  }
+  .czarSelectionContainer ul {
+    gap: 0.1rem;
+  }
+}

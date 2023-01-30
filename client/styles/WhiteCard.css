@@ -1,7 +1,7 @@
 .whiteCardContainer {
   display: flex;
-  width: 100%;
-  height: 100%;
+  width: 175px;
+  aspect-ratio: 1/1.4;
   border-radius: 15px;
   color: black;
   perspective: 1000px;
@@ -39,8 +39,9 @@
 
 .whiteCardFace {
   position: absolute;
-  width: 100%;
-  height: 100%;
+
+  width: 175px;
+  aspect-ratio: 1/1.4;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   overflow: hidden;
@@ -142,5 +143,14 @@
   }
   to {
     transform: translateY(0);
+  }
+}
+
+@media (max-width: 640px) {
+  .whiteCardContainer {
+    width: 140px;
+  }
+  .whiteCardFace {
+    width: 140px;
   }
 }

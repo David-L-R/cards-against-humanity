@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { DragOverlay, useDndMonitor, useDroppable } from "@dnd-kit/core";
 import {
   horizontalListSortingStrategy,
@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 import CardTemplate from "../../../components/CardTemplate";
 import { motion as m } from "framer-motion";
 import WhiteCard from "../../../components/WhiteCard";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 export function DropZone(props) {
   let {
@@ -28,8 +29,50 @@ export function DropZone(props) {
   const [blackCard, setBlackCard] = useState(null);
   const [skelletons, setSkelletons] = useState(null);
   const [blackText, setBlackText] = useState(null);
+  const [intervalId, setIntervalId] = useState(null);
 
-  const { setNodeRef } = useDroppable({
+  const [scrollLeftandRight, setScrollLeftandRight] = useState(0);
+  const windowWidth = window && window.innerWidth;
+
+  const handleScrollLeft = () => {
+    const fullWidth = node.current.getBoundingClientRect().width;
+    const cardWidth = node.current.childNodes[0].getBoundingClientRect().width;
+    const minWidth = fullWidth - fullWidth / 2 - cardWidth;
+    setScrollLeftandRight((prev) => prev + cardWidth);
+    if (0 < scrollLeftandRight) {
+      setScrollLeftandRight(minWidth);
+    }
+  };
+  const handleScrollRight = () => {
+    const fullWidth = node.current.getBoundingClientRect().width;
+    const cardWidth = node.current.childNodes[0].getBoundingClientRect().width;
+    const maxWidth = -(fullWidth / 2) + cardWidth * 2;
+    const listLength = node.current.childNodes.length;
+    const listPadding = fullWidth / listLength - cardWidth;
+    const lastCard = (fullWidth / listLength) * (listLength - 1) + listPadding;
+
+    setScrollLeftandRight((prev) => prev - cardWidth - listPadding);
+    if (-(lastCard / 2) + cardWidth >= scrollLeftandRight) {
+      return setScrollLeftandRight(maxWidth - cardWidth);
+    }
+  };
+
+  const handleLeftMouseDown = () => {
+    setIntervalId(setInterval(handleScrollLeft, 200));
+  };
+
+  const handleLeftMouseUp = () => {
+    clearInterval(intervalId);
+  };
+  const handleRightMouseDown = () => {
+    setIntervalId(setInterval(handleScrollRight, 200));
+  };
+
+  const handleRightMouseUp = () => {
+    clearInterval(intervalId);
+  };
+
+  const { setNodeRef, node } = useDroppable({
     id: id,
     disabled:
       cards.length >= blackCard?.pick + 1 ||
@@ -38,6 +81,7 @@ export function DropZone(props) {
         ? true
         : false,
   });
+
   //Render skelettons based on the amount of white cards that are missing, using CSS classes to hide
   const createSkelleton = () => {
     if (!blackCard) return;
@@ -108,7 +152,8 @@ export function DropZone(props) {
     <SortableContext
       id={id}
       items={cards.map((card) => card && card.text)}
-      strategy={horizontalListSortingStrategy}>
+      strategy={horizontalListSortingStrategy}
+    >
       <article
         className={
           isCzar && blackCard
@@ -118,7 +163,8 @@ export function DropZone(props) {
             : isCzar && !blackCard
             ? "czarSelecteWhites whiteHandOut"
             : null
-        }>
+        }
+      >
         {id === "table" && !isCzar && !blackCard && (
           <div className="czarIsChoosing">
             <h1>Czar is Choosing a Black Card</h1>
@@ -128,19 +174,44 @@ export function DropZone(props) {
         <div
           className={
             blackCard ? "onTable black-on-table" : "onTable whiteCardTable"
-          }>
+          }
+        >
+          {!blackCard && windowWidth < 720 && (
+            <>
+              <button
+                className="carusselButton1"
+                onClick={handleScrollLeft}
+                onMouseDown={handleLeftMouseDown}
+                onMouseUp={handleLeftMouseUp}
+              >
+                <FaChevronLeft className="arrowIcon" />
+              </button>
+              <button className="carusselButton2" onClick={handleScrollRight}>
+                <FaChevronRight
+                  className="arrowIcon"
+                  onMouseDown={handleRightMouseDown}
+                  onMouseUp={handleRightMouseUp}
+                />
+              </button>
+            </>
+          )}
           <m.ul
             className={
               confirmed && blackCard ? "cardDisplay confirmed" : "cardDisplay"
             }
             ref={setNodeRef}
             initial={{ y: -500, rotate: 20 }}
-            animate={{ y: 0, rotate: 0 }}
+            animate={{
+              y: 0,
+              rotate: 0,
+              x: !blackCard ? scrollLeftandRight : 0,
+            }}
             exit={{
               y: 1300,
 
               transition: { duration: 0.5 },
-            }}>
+            }}
+          >
             {cards &&
               cards.map((card, index) => {
                 return (
@@ -184,7 +255,8 @@ export function DropZone(props) {
                       !skell.show
                         ? `hide-skell skeleton${index}`
                         : `skeleton${index}`
-                    }>
+                    }
+                  >
                     <CardTemplate card={skell} index={index} isSkell={true} />
                   </li>
                 ))
@@ -200,7 +272,8 @@ export function DropZone(props) {
                     !confirmed && !isCzar
                       ? "selectButton active"
                       : "selectButton "
-                  }>
+                  }
+                >
                   <h3>Confirm</h3>
                 </li>
                 {confirmed && (

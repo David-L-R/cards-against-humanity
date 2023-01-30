@@ -6,7 +6,8 @@ const Layout = ({ children, socket, ...props }) => {
   return (
     <>
       <Head>
-        <title>Card Game</title>
+        <meta name="theme-color" content="#171717" />
+        <title>MMM</title>
       </Head>
       <header>
         <Navbar socket={socket} {...props} />
