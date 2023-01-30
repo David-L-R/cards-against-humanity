@@ -171,7 +171,12 @@ export function DropZone(props) {
               />
             )}
 
-            {skelletons && stage === "white" && !isCzar
+            {(skelletons && stage === "white" && !isCzar) ||
+            (skelletons &&
+              !confirmed &&
+              !isCzar &&
+              skelletons &&
+              stage === "deciding")
               ? skelletons.map((skell, index) => (
                   <li
                     key={skell.key}

@@ -42,8 +42,10 @@ const Game = ({ socket }) => {
   const [gameEnds, setGameEnds] = useState(false);
   const { storeData, setStoreData } = useAppContext();
   const [reconnect, setReconnect] = useState(false);
+  let currentTimer = false;
 
   const chooseBlackCard = (selected) => {
+    setTimer(false);
     const playerData = {
       playedBlack: selected,
       playerId: cookies.socketId,
@@ -53,8 +55,14 @@ const Game = ({ socket }) => {
       lobbyId,
     };
     // if czar left == timer runs out
-    if (!selected)
-      return socket.emit("changeGame", { ...playerData, leavedGame: true });
+    if (!selected) {
+      const leavePlayer = {
+        playerId: cookies.socketId,
+        gameId,
+        lobbyId,
+      };
+      return socket.emit("changeGame", { ...leavePlayer, leavedGame: true });
+    }
 
     socket.emit("changeGame", playerData);
   };
@@ -117,7 +125,7 @@ const Game = ({ socket }) => {
 
     if (!cards) {
       playerData.winningCards = playedWhite[0];
-      socket.emit("changeGame", { ...playerData });
+      // socket.emit("changeGame", { ...playerData });
       socket.emit("changeGame", { ...playerData, leavedGame: true });
       return;
     }
@@ -126,7 +134,7 @@ const Game = ({ socket }) => {
   };
 
   //clicking the ready button, stores ready state in DB
-  const checkoutRound = (id, inactive) => {
+  const checkoutRound = (id) => {
     setTimer(false);
 
     //prevent player from smashing ready button like an idiot ^^
@@ -143,11 +151,6 @@ const Game = ({ socket }) => {
       gameId,
       lobbyId,
     };
-
-    if (inactive) {
-      socket.emit("changeGame", { ...playerData, leavedGame: true });
-      return;
-    }
 
     socket.emit("changeGame", { ...playerData });
   };
@@ -182,17 +185,19 @@ const Game = ({ socket }) => {
     }
   };
 
-  const processGame = ({ currentGame, err, kicked }) => {
+  const processGame = ({ currentGame, err }) => {
     console.log("currentGame", currentGame);
     //if player got kicket
     const player = currentGame?.players.find(
       (player) => player.id === cookies.socketId
     );
-    if (kicked && !player && currentGame)
-      setShowErrMessage("You got kicked! Redirecting you back"),
+    if (currentGame?.kicked && !player)
+      return (
+        setShowErrMessage("You got kicked! Redirecting you back"),
         setTimeout(() => {
           router.push("/");
-        }, 3500);
+        }, 3500)
+      );
 
     //if error ocurred
     if (err || (!currentGame && !kicked)) {
@@ -210,10 +215,6 @@ const Game = ({ socket }) => {
       setGameEnds(true);
       setTimer(false);
     }
-
-    //if less then 3 players, let host decide to close the game
-    if (currentGame.players.filter((player) => !player.inactive).length < 3)
-      setClosingGame(true);
 
     //if less then 2 players, close the game after 3.5s, else abort the closing function
     if (
@@ -268,17 +269,13 @@ const Game = ({ socket }) => {
       //check if the host
       if (isHost)
         setHost(true), setStoreData((prev) => ({ ...prev, isHost: true }));
+      else setHost(false), setStoreData((prev) => ({ ...prev, isHost: false }));
 
       //skipp dealing phase because of rerender
       if (stage === "dealing") return setGameStage(stage);
 
       //check is czar
-      currentCzarId === cookies.socketId
-        ? (setIsCzar(true),
-          currentCzarId === cookies.socketId &&
-            gameStage !== "winner" &&
-            setTimer(false))
-        : setIsCzar(false);
+      currentCzarId === cookies.socketId ? setIsCzar(true) : setIsCzar(false);
 
       //if czar and stage white is is currently runnning, display white cards from users
       if (stage === "white" || stage === "deciding") {
@@ -302,6 +299,7 @@ const Game = ({ socket }) => {
         });
       } else if (
         cardsOnTable?.table?.cards?.length < 1 ||
+        cardsOnTable?.player?.cards?.length < 1 ||
         !cardsOnTable ||
         cardsOnTable?.table?.cards[0]?.text !== playedBlackFromCzar?.text
       ) {
@@ -359,7 +357,6 @@ const Game = ({ socket }) => {
         gameIdentifier: router.query.gameId[0],
       }));
     }
-
     socket.io.on("reconnect", () => {
       setReconnect(true);
     });
@@ -378,37 +375,6 @@ const Game = ({ socket }) => {
         });
       }
 
-      if (gameStage === "black" && timerTrigger) {
-        setTimer(45);
-      }
-
-      if (gameStage === "white" && timerTrigger) {
-        setTimer(60);
-      }
-
-      if (gameStage === "deciding" && timerTrigger) {
-        setTimer(60);
-      }
-
-      if (gameStage === "winner" && timerTrigger) {
-        setTimer(30);
-      }
-      // if (gameStage === "black" && timerTrigger) {
-      //   setTimer(5);
-      // }
-
-      // if (gameStage === "white" && timerTrigger) {
-      //   setTimer(5);
-      // }
-
-      // if (gameStage === "deciding" && timerTrigger) {
-      //   setTimer(5);
-      // }
-
-      // if (gameStage === "winner" && timerTrigger) {
-      //   setTimer(5);
-      // }
-
       if (gameStage === "black") setConfirmed(false);
     }
   }, [gameStage, isCzar]);
@@ -416,22 +382,19 @@ const Game = ({ socket }) => {
   // timer runs out logic
   useEffect(() => {
     // choose random white cards, submit and set player inactive
-    if (timer === null && gameStage === "white" && !isCzar) {
+    if (timer === null && gameStage === "white" && !isCzar && !confirmed) {
       whiteCardChoosed(null);
     }
-
     // set czar inactive and assign a new one
     if (timer === null && gameStage === "black" && isCzar) {
       chooseBlackCard();
     }
-
     // set czar inactive and assign a new one
     if (timer === null && gameStage === "deciding" && isCzar) {
       submitWinner();
     }
-
     if (timer === null && gameStage === "winner") {
-      checkoutRound(cookies.socketId, true);
+      checkoutRound(cookies.socketId);
     }
   }, [timer]);
 
@@ -441,7 +404,12 @@ const Game = ({ socket }) => {
         <Loading />
         {currentLobby && (
           <>
-            <Scoreboard currentLobby={currentLobby} socket={socket} />
+            <Scoreboard
+              currentLobby={currentLobby}
+              socket={socket}
+              isOpen={isOpen}
+              setIsOpen={setIsOpen}
+            />
           </>
         )}
       </main>
@@ -462,25 +430,6 @@ const Game = ({ socket }) => {
     );
 
   if (gameEnds) return <GameEnd currentGame={currentLobby} />;
-
-  if (closingGame && !gameEnds)
-    return (
-      <main>
-        <h1>{"To less players, continue with game anyway?"}</h1>
-        {isHost && closingGame >= 2 && (
-          <ul>
-            <li>
-              <button onClick={() => setClosingGame(false)}>Continue</button>
-            </li>
-            <li>
-              <button onClick={handleClosingGame}>
-                Close and back to lobby
-              </button>
-            </li>
-          </ul>
-        )}
-      </main>
-    );
 
   return (
     <main className="game">
@@ -503,7 +452,11 @@ const Game = ({ socket }) => {
           </div>
           {currentLobby && (
             <>
-              <Scoreboard currentLobby={currentLobby} />
+              <Scoreboard
+                currentLobby={currentLobby}
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+              />
             </>
           )}
 
@@ -517,11 +470,28 @@ const Game = ({ socket }) => {
                 {"You are inactive, you are able to turn back in each stage"}
               </div>
             )}
-            {/* {timerTrigger && (
+            {(timerTrigger && isCzar) || (!isCzar && gameStage !== "black") ? (
               <div className="timerContainer">
-                <Countdown timer={timer} setTimer={setTimer} />
+                <Countdown
+                  gameStage={gameStage}
+                  timer={timer}
+                  setTimer={setTimer}
+                  socket={socket}
+                  lobbyId={lobbyId}
+                  isCzar={isCzar}
+                  timerTrigger={timerTrigger}
+                />
               </div>
-            )} */}
+            ) : null}
+            {currentLobby && (
+              <section className="scoreboard-container">
+                <Scoreboard
+                  currentLobby={currentLobby}
+                  isOpen={isOpen}
+                  setIsOpen={setIsOpen}
+                />
+              </section>
+            )}
           </Winner>
         </>
       ) : (
@@ -560,14 +530,10 @@ const Game = ({ socket }) => {
             <Czar
               blackCards={blackCards}
               chooseBlackCard={chooseBlackCard}
-              setCardsOnTable={setCardsOnTable}
               setBlackCards={setBlackCards}
               gameStage={gameStage}
-              timer={timer}
-              setTimer={setTimer}
             />
           )}
-
           {(isCzar && gameStage !== "black") || !isCzar ? (
             <DragAndDropContainer
               data={cardsOnTable}
@@ -609,11 +575,19 @@ const Game = ({ socket }) => {
               )}
             </DragAndDropContainer>
           ) : null}
-          {timerTrigger && (
+          {(timerTrigger && isCzar) || (!isCzar && gameStage !== "black") ? (
             <div className="timerContainer">
-              <Countdown timer={timer} setTimer={setTimer} />
+              <Countdown
+                gameStage={gameStage}
+                timer={timer}
+                setTimer={setTimer}
+                socket={socket}
+                lobbyId={lobbyId}
+                isCzar={isCzar}
+                timerTrigger={timerTrigger}
+              />
             </div>
-          )}
+          ) : null}
 
           {showErrMessage && (
             <Error
