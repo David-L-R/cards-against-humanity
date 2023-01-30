@@ -134,7 +134,7 @@ const Game = ({ socket }) => {
   };
 
   //clicking the ready button, stores ready state in DB
-  const checkoutRound = (id, inactive) => {
+  const checkoutRound = (id) => {
     setTimer(false);
 
     //prevent player from smashing ready button like an idiot ^^
@@ -151,11 +151,6 @@ const Game = ({ socket }) => {
       gameId,
       lobbyId,
     };
-
-    if (inactive) {
-      socket.emit("changeGame", { ...playerData, leavedGame: true });
-      return;
-    }
 
     socket.emit("changeGame", { ...playerData });
   };
@@ -190,17 +185,19 @@ const Game = ({ socket }) => {
     }
   };
 
-  const processGame = ({ currentGame, err, kicked }) => {
+  const processGame = ({ currentGame, err }) => {
     console.log("currentGame", currentGame);
     //if player got kicket
     const player = currentGame?.players.find(
       (player) => player.id === cookies.socketId
     );
-    if (kicked && !player && currentGame)
-      setShowErrMessage("You got kicked! Redirecting you back"),
+    if (currentGame?.kicked && !player)
+      return (
+        setShowErrMessage("You got kicked! Redirecting you back"),
         setTimeout(() => {
           router.push("/");
-        }, 3500);
+        }, 3500)
+      );
 
     //if error ocurred
     if (err || (!currentGame && !kicked)) {
@@ -220,20 +217,20 @@ const Game = ({ socket }) => {
     }
 
     //if less then 2 players, close the game after 3.5s, else abort the closing function
-    // if (
-    //   currentGame.players.filter((player) => !player.inactive).length < 2 &&
-    //   !currentGame.concluded
-    // ) {
-    //   setShowErrMessage(
-    //     "Not enough Players left, game will be closed within 3 seconds"
-    //   );
-    //   handleClosingGame({ force: true });
+    if (
+      currentGame.players.filter((player) => !player.inactive).length < 2 &&
+      !currentGame.concluded
+    ) {
+      setShowErrMessage(
+        "Not enough Players left, game will be closed within 3 seconds"
+      );
+      handleClosingGame({ force: true });
 
-    //   setTimeout(() => {
-    //     router.push(`/lobby/${storeData.lobbyId}`);
-    //   }, 3500);
-    //   return;
-    // }
+      setTimeout(() => {
+        router.push(`/lobby/${storeData.lobbyId}`);
+      }, 3500);
+      return;
+    }
 
     // if players cookie is not stored inside game Object = player is not part of the game, redirect to hompage
     if (!currentGame.players.find((player) => player.id === cookies.socketId)) {
@@ -278,12 +275,7 @@ const Game = ({ socket }) => {
       if (stage === "dealing") return setGameStage(stage);
 
       //check is czar
-      currentCzarId === cookies.socketId
-        ? setIsCzar(true)
-        : // currentCzarId === cookies.socketId &&
-          //   gameStage !== "winner" &&
-          //   setTimer(false))
-          setIsCzar(false);
+      currentCzarId === cookies.socketId ? setIsCzar(true) : setIsCzar(false);
 
       //if czar and stage white is is currently runnning, display white cards from users
       if (stage === "white" || stage === "deciding") {
@@ -402,7 +394,7 @@ const Game = ({ socket }) => {
       submitWinner();
     }
     if (timer === null && gameStage === "winner") {
-      checkoutRound(cookies.socketId, true);
+      checkoutRound(cookies.socketId);
     }
   }, [timer]);
 
@@ -478,11 +470,28 @@ const Game = ({ socket }) => {
                 {"You are inactive, you are able to turn back in each stage"}
               </div>
             )}
-            {/* {timerTrigger && (
+            {(timerTrigger && isCzar) || (!isCzar && gameStage !== "black") ? (
               <div className="timerContainer">
-                <Countdown timer={timer} setTimer={setTimer} />
+                <Countdown
+                  gameStage={gameStage}
+                  timer={timer}
+                  setTimer={setTimer}
+                  socket={socket}
+                  lobbyId={lobbyId}
+                  isCzar={isCzar}
+                  timerTrigger={timerTrigger}
+                />
               </div>
-            )} */}
+            ) : null}
+            {currentLobby && (
+              <section className="scoreboard-container">
+                <Scoreboard
+                  currentLobby={currentLobby}
+                  isOpen={isOpen}
+                  setIsOpen={setIsOpen}
+                />
+              </section>
+            )}
           </Winner>
         </>
       ) : (
@@ -566,7 +575,7 @@ const Game = ({ socket }) => {
               )}
             </DragAndDropContainer>
           ) : null}
-          {timerTrigger && (
+          {(timerTrigger && isCzar) || (!isCzar && gameStage !== "black") ? (
             <div className="timerContainer">
               <Countdown
                 gameStage={gameStage}
@@ -578,7 +587,7 @@ const Game = ({ socket }) => {
                 timerTrigger={timerTrigger}
               />
             </div>
-          )}
+          ) : null}
 
           {showErrMessage && (
             <Error

@@ -1,7 +1,8 @@
 import style from "../styles/cardTemplate.module.css";
 
 const CardTemplate = (props) => {
-  const { id, isBlackCard, card, blackText, isSkell, isOverlay, index } = props;
+  const { id, isBlackCard, card, blackText, isSkell, isOverlay, index, table } =
+    props;
   let cardClass;
 
   (() => {
@@ -22,7 +23,9 @@ const CardTemplate = (props) => {
 
   return (
     <>
-      <div key={id + index} className={cardClass}>
+      <div
+        key={id + index + card?.text + isOverlay + table}
+        className={cardClass}>
         {!isBlackCard ? id : blackText}
       </div>
     </>

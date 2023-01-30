@@ -5,6 +5,7 @@ import { updateGameInLobby } from "../utils/addGameToLobby.js";
 import updateTurn from "../utils/updateTurn.js";
 import dealCards from "../utils/dealCardsToPlayers.js";
 import { getCache, storeToCache } from "../cache/useCache.js";
+import updateGame from "../router/controllers/updateGame.js";
 
 export const createGame = async ({
   setRounds,
@@ -196,7 +197,7 @@ export const changeGame = async (states) => {
   try {
     const currentLobbyData = await getCache({ lobbyId });
     const { currentGame } = currentLobbyData;
-    const gameIdentifier = currentGame.gameIdentifier;
+    const gameIdentifier = currentGame?.gameIdentifier;
     const updatedGame = await updateTurn({ ...states, currentGame });
     if (!updatedGame) return "Server error, no game found";
 
@@ -204,17 +205,18 @@ export const changeGame = async (states) => {
       currentGame: updatedGame,
       kicked: updatedGame.kicked,
     });
-
+    if (updatedGame.kicked) delete updatedGame.kicked;
     //if game is finished, store into lobby/games
     if (updatedGame.concluded) await updateGameInLobby(updatedGame);
     await storeToCache({ lobbyId, currentGame: updatedGame });
-    GameCollection.findOneAndUpdate(
-      {
-        id: lobbyId,
-        gameIdentifier: gameIdentifier,
-      },
-      updatedGame
-    ).exec();
+    gameIdentifier &&
+      GameCollection.findOneAndUpdate(
+        {
+          id: lobbyId,
+          gameIdentifier: gameIdentifier,
+        },
+        updatedGame
+      ).exec();
     return;
   } catch (error) {
     console.error("error", error);

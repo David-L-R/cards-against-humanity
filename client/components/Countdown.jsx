@@ -76,48 +76,28 @@ function Countdown({
   }, [isCzar, gameStage]);
 
   useEffect(() => {
-    // if (gameStage === "black" && timerTrigger) {
-    //   setTimer(45);
-    //   synchronizeTimer({ timer });
-    // }
-
-    // if (gameStage === "white" && timerTrigger) {
-    //   setTimer(60);
-    //   synchronizeTimer({ timer });
-    // }
-
-    // if (gameStage === "deciding" && timerTrigger) {
-    //   setTimer( 60);
-    //   synchronizeTimer({ timer });
-    // }
-
-    // if (gameStage === "winner" && timerTrigger) {
-    //   setTimer(30);
-    //   synchronizeTimer({ timer });
-    // }
-
     if (gameStage === "black" && isCzar) {
-      const counter = 15;
+      const counter = 45;
       setTimer(counter);
       synchronizeTimer({ timer: counter });
     }
 
     if (gameStage === "white" && isCzar) {
-      const counter = 25;
+      const counter = 60;
 
       setTimer(counter);
       synchronizeTimer({ timer: counter });
     }
 
     if (gameStage === "deciding" && isCzar) {
-      const counter = 11;
+      const counter = 59;
 
       setTimer(counter);
       synchronizeTimer({ timer: counter });
     }
 
     if (gameStage === "winner" && isCzar) {
-      const counter = 15;
+      const counter = 30;
 
       setTimer(counter);
       synchronizeTimer({ timer: counter });

@@ -19,9 +19,9 @@ const updateTurn = async ({
   changeAvatar,
   avatar,
 }) => {
-  const currentTurnIndex = currentGame?.turns?.length - 1;
-  if (currentTurnIndex < 0) currentTurnIndex = 0;
-  const currentTurn = currentGame?.turns[currentTurnIndex];
+  let currentTurnIndex = currentGame?.turns?.length - 1;
+  if (currentTurnIndex < 0 || !currentTurnIndex) currentTurnIndex = 0;
+  const currentTurn = currentGame ? currentGame?.turns[currentTurnIndex] : null;
 
   //reactivate each player after they really played
   if (!leavedGame && currentGame) {
@@ -29,22 +29,6 @@ const updateTurn = async ({
       if (player.id === playerId) player.inactive = false;
       return player;
     });
-
-    //if czar turns back, add him in white_cards
-    // const findPlayer = currentGame.players.find(
-    //   (player) => player.id === playerId
-    // );
-    // const playerPresent = currentTurn.white_cards.find(
-    //   (player) => player.player === findPlayer.id
-    // );
-
-    // if (!playerPresent)
-    //   currentTurn.white_cards.push({
-    //     player: findPlayer.id,
-    //     cards: findPlayer.hand,
-    //     played_card: [],
-    //     points: findPlayer.points,
-    //   });
   }
 
   //if just avatar gotes changed
@@ -122,7 +106,7 @@ const updateTurn = async ({
     newHost.isHost = true;
 
     //if czar leaves, asign a new czar and restart round
-    if (currentCzar.id === currentPlayer.id) {
+    if (currentCzar.id === currentPlayer.id && game) {
       //asign new czar
       const activePlayers = currentGame.players.filter(
         (player) => !player.inactive
@@ -245,12 +229,10 @@ const updateTurn = async ({
   //send winner to players
   if (stage === "winner") {
     // currentGame;
-    console.log("currentTurn.white_cards", currentTurn.white_cards);
     const wonPlayer = currentTurn.white_cards
       .filter((player) => player.played_card.length > 0)
       .find((player) => player.played_card[0].text === winningCards[0].text);
 
-    console.log("wonPlayer", wonPlayer);
     //add points to turn
     wonPlayer.played_card.forEach((card) => (wonPlayer.points += 10));
     currentTurn.winner = wonPlayer;
@@ -265,7 +247,6 @@ const updateTurn = async ({
 
   if (stage === "completed") {
     const Game = currentGame;
-
     currentTurn.completed.push(
       Game.players.find((player) => player.id === playerId)
     );
