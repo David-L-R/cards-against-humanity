@@ -227,9 +227,10 @@
   height: 35px;
   display: flex;
   border-radius: 10px;
-  background-color: rgb(41, 40, 40);
+  background-color: rgba(41, 40, 40, 0.28);
   color: white;
   text-align: center;
+  z-index: 10;
 }
 .inputEnterIconContainer {
   width: 100%;
@@ -244,6 +245,8 @@
   font-weight: 800;
   stroke-width: 50px;
   height: 100%;
+  z-index: -1;
+  width: 10%;
 }
 .disconectIcon {
   margin: auto;
@@ -316,5 +319,19 @@
   }
   .waitingLobbyContainer {
     padding-bottom: 1.5rem;
+  }
+  .disconectIcon {
+    position: absolute;
+    color: #eb455eb0;
+    stroke-width: 1px;
+    height: 60%;
+    width: 60%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: -1;
+  }
+  .disconnectText {
+    display: none;
   }
 }
