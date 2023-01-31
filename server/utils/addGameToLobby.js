@@ -13,9 +13,24 @@ export const updateGameInLobby = async (game) => {
     const copyedGame = {
       id: game.id,
       gameIdentifier: game.gameIdentifier,
+      players: game.players,
       concluded: game.concluded,
     };
+
     currentLobby.games.push(copyedGame);
+    //add points to player
+    currentLobby.waiting = currentLobby.waiting.map((currPlayer) => {
+      let points = 0;
+      currentLobby.games.forEach((game) => {
+        const oldPlayer = game.players.find(
+          (player) => player.id === currPlayer.id
+        );
+        if (!oldPlayer) return;
+        points += oldPlayer.points;
+      });
+      return { ...currPlayer, points };
+    });
+
     await storeToCache({ lobbyId, currentLobby });
     return LobbyCollection.findByIdAndUpdate(lobbyId, currentLobby).exec();
   }
@@ -23,9 +38,25 @@ export const updateGameInLobby = async (game) => {
   const copyedGame = {
     id: game.id,
     gameIdentifier: game.gameIdentifier,
+    players: game.players,
     concluded: game.concluded,
   };
+
   currentLobby.games[currentGameIndex] = copyedGame;
+
+  //add points to player
+  currentLobby.waiting = currentLobby.waiting.map((currPlayer) => {
+    let points = 0;
+    currentLobby.games.forEach((game) => {
+      const oldPlayer = game.players.find(
+        (player) => player.id === currPlayer.id
+      );
+      if (!oldPlayer) return;
+      points += oldPlayer.points;
+    });
+    return { ...currPlayer, points };
+  });
+
   await storeToCache({ lobbyId, currentLobby });
   return LobbyCollection.findByIdAndUpdate(lobbyId, currentLobby).exec();
 };

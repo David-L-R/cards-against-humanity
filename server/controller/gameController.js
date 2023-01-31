@@ -209,7 +209,8 @@ export const changeGame = async (states) => {
     if (updatedGame.kicked) delete updatedGame.kicked;
 
     //if game is finished, store into lobby/games
-    if (updatedGame.concluded) await updateGameInLobby(updatedGame);
+    // if (updatedGame.concluded) await updateGameInLobby(updatedGame);
+    await updateGameInLobby(updatedGame);
     await storeToCache({ lobbyId, currentGame: updatedGame });
     GameCollection.findOneAndUpdate(
       {
