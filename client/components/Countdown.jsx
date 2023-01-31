@@ -42,16 +42,16 @@ function Countdown({
     },
   });
 
-  // const renderTime = ({ remainingTime }) => {
-  //   if (remainingTime === 0) {
-  //     return;
-  //   } else
-  //     return (
-  //       <div className="timer">
-  //         <div className="value">{remainingTime}</div>
-  //       </div>
-  //     );
-  // };
+  const renderTime = ({ remainingTime }) => {
+    if (remainingTime === 0) {
+      return;
+    } else
+      return (
+        <div className="timer">
+          <div className="value">{remainingTime}</div>
+        </div>
+      );
+  };
 
   const synchronizeTimer = ({ timer, requestSync }) => {
     //send current timer after request
@@ -101,7 +101,7 @@ function Countdown({
 
   useEffect(() => {
     if (gameStage === "black" && isCzar) {
-      const counter = 150;
+      const counter = 30;
       setTimer(counter);
       synchronizeTimer({ timer: counter });
     }
