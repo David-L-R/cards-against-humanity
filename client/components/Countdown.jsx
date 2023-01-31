@@ -17,17 +17,41 @@ function Countdown({
 }) {
   const [updateClients, setUpdateClients] = useState(false);
   const [currentTimer, setCurrentTimer] = useState(null);
+  const {
+    path,
+    pathLength,
+    stroke,
+    strokeDashoffset,
+    remainingTime,
+    elapsedTime,
+    size,
+    strokeWidth,
+  } = useCountdown({
+    isPlaying: timer ? true : false,
+    key: timer,
+    colorsTime: [10, 5, 0],
+    duration: timer,
+    colors: ["#fff", "#EB455F", "#EB455F"],
+    shouldRepeat: false,
+    onUpdate: (remainingTime) => {
+      setCurrentTimer(remainingTime);
+    },
+    onComplete: () => {
+      synchronizeTimer({ timer: null });
+      setTimer(null);
+    },
+  });
 
-  const renderTime = ({ remainingTime }) => {
-    if (remainingTime === 0) {
-      return;
-    } else
-      return (
-        <div className="timer">
-          <div className="value">{remainingTime}</div>
-        </div>
-      );
-  };
+  // const renderTime = ({ remainingTime }) => {
+  //   if (remainingTime === 0) {
+  //     return;
+  //   } else
+  //     return (
+  //       <div className="timer">
+  //         <div className="value">{remainingTime}</div>
+  //       </div>
+  //     );
+  // };
 
   const synchronizeTimer = ({ timer, requestSync }) => {
     //send current timer after request
@@ -77,7 +101,7 @@ function Countdown({
 
   useEffect(() => {
     if (gameStage === "black" && isCzar) {
-      const counter = 45;
+      const counter = 150;
       setTimer(counter);
       synchronizeTimer({ timer: counter });
     }
@@ -108,7 +132,7 @@ function Countdown({
 
   return (
     <div className="timer-wrapper">
-      <CountdownCircleTimer
+      {/* <CountdownCircleTimer
         key={timer}
         isPlaying={timer ? true : false}
         size={100}
@@ -131,7 +155,12 @@ function Countdown({
           };
         }}>
         {renderTime}
-      </CountdownCircleTimer>
+      </CountdownCircleTimer> */}
+      <div
+        className="customTimer"
+        style={{ width: remainingTime * 10, backgroundColor: stroke }}>
+        {remainingTime}
+      </div>
     </div>
   );
 }

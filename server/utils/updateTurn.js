@@ -106,7 +106,7 @@ const updateTurn = async ({
     newHost.isHost = true;
 
     //if czar leaves, asign a new czar and restart round
-    if (currentCzar.id === currentPlayer.id && game) {
+    if (currentCzar.id === currentPlayer.id) {
       //asign new czar
       const activePlayers = currentGame.players.filter(
         (player) => !player.inactive
