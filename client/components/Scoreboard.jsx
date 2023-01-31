@@ -55,9 +55,7 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
       <div
         className={!isOpen ? "sideMenu" : "sideMenu active"}
         style={{
-          boxShadow: isOpen
-            ? "20px 2px 31px 4px rgba(135,129,129,0.52)"
-            : "none",
+          boxShadow: isOpen ? "20px 2px 31px 4px #8781813e" : "none",
         }}
       >
         <div

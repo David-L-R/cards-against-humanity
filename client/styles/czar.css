@@ -110,19 +110,44 @@
 */
 @media (max-width: 640px) {
   .czarPicking {
-    width: 140px;
+    width: 160px;
     font-size: 16px;
     padding: 10px !important;
   }
   .czarSelectionContainer {
-    gap: 0;
+    gap: 1rem;
+    display: flex;
+    height: 60%;
+    justify-content: space-between;
   }
   .czarPickingH1 {
-    font-size: 24px;
+    font-size: 26px;
+    padding-bottom: 1rem;
     font-weight: 800;
     letter-spacing: 1px;
   }
   .czarSelectionContainer ul {
-    gap: 0.1rem;
+    gap: 0.5rem;
+    display: flex;
+    overflow: none;
+
+    transition: 0.5s;
+  }
+  .czarButtonLeft {
+    display: flex;
+    position: absolute;
+    color: white;
+    top: 105%;
+    z-index: 0;
+    left: 5%;
+    font-size: 30px;
+  }
+  .czarButtonRight {
+    display: flex;
+    position: absolute;
+    top: 105%;
+    right: 5%;
+    z-index: 0;
+    font-size: 30px;
   }
 }
