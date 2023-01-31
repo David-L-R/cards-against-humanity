@@ -2050,7 +2050,6 @@
         "pick": 1,
         "pack": 0
       },
-      { "text": "Make a haiku.", "pick": 3, "pack": 0 },
       {
         "text": "Mate, do not go in that bathroom. There's _ in there.",
         "pick": 1,

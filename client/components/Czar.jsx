@@ -95,8 +95,8 @@ const Czar = ({ blackCards, chooseBlackCard, setBlackCards, gameStage }) => {
         <ul
           className="czarPickingContainer"
           style={styles}
-          ref={czarPickingContainerRef}
-        >
+          ref={czarPickingContainerRef}>
+          {console.log("showBlackCards", showBlackCards)}
           {showBlackCards &&
             showBlackCards.map((cardItem, blackIndex) =>
               cardItem.index === activeIndex ? (
@@ -130,8 +130,7 @@ const Czar = ({ blackCards, chooseBlackCard, setBlackCards, gameStage }) => {
                       : blackIndex === showBlackCards.length - 1
                       ? "highest"
                       : "lowest"
-                  }
-                >
+                  }>
                   <div
                     key={cardItem.card.text + blackIndex}
                     className={` ${style.black} czarPicking`}
@@ -140,13 +139,13 @@ const Czar = ({ blackCards, chooseBlackCard, setBlackCards, gameStage }) => {
                         index: cardItem.index,
                         event: e,
                       });
-                    }}
-                  >
+                    }}>
                     {cardItem.card.text}
                   </div>
                 </m.li>
               ) : (
                 <li key={cardItem.card.text + blackIndex}>
+                  {console.log("cardItem", cardItem)}
                   <div
                     className={` ${style.black} czarPicking`}
                     onClick={(e) => {
@@ -155,8 +154,7 @@ const Czar = ({ blackCards, chooseBlackCard, setBlackCards, gameStage }) => {
                         event: e,
                       });
                       setScrollLeftandRight(0);
-                    }}
-                  >
+                    }}>
                     {cardItem.card.text}
                   </div>
                 </li>

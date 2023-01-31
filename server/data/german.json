@@ -2245,7 +2245,6 @@
         "pick": 1,
         "pack": 0
       },
-      { "text": "Machen Sie ein Haiku.", "pick": 3, "pack": 0 },
       {
         "text": "Kumpel, geh nicht in das Badezimmer. Da ist _ drin.",
         "pick": 1,
