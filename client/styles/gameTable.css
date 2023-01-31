@@ -359,19 +359,4 @@
     left: 50%;
     transform: translateX(-50%);
   }
-  .czarButtonLeft {
-    display: flex;
-    position: absolute;
-    color: white;
-    top: 105%;
-    z-index: 0;
-    left: 10%;
-  }
-  .czarButtonRight {
-    display: flex;
-    position: absolute;
-    top: 105%;
-    right: 10%;
-    z-index: 0;
-  }
 }

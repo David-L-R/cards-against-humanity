@@ -5,6 +5,7 @@ import {
   CountdownCircleTimer,
   useCountdown,
 } from "react-countdown-circle-timer";
+import { CgLogIn } from "react-icons/cg";
 
 function Countdown({
   timer,
@@ -13,10 +14,12 @@ function Countdown({
   socket,
   isCzar,
   gameStage,
-  timerTrigger,
+  confirmed,
 }) {
   const [updateClients, setUpdateClients] = useState(false);
   const [currentTimer, setCurrentTimer] = useState(null);
+
+  const windowWidth = window && window.innerWidth;
 
   const renderTime = ({ remainingTime }) => {
     if (remainingTime === 0) {
@@ -67,7 +70,7 @@ function Countdown({
       }
     });
     //request for timer after initial load
-    if (!isCzar) synchronizeTimer({ requestSync: true });
+    if (!isCzar && !confirmed) synchronizeTimer({ requestSync: true });
     isCzar && synchronizeTimer({ timer });
 
     return () => {
@@ -77,27 +80,27 @@ function Countdown({
 
   useEffect(() => {
     if (gameStage === "black" && isCzar) {
-      const counter = 450;
+      const counter = 45;
       setTimer(counter);
       synchronizeTimer({ timer: counter });
     }
 
     if (gameStage === "white" && isCzar) {
-      const counter = 600;
+      const counter = 60;
 
       setTimer(counter);
       synchronizeTimer({ timer: counter });
     }
 
     if (gameStage === "deciding" && isCzar) {
-      const counter = 590;
+      const counter = 59;
 
       setTimer(counter);
       synchronizeTimer({ timer: counter });
     }
 
     if (gameStage === "winner" && isCzar) {
-      const counter = 300;
+      const counter = 30;
 
       setTimer(counter);
       synchronizeTimer({ timer: counter });
@@ -105,34 +108,52 @@ function Countdown({
   }, [gameStage, isCzar, timer]);
 
   if (!timer) return null;
-
+  const styles = {
+    width: `${(100 * currentTimer) / currentTimer}vw`,
+  };
   return (
     <div className="timer-wrapper">
-      <CountdownCircleTimer
-        key={timer}
-        isPlaying={timer ? true : false}
-        size={100}
-        strokeWidth={17}
-        strokeLinecap="butt"
-        trailStrokeWidth={0}
-        onUpdate={(remainingTime) => {
-          setCurrentTimer(remainingTime);
-        }}
-        duration={timer}
-        colors={["#fff", "#EB455F", "#EB455F"]}
-        colorsTime={[10, 5, 0]}
-        onComplete={() => {
-          synchronizeTimer({ timer: null });
-          setTimer(null);
-          return {
-            shouldRepeat: false,
-            delay: 1,
-            newInitialRemainingTime: 0,
-          };
-        }}
+      <div style={windowWidth < 700 ? { display: "none" } : null}>
+        <CountdownCircleTimer
+          style={{ display: "none" }}
+          key={timer}
+          isPlaying={timer ? true : false}
+          size={100}
+          strokeWidth={17}
+          strokeLinecap="butt"
+          trailStrokeWidth={0}
+          onUpdate={(remainingTime) => {
+            setCurrentTimer(remainingTime);
+          }}
+          duration={timer}
+          colors={["#fff", "#EB455F", "#EB455F"]}
+          colorsTime={[10, 5, 0]}
+          onComplete={() => {
+            synchronizeTimer({ timer: null });
+            setTimer(null);
+            return {
+              shouldRepeat: false,
+              delay: 1,
+              newInitialRemainingTime: 0,
+            };
+          }}
+        >
+          {renderTime}
+        </CountdownCircleTimer>
+      </div>
+      <div
+        className="customTimer"
+        style={
+          windowWidth > 700
+            ? { display: "none" }
+            : {
+                width: `${(currentTimer / timer) * 100}%`,
+                backgroundColor: currentTimer < 15 ? "#EB455F" : "white",
+              }
+        }
       >
-        {renderTime}
-      </CountdownCircleTimer>
+        <div className="remainingTime">{currentTimer}</div>
+      </div>
     </div>
   );
 }
