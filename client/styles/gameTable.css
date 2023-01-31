@@ -291,6 +291,12 @@
     transform: translateY(0px);
   }
 }
+.czarButtonLeft {
+  display: none;
+}
+.czarButtonRight {
+  display: none;
+}
 
 @media (max-width: 640px) {
   .whiteCardTable {

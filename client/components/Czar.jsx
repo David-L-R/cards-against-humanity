@@ -1,10 +1,47 @@
 import React, { useEffect, useRef, useState } from "react";
 import style from "../styles/cardTemplate.module.css";
 import { motion as m } from "framer-motion";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const Czar = ({ blackCards, chooseBlackCard, setBlackCards, gameStage }) => {
   const [showBlackCards, setshowBlackCards] = useState([]);
   const [activeIndex, setActiveIndex] = useState(false);
+  const [scrollLeftandRight, setScrollLeftandRight] = useState(0);
+  const czarPickingContainerRef = useRef(null);
+
+  const handleScrollLeft = () => {
+    const fullWidth = czarPickingContainerRef.current.offsetWidth;
+    const minWidth = fullWidth - fullWidth / 2;
+    const cardWidth =
+      czarPickingContainerRef.current.childNodes[0].getBoundingClientRect()
+        .width;
+
+    setScrollLeftandRight((prev) => prev + cardWidth);
+    if (0 < scrollLeftandRight) {
+      setScrollLeftandRight(minWidth - cardWidth / 2);
+    }
+  };
+  const handleScrollRight = () => {
+    const fullWidth = czarPickingContainerRef.current.offsetWidth;
+    const cardWidth =
+      czarPickingContainerRef.current.childNodes[0].getBoundingClientRect()
+        .width;
+    const maxWidth = -(fullWidth / 2) + cardWidth * 2;
+    const listLength = czarPickingContainerRef.current.childNodes.length;
+    const listPadding = fullWidth / listLength - cardWidth;
+    const lastCard = (fullWidth / listLength) * (listLength - 1) + listPadding;
+
+    setScrollLeftandRight((prev) => prev - cardWidth - listPadding);
+    if (-(lastCard / 2) + cardWidth >= scrollLeftandRight) {
+      return setScrollLeftandRight(
+        -(lastCard / 2) + cardWidth >=
+          scrollLeftandRight - listPadding - listPadding / 2
+      );
+    }
+  };
+  const styles = {
+    transform: `translateX(${scrollLeftandRight}px)`,
+  };
 
   // get randokm black cards and let czar decide
   const randomBlackCards = () => {
@@ -45,6 +82,7 @@ const Czar = ({ blackCards, chooseBlackCard, setBlackCards, gameStage }) => {
 
   {
   }
+
   if (!showBlackCards || gameStage !== "black") return;
 
   return (
@@ -54,7 +92,11 @@ const Czar = ({ blackCards, chooseBlackCard, setBlackCards, gameStage }) => {
         <h2>Select a Card </h2>
       </div>
       <div>
-        <ul className="czarPickingContainer">
+        <ul
+          className="czarPickingContainer"
+          style={styles}
+          ref={czarPickingContainerRef}
+        >
           {showBlackCards &&
             showBlackCards.map((cardItem, blackIndex) =>
               cardItem.index === activeIndex ? (
@@ -88,7 +130,8 @@ const Czar = ({ blackCards, chooseBlackCard, setBlackCards, gameStage }) => {
                       : blackIndex === showBlackCards.length - 1
                       ? "highest"
                       : "lowest"
-                  }>
+                  }
+                >
                   <div
                     key={cardItem.card.text + blackIndex}
                     className={` ${style.black} czarPicking`}
@@ -97,7 +140,8 @@ const Czar = ({ blackCards, chooseBlackCard, setBlackCards, gameStage }) => {
                         index: cardItem.index,
                         event: e,
                       });
-                    }}>
+                    }}
+                  >
                     {cardItem.card.text}
                   </div>
                 </m.li>
@@ -110,13 +154,21 @@ const Czar = ({ blackCards, chooseBlackCard, setBlackCards, gameStage }) => {
                         index: cardItem.index,
                         event: e,
                       });
-                    }}>
+                      setScrollLeftandRight(0);
+                    }}
+                  >
                     {cardItem.card.text}
                   </div>
                 </li>
               )
             )}
         </ul>
+        <button className="czarButtonLeft" onClick={handleScrollLeft}>
+          <FaChevronLeft />
+        </button>
+        <button className="czarButtonRight" onClick={handleScrollRight}>
+          <FaChevronRight />
+        </button>
       </div>
     </section>
   );

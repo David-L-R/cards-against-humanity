@@ -186,7 +186,6 @@ const Game = ({ socket }) => {
   };
 
   const processGame = ({ currentGame, err }) => {
-    console.log("currentGame", currentGame);
     //if player got kicket
     const player = currentGame?.players.find(
       (player) => player.id === cookies.socketId
@@ -480,7 +479,7 @@ const Game = ({ socket }) => {
                   socket={socket}
                   lobbyId={lobbyId}
                   isCzar={isCzar}
-                  timerTrigger={timerTrigger}
+                  confirmed={confirmed}
                 />
               </div>
             ) : null}
@@ -582,13 +581,13 @@ const Game = ({ socket }) => {
           {(timerTrigger && isCzar) || (!isCzar && gameStage !== "black") ? (
             <div className="timerContainer">
               <Countdown
+                confirmed={confirmed}
                 gameStage={gameStage}
                 timer={timer}
                 setTimer={setTimer}
                 socket={socket}
                 lobbyId={lobbyId}
                 isCzar={isCzar}
-                timerTrigger={timerTrigger}
               />
             </div>
           ) : null}
