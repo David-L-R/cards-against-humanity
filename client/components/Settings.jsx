@@ -9,6 +9,8 @@ const Settings = ({
   setAmountOfRounds,
   amountOfRounds,
   handSize,
+  language,
+  setLanguage,
 }) => {
   const [error, setError] = useState(false);
 
@@ -96,6 +98,35 @@ const Settings = ({
           <button onClick={handleRoundsIncrement}>
             <BsFillArrowUpSquareFill className="settingsButton" />
           </button>
+        </li>
+        <li>
+          <h3>Language</h3>
+        </li>
+        <li>
+          <div className="language-wrapper">
+            <div>
+              <label htmlFor="english">English</label>
+              <input
+                type="radio"
+                name="language"
+                value="english"
+                id="english"
+                onChange={(e) => setLanguage(e.target.value)}
+                checked={language === "english" ? true : false}
+              />
+            </div>
+            <div>
+              <label htmlFor="german">German</label>
+              <input
+                type="radio"
+                name="language"
+                value="german"
+                id="german"
+                onChange={(e) => setLanguage(e.target.value)}
+                checked={language === "german" ? true : false}
+              />
+            </div>
+          </div>
         </li>
       </ul>
     </>

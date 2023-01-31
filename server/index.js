@@ -1,4 +1,3 @@
-import router from "./router/routes.js";
 import dotenv from "dotenv";
 import connectDB from "./database/db.js";
 import { Server } from "socket.io";
@@ -15,7 +14,6 @@ connectDB();
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/", router);
 app.use(
   express.urlencoded({
     extended: true,

@@ -17,6 +17,7 @@ function MyApp({ Component, router, pageProps: { session, ...pageProps } }) {
   const cookies = parseCookies();
   const [amountOfRounds, setAmountOfRounds] = useState(10);
   const [handSize, setHandSize] = useState(10);
+  const [language, setLanguage] = useState("english");
 
   useEffect(() => {
     if (socket.id && !cookies.socketId)
@@ -35,7 +36,9 @@ function MyApp({ Component, router, pageProps: { session, ...pageProps } }) {
           setHandSize={setHandSize}
           setAmountOfRounds={setAmountOfRounds}
           handSize={handSize}
-          amountOfRounds={amountOfRounds}>
+          amountOfRounds={amountOfRounds}
+          language={language}
+          setLanguage={setLanguage}>
           <AnimatePresence mode="wait" initial={false}>
             <Component
               key={router.pathname}
@@ -43,6 +46,7 @@ function MyApp({ Component, router, pageProps: { session, ...pageProps } }) {
               handSize={handSize}
               amountOfRounds={amountOfRounds}
               socket={socket}
+              language={language}
             />
             ;
           </AnimatePresence>

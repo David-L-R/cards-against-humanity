@@ -19,7 +19,7 @@ import { AiOutlineEnter } from "react-icons/ai";
 import { VscDebugDisconnect } from "react-icons/vsc";
 
 const Lobby = (props) => {
-  const { socket, handSize, amountOfRounds } = props;
+  const { socket, handSize, amountOfRounds, language } = props;
   const router = useRouter();
   const { joinGame } = router.query;
   const cookies = parseCookies();
@@ -49,6 +49,7 @@ const Lobby = (props) => {
       lobbyId,
       setRounds: amountOfRounds,
       maxHandSize: handSize,
+      language,
     });
   };
 
@@ -243,8 +244,7 @@ const Lobby = (props) => {
               x: -1300,
               rotate: -120,
               transition: { duration: 0.75 },
-            }}
-          >
+            }}>
             <h1>
               Waiting for players&nbsp;
               <span className="loadingContainer">
@@ -303,8 +303,7 @@ const Lobby = (props) => {
                         transform: "scale(1)",
                       }
                     : null
-                }
-              >
+                }>
                 <span>{isLoading ? "Loading..." : "Start Game"}</span>
               </button>
             )}
@@ -318,8 +317,7 @@ const Lobby = (props) => {
                     player.inactive || checkIfPlaying(player.id)
                       ? "inactive"
                       : null
-                  }
-                >
+                  }>
                   <h2 style={{ fontSize: `${calculateFontSize(player.name)}` }}>
                     {player.name.toUpperCase() !== "DAVID" ? (
                       player.name.toUpperCase()

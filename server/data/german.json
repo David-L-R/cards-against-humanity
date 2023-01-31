@@ -181,12 +181,12 @@
       },
       { "text": "Ein feuchter Sao.", "pack": 0 },
       { "text": "Ein spastischer Nerd.", "pack": 0 },
-      { "text": "Ein Stachelrochen durch die Brust.", "pack": 0 },
-      { "text": "Eine streunende Scham.", "pack": 0 },
+      { "text": "Eine Stachelrochenspitze durch die Brust.", "pack": 0 },
+      { "text": "Eine einzelnes Schamhaar.", "pack": 0 },
       { "text": "Ein Abonnement für Men's Fitness.", "pack": 0 },
       { "text": "Ein Super Soaker™ voller Katzenpisse.", "pack": 0 },
       { "text": "Überraschend wenig Vergewaltigung im Gefängnis.", "pack": 0 },
-      { "text": "Ein schnelles Huf ins Gesicht.", "pack": 0 },
+      { "text": "Ein schneller tritt ins Gesicht.", "pack": 0 },
       { "text": "Eine thermonukleare Detonation.", "pack": 0 },
       {
         "text": "Tausend schottische Krieger, die gemeinsam ihre Kilts heben.",
@@ -202,9 +202,9 @@
         "text": "Eine Vagina, die schmeckt wie der Badezimmerboden in Tom's Diner.",
         "pack": 0
       },
-      { "text": "Eine vajazzled Vagina.", "pack": 0 },
+      { "text": "Eine mit glitter verzierte Vagina.", "pack": 0 },
       { "text": "Ein weit überlegenes Gesundheitssystem.", "pack": 0 },
-      { "text": "Ein Vindaloo-Hack.", "pack": 0 },
+      { "text": "Ein Vindaloo Schiss.", "pack": 0 },
       { "text": "Ein Netz aus Lügen.", "pack": 0 },
       { "text": "Ein Todesrennen im Rollstuhl.", "pack": 0 },
       { "text": "Ein weißer Ethnostaat.", "pack": 0 },
@@ -218,7 +218,7 @@
       { "text": "Oscar-Gewinnerin Meryl Streep.", "pack": 0 },
       { "text": "Akzeptieren wie die Dinge sind.", "pack": 0 },
       {
-        "text": "Du hast dir versehentlich einen Roofie ausgerutscht.",
+        "text": "Du hast dir versehentlich einen Roofie ausgesucht.",
         "pack": 0
       },
       { "text": "Aktives Zuhören.", "pack": 0 },
@@ -313,7 +313,7 @@
       { "text": "Bananen im Pyjama.", "pack": 0 },
       { "text": "Bananen.", "pack": 0 },
       { "text": "Barack Obama.", "pack": 0 },
-      { "text": "Knapp 25.000 $ pro Jahr verdienen.", "pack": 0 },
+      { "text": "Knapp 25.000 $ pro Jahr verdienen.", "pack": 0 },
       { "text": "Grundauszubildende.", "pack": 0 },
       { "text": "BATMAN!", "pack": 0 },
       { "text": "BATMAN!!!", "pack": 0 },
@@ -345,9 +345,9 @@
       { "text": "Reich sein.", "pack": 0 },
       { "text": "Weiß sein.", "pack": 0 },
       { "text": "Benedict Cumberbatch.", "pack": 0 },
-      { "text": "Bestiality.", "pack": 0 },
+      { "text": "Bestialität.", "pack": 0 },
       { "text": "Bill Nye der Wissenschaftler.", "pack": 0 },
-      { "text": "Bingeing und Purging.", "pack": 0 },
+      { "text": "Fressflash und kotzen.", "pack": 0 },
       {
         "text": "Biotechnologisch hergestellte Sturmschildkröten mit saurem Atem.",
         "pack": 0
@@ -379,7 +379,7 @@
       { "text": "Braune Menschen.", "pack": 0 },
       { "text": "Bubble Butt Bottom Boys.", "pack": 0 },
       { "text": "Buckfast Tonic Wine.", "pack": 0 },
-      { "text": "Bullshitting my ass off.", "pack": 0 },
+      { "text": "Lügen wie gedruckt.", "pack": 0 },
       { "text": "Das Weiße Haus niederbrennen.", "pack": 0 },
       {
         "text": "Den richtigen Zahnputzbecher für meinen Lebensstil kaufen.",
@@ -1644,7 +1644,7 @@
       { "text": "Deine Mama.", "pack": 0 },
       { "text": "Dein komischer Bruder.", "pack": 0 }
     ],
-    "Schwarz": [
+    "black": [
       { "text": "_ + _ = Hipster", "pick": 2, "pack": 0 },
       {
         "text": "_ ist ein sicheres Zeichen für den Untergang der Menschheit.",

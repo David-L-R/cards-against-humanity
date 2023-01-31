@@ -28,8 +28,15 @@ function Navbar(props) {
   const [showRules, setShowRules] = useState(false);
   const [showBug, setShowBug] = useState(false);
   const [showContact, setShowContact] = useState(false);
-  const { socket, setHandSize, setAmountOfRounds, handSize, amountOfRounds } =
-    props;
+  const {
+    socket,
+    setHandSize,
+    setAmountOfRounds,
+    handSize,
+    amountOfRounds,
+    language,
+    setLanguage,
+  } = props;
   const { data: session } = useSession();
   const { storeData } = useAppContext();
   const [showErrMessage, setShowErrMessage] = useState(false);
@@ -111,10 +118,10 @@ function Navbar(props) {
       </nav>
       <div
         className="accountMenu"
-        onMouseLeave={() => {
-          setShowProfile(false);
-          setShowSettings(false);
-        }}
+        // onMouseLeave={() => {
+        //   setShowProfile(false);
+        //   setShowSettings(false);
+        // }}
       >
         <button className="burgerMenue"></button>
         <ul>
@@ -123,8 +130,7 @@ function Navbar(props) {
               <li id="sidebar-item">
                 <div
                   id="settingsToggle"
-                  onClick={() => setShowProfile((prev) => !prev)}
-                >
+                  onClick={() => setShowProfile((prev) => !prev)}>
                   <div className="navbarProfilePic">
                     <img
                       className="navIcon"
@@ -140,8 +146,7 @@ function Navbar(props) {
                         showProfile
                           ? "arrowDownIcon "
                           : "arrowDownIcon openArrow"
-                      }
-                    >
+                      }>
                       <IoIosArrowDown />
                     </span>
                   </div>
@@ -151,8 +156,7 @@ function Navbar(props) {
                 <ul className="settingsInputContainer">
                   <li
                     className="profileMenu"
-                    onClick={() => setShowProfileMenu(true)}
-                  >
+                    onClick={() => setShowProfileMenu(true)}>
                     <span className="profileMenuIcon">
                       <ImProfile />
                     </span>
@@ -172,8 +176,7 @@ function Navbar(props) {
               className={!lobbyId && !gameIdentifier ? "" : "diseabled"}
               onClick={
                 !lobbyId && !gameIdentifier ? () => setShowSignIn(true) : null
-              }
-            >
+              }>
               <div className="navbarIcons">
                 <CgProfile />
               </div>
@@ -190,8 +193,7 @@ function Navbar(props) {
               <li id="sidebar-item">
                 <div
                   id="settingsToggle"
-                  onClick={() => setShowSettings((prev) => !prev)}
-                >
+                  onClick={() => setShowSettings((prev) => !prev)}>
                   <div className="navbarIcons gameSettingsIcon">
                     <FiSettings />
                   </div>
@@ -202,8 +204,7 @@ function Navbar(props) {
                         showSettings
                           ? "arrowDownIcon "
                           : "arrowDownIcon openArrow"
-                      }
-                    >
+                      }>
                       <IoIosArrowDown />
                     </span>
                   </div>
@@ -216,6 +217,8 @@ function Navbar(props) {
                   setHandSize={setHandSize}
                   setAmountOfRounds={setAmountOfRounds}
                   handSize={handSize}
+                  language={language}
+                  setLanguage={setLanguage}
                   amountOfRounds={amountOfRounds}
                 />
               </li>

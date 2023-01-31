@@ -1,11 +1,10 @@
 import GameCollection from "../database/models/game.js";
 import LobbyCollection from "../database/models/lobby.js";
-import allCards from "../data/allCards.json" assert { type: "json" };
 import { updateGameInLobby } from "../utils/addGameToLobby.js";
 import updateTurn from "../utils/updateTurn.js";
 import dealCards from "../utils/dealCardsToPlayers.js";
 import { getCache, storeToCache } from "../cache/useCache.js";
-import updateGame from "../router/controllers/updateGame.js";
+import allCards from "../data/index.js";
 
 export const createGame = async ({
   setRounds,
@@ -13,9 +12,11 @@ export const createGame = async ({
   lobbyId,
   io,
   socket,
+  language,
 }) => {
   let amountOfRounds = parseInt(setRounds);
   let handSize = parseInt(maxHandSize);
+  let languageDeck = allCards[language];
 
   if (!lobbyId)
     io.to(lobbyId).emit("newgame", {
@@ -60,8 +61,8 @@ export const createGame = async ({
     await storeToCache({ lobbyId, currentLobby: lobby });
     LobbyCollection.findByIdAndUpdate(lobbyId, lobby).exec();
 
-    const [black] = allCards.map((set) => set.black);
-    const [white] = allCards.map((set) => set.white);
+    const [black] = languageDeck.map((set) => set.black);
+    const [white] = languageDeck.map((set) => set.white);
 
     const gamedata = {
       id: lobbyId,
