@@ -9,6 +9,7 @@ import { parseCookies } from "nookies";
 import Avatar from "./Avatar.jsx";
 
 const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
+  const [showButton, setShowButton] = useState(false);
   const [showKick, setShowKick] = useState(false);
   const cookies = parseCookies();
   const { turns } = currentLobby;
@@ -89,10 +90,9 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
                 data-id={player.id}
               >
                 <div>
-                  {storeData.isHost &&
-                  showKick === player.id &&
-                  player.id !== cookies.socketId ? (
+                  {storeData.isHost && player.id !== cookies.socketId ? (
                     <KickButton
+                      showKick={showKick}
                       playerId={player.id}
                       socket={socket}
                       playerName={player.name}

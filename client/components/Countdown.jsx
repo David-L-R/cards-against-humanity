@@ -149,6 +149,7 @@ function Countdown({
             : {
                 width: `${(currentTimer / timer) * 100}%`,
                 backgroundColor: currentTimer < 15 ? "#EB455F" : "white",
+                zIndex: "20",
               }
         }
       >

@@ -46,3 +46,11 @@
   top: 0;
   left: 0;
 }
+
+.mobileKickButton {
+  position: absolute;
+  top: 25%;
+  left: 5%;
+  color: #aa3446;
+  transform: translate(-50%, -50%);
+}

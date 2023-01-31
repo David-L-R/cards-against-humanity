@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Ukflag1 from "../public/Ukflag1.svg";
 import {
   BsFillArrowDownSquareFill,
   BsFillArrowUpSquareFill,
@@ -100,7 +101,7 @@ const Settings = ({
           </button>
         </li>
         <li>
-          <h3>Language</h3>
+          <h3>Languages</h3>
         </li>
         <li>
           <div className="language-wrapper">
