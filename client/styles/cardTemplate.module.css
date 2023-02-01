@@ -2,7 +2,7 @@
   position: relative;
   display: inline-block;
   padding: 15px;
-  width: 175px;
+  width: 170px;
   aspect-ratio: 1/1.4;
   background-color: white;
   color: black;
@@ -63,7 +63,10 @@
 
 @media (max-width: 640px) {
   .cardTemplateContainer {
-    width: 140px;
-    font-size: 16px;
+    min-width: 115px;
+    max-width: 36vw;
+    padding: 10px;
+    font-size: 14px;
+    overflow: auto;
   }
 }

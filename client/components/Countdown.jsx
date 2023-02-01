@@ -80,7 +80,8 @@ function Countdown({
 
   useEffect(() => {
     if (gameStage === "black" && isCzar) {
-      const counter = 4500;
+      // const counter = 45;
+      const counter = 6000;
       setTimer(counter);
       synchronizeTimer({ timer: counter });
     }
@@ -93,14 +94,16 @@ function Countdown({
     }
 
     if (gameStage === "deciding" && isCzar) {
-      const counter = 5900;
+      // const counter = 59;
+      const counter = 6000;
 
       setTimer(counter);
       synchronizeTimer({ timer: counter });
     }
 
     if (gameStage === "winner" && isCzar) {
-      const counter = 3000;
+      // const counter = 30;
+      const counter = 6000;
 
       setTimer(counter);
       synchronizeTimer({ timer: counter });
@@ -134,8 +137,7 @@ function Countdown({
               delay: 1,
               newInitialRemainingTime: 0,
             };
-          }}
-        >
+          }}>
           {renderTime}
         </CountdownCircleTimer>
       </div>
@@ -149,8 +151,7 @@ function Countdown({
                 backgroundColor: currentTimer < 15 ? "#EB455F" : "white",
                 zIndex: "20",
               }
-        }
-      >
+        }>
         <div className="remainingTime">{currentTimer}</div>
       </div>
     </div>

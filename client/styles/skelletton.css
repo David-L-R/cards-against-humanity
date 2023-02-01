@@ -63,6 +63,7 @@ div.skeleton {
   animation: hideSkell 0ms;
   animation-fill-mode: forwards;
   z-index: -1;
+  display: none;
 }
 
 @keyframes hideSkell {
