@@ -8,6 +8,7 @@ import { useAppContext } from "../context";
 import { useRouter } from "next/router";
 import emotions from "../utils/avatarEmotions.js";
 import { GoSettings } from "react-icons/go";
+import { motion as m } from "framer-motion";
 
 const Avatar = ({ userName, playerId, playerAvatar, isPopup }) => {
   const cookies = parseCookies();
@@ -73,7 +74,8 @@ const Avatar = ({ userName, playerId, playerAvatar, isPopup }) => {
         onClick={() => playerId === cookies.socketId && setShowSettings(true)}
         className={"avatar-image"}
         style={playerId === cookies.socketId ? { cursor: "pointer" } : null}
-        dangerouslySetInnerHTML={{ __html: svg }}></div>
+        dangerouslySetInnerHTML={{ __html: svg }}
+      ></div>
     );
   };
 
@@ -99,11 +101,24 @@ const Avatar = ({ userName, playerId, playerAvatar, isPopup }) => {
     }
   }, [storeData.changeAvatar]);
 
-  if (isPopup && showAvatar) return <AvatarSVG avatarOptions={avatarOptions} />;
+  if (isPopup && showAvatar)
+    return (
+      <m.div
+        className="motionAvatarContainer"
+        initial={{ y: 150 }}
+        animate={{
+          y: -30,
+          transition: { duration: 0.5, ease: "linear" },
+        }}
+      >
+        <p>{userName}</p>
+        <AvatarSVG avatarOptions={avatarOptions} />
+      </m.div>
+    );
 
   if (!isPopup)
     return (
-      <div>
+      <div className="scoreBoardAvatars">
         {playerId === cookies.socketId && (
           <GoSettings className="customiseIcon" />
         )}
@@ -112,7 +127,8 @@ const Avatar = ({ userName, playerId, playerAvatar, isPopup }) => {
           <>
             <AvatarCustomizer
               handleSetAvatarOptions={handleSetAvatarOptions}
-              setShowSettings={setShowSettings}>
+              setShowSettings={setShowSettings}
+            >
               <div className="avatar-preview">
                 <AvatarSVG avatarOptions={avatarOptions} />
                 <div>
@@ -123,7 +139,8 @@ const Avatar = ({ userName, playerId, playerAvatar, isPopup }) => {
                         <li key={emotion.label}>
                           <button
                             style={{ textTransform: "uppercase" }}
-                            onClick={() => handlEemotions(emotion.settings)}>
+                            onClick={() => handlEemotions(emotion.settings)}
+                          >
                             {emotion.label}
                           </button>
                         </li>

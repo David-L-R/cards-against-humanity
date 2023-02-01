@@ -1,4 +1,4 @@
-.avatar-image {
+.scoreBoardAvatars .avatar-image {
   position: relative;
   bottom: 0;
   min-width: 30px;
@@ -9,17 +9,39 @@
   flex-shrink: 0;
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.118);
-  transition: 0.3s;
 }
-.avatar-image svg {
+.motionAvatarContainer .avatar-image svg {
+  position: relative;
+  display: flex;
+  cursor: default;
+  width: auto;
+  flex-basis: 30%;
+  height: 100px;
+  width: 50px;
+  flex-shrink: 0;
+  scale: 3.5;
+}
+.motionAvatarContainer p {
+  display: flex;
+  width: max-content;
+
+  justify-content: center;
+  margin: auto;
+  padding-bottom: 30px;
+  color: white;
+  font-weight: bold;
+}
+
+.scoreBoardAvatars .avatar-image svg {
   border-radius: 50%;
   transition: 0.3s;
 }
-.avatar-image:hover {
+
+.scoreBoardAvatars .avatar-image:hover {
   transition: 0.3s;
   scale: 1.1;
 }
-.avatar-image svg:hover {
+.scoreBoardAvatars .avatar-image svg:hover {
   position: absolute;
   display: flex;
   transform: translateY(-7px);
@@ -247,6 +269,28 @@ input[type="radio"]:checked + * {
 .avatar-preview ul > li:hover > button {
   transform: translateY(-5px);
   box-shadow: 0 6px 7px -3px rgba(255, 255, 255, 0.61);
+}
+.avatar-popup-container {
+  position: fixed;
+  width: 50vw;
+  bottom: 0;
+  right: 5%;
+  display: flex;
+  justify-content: flex-end;
+  gap: 1.5rem;
+  transition: 0.3s;
+}
+
+.motionAvatarContainer {
+  animation: avatarExit 0.5s linear 4.5s;
+}
+@keyframes avatarExit {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateY(20vh);
+  }
 }
 
 @media (max-width: 640px) {
