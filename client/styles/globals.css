@@ -101,3 +101,16 @@ body {
   display: flex;
   flex-direction: column;
 }
+
+.avaPopup {
+  position: fixed;
+  z-index: 100;
+  top: 50%;
+  left: 50%;
+}
+
+.showAvatar {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+}

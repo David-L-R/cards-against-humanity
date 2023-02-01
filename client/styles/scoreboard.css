@@ -23,12 +23,13 @@
   transform: rotate(20deg);
 }
 .sideMenu {
+  --width: 350px;
   height: 100%;
-  width: 350px;
+  width: var(--width);
   max-width: 100vw;
   position: fixed;
   top: 0;
-  left: 0;
+  left: calc(var(--width) * -1);
   background-color: rgba(255, 255, 255, 1);
   z-index: 20;
   color: black;
@@ -36,11 +37,11 @@
   display: flex;
   transition: all 0.3s ease-in-out;
   border-right: 2px solid black;
-  transform: translateX(-100%);
+  /* transform: translateX(-100%); */
 }
 
 .sideMenu.active {
-  transform: translateX(0);
+  left: 0;
 }
 
 .sideMenu > ul {
@@ -258,6 +259,6 @@
     box-shadow: 0px 4px 0px 0px rgb(255 255 255);
   }
   .sideMenu {
-    width: 100%;
+    --width: 100%;
   }
 }

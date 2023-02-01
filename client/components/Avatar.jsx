@@ -9,12 +9,13 @@ import { useRouter } from "next/router";
 import emotions from "../utils/avatarEmotions.js";
 import { GoSettings } from "react-icons/go";
 
-const Avatar = ({ userName, playerId, playerAvatar }) => {
+const Avatar = ({ userName, playerId, playerAvatar, index }) => {
   const cookies = parseCookies();
   const router = useRouter();
   const [showSettings, setShowSettings] = useState(false);
   const [currGameId, setCurrGameId] = useState(false);
   const { storeData, setStoreData } = useAppContext();
+  const [showAvatar, setShowAvatar] = useState(false);
   const avatarOptions = {
     seed: userName,
     ...playerAvatar,
@@ -39,7 +40,6 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
 
   const handlEemotions = (emotions) => {
     const newOptions = { ...avatarOptions, ...emotions };
-
     storeAvatarSettings(newOptions);
   };
 
@@ -72,10 +72,22 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
         onClick={() => playerId === cookies.socketId && setShowSettings(true)}
         className={"avatar-image"}
         style={playerId === cookies.socketId ? { cursor: "pointer" } : null}
-        dangerouslySetInnerHTML={{ __html: svg }}
-      ></div>
+        dangerouslySetInnerHTML={{ __html: svg }}></div>
     );
   };
+
+  useEffect(() => {
+    if (storeData.changeAvatar === playerId) {
+      setShowAvatar(true);
+      setTimeout(() => {
+        setShowAvatar(false);
+        setStoreData((prev) => ({
+          ...prev,
+          changeAvatar: null,
+        }));
+      }, 5000);
+    }
+  }, [storeData.changeAvatar]);
 
   useEffect(() => {
     storeAvatarSettings(avatarOptions);
@@ -88,16 +100,22 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
 
   return (
     <div>
-      {playerId === cookies.socketId && (
+      {playerId === cookies.socketId && !showAvatar && (
         <GoSettings className="customiseIcon" />
       )}
       <AvatarSVG avatarOptions={avatarOptions} />
+      {showAvatar && (
+        <div
+          className={"showAvatar"}
+          style={{ transform: `translateX(${index * 90}%)` }}>
+          <AvatarSVG avatarOptions={avatarOptions} />
+        </div>
+      )}
       {showSettings && (
         <>
           <AvatarCustomizer
             handleSetAvatarOptions={handleSetAvatarOptions}
-            setShowSettings={setShowSettings}
-          >
+            setShowSettings={setShowSettings}>
             <div className="avatar-preview">
               <AvatarSVG avatarOptions={avatarOptions} />
               <div>
@@ -108,8 +126,7 @@ const Avatar = ({ userName, playerId, playerAvatar }) => {
                       <li key={emotion.label}>
                         <button
                           style={{ textTransform: "uppercase" }}
-                          onClick={() => handlEemotions(emotion.settings)}
-                        >
+                          onClick={() => handlEemotions(emotion.settings)}>
                           {emotion.label}
                         </button>
                       </li>

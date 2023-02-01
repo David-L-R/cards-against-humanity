@@ -83,7 +83,7 @@ function Navbar(props) {
         setReconnect("Successfully reconnected with Server");
         setTimeout(() => {
           setReconnect(false);
-        }, 5000);
+        }, 500);
       });
     }
 
@@ -121,8 +121,7 @@ function Navbar(props) {
         onMouseLeave={() => {
           setShowProfile(false);
           setShowSettings(false);
-        }}
-      >
+        }}>
         <button className="burgerMenue"></button>
         <ul>
           {session ? (
@@ -130,8 +129,7 @@ function Navbar(props) {
               <li id="sidebar-item">
                 <div
                   id="settingsToggle"
-                  onClick={() => setShowProfile((prev) => !prev)}
-                >
+                  onClick={() => setShowProfile((prev) => !prev)}>
                   <div className="navbarProfilePic">
                     <img
                       className="navIcon"
@@ -147,8 +145,7 @@ function Navbar(props) {
                         showProfile
                           ? "arrowDownIcon "
                           : "arrowDownIcon openArrow"
-                      }
-                    >
+                      }>
                       <IoIosArrowDown />
                     </span>
                   </div>
@@ -158,8 +155,7 @@ function Navbar(props) {
                 <ul className="settingsInputContainer">
                   <li
                     className="profileMenu"
-                    onClick={() => setShowProfileMenu(true)}
-                  >
+                    onClick={() => setShowProfileMenu(true)}>
                     <span className="profileMenuIcon">
                       <ImProfile />
                     </span>
@@ -179,8 +175,7 @@ function Navbar(props) {
               className={!lobbyId && !gameIdentifier ? "" : "diseabled"}
               onClick={
                 !lobbyId && !gameIdentifier ? () => setShowSignIn(true) : null
-              }
-            >
+              }>
               <div className="navbarIcons">
                 <CgProfile />
               </div>
@@ -197,8 +192,7 @@ function Navbar(props) {
               <li id="sidebar-item">
                 <div
                   id="settingsToggle"
-                  onClick={() => setShowSettings((prev) => !prev)}
-                >
+                  onClick={() => setShowSettings((prev) => !prev)}>
                   <div className="navbarIcons gameSettingsIcon">
                     <FiSettings />
                   </div>
@@ -209,8 +203,7 @@ function Navbar(props) {
                         showSettings
                           ? "arrowDownIcon "
                           : "arrowDownIcon openArrow"
-                      }
-                    >
+                      }>
                       <IoIosArrowDown />
                     </span>
                   </div>
@@ -301,6 +294,17 @@ function Navbar(props) {
         setShowErrMessage={setShowErrMessage}
         success={reconnect}
       />
+      {/* {storeData.avatarSettings && showAva && (
+        <aside className="avaPopup">
+          <Avatar
+            userName={storeData.avatarSettings.userName}
+            playerId={storeData.avatarSettings.playerId}
+            playerAvatar={storeData.avatarSettings.playerAvatar}
+            raw={true}
+          />
+          <p>{storeData.avatarSettings.userName}</p>
+        </aside>
+      )} */}
     </>
   );
 }

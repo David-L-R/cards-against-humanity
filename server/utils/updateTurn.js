@@ -35,9 +35,10 @@ const updateTurn = async ({
   if (changeAvatar) {
     currentGame.players = currentGame.players.map((player) => {
       if (player.id === playerId) player.avatar = avatar;
+
       return player;
     });
-    return currentGame;
+    return { ...currentGame, changeAvatar: playerId };
   }
 
   //kick player

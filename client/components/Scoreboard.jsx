@@ -9,7 +9,6 @@ import { parseCookies } from "nookies";
 import Avatar from "./Avatar.jsx";
 
 const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
-  const [showButton, setShowButton] = useState(false);
   const [showKick, setShowKick] = useState(false);
   const cookies = parseCookies();
   const { turns } = currentLobby;
@@ -57,16 +56,14 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
         className={!isOpen ? "sideMenu" : "sideMenu active"}
         style={{
           boxShadow: isOpen ? "20px 2px 31px 4px #8781813e" : "none",
-        }}
-      >
+        }}>
         <div
           className="scoreButton"
           onClick={openMenu}
           style={{
             opacity: isOpen ? "0" : "1",
             cursor: isOpen ? "default" : "pointer",
-          }}
-        >
+          }}>
           <p>SCORES</p>
         </div>
         <button className="closeScorebutton" onClick={openMenu}>
@@ -81,14 +78,13 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
             <div>Score</div>
           </li>
           {players &&
-            players.map((player) => (
+            players.map((player, index) => (
               <li
                 key={player.id}
                 className={player.inactive ? "inactive-player" : null}
                 onMouseEnter={(e) => setShowKick(e.target.dataset.id)}
                 onMouseLeave={showKick ? () => setShowKick(false) : null}
-                data-id={player.id}
-              >
+                data-id={player.id}>
                 <div>
                   {storeData.isHost && player.id !== cookies.socketId ? (
                     <KickButton
@@ -119,12 +115,12 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
                     userName={player.name}
                     playerId={player.id}
                     playerAvatar={player.avatar}
+                    index={index}
                   />
 
                   <span
                     className="player-name"
-                    style={{ fontSize: `${calculateFontSize(player.name)}` }}
-                  >
+                    style={{ fontSize: `${calculateFontSize(player.name)}` }}>
                     {player.name}
                   </span>
                 </div>

@@ -320,6 +320,10 @@ const Game = ({ socket }) => {
       setGameId(currentGame.id);
       setTimerTrigger(currentGame.timerTrigger);
       setGameStage(stage);
+      setStoreData((prev) => ({
+        ...prev,
+        changeAvatar: currentGame.changeAvatar,
+      }));
     }
   };
 
@@ -429,59 +433,44 @@ const Game = ({ socket }) => {
       </main>
     );
 
-  return <GameEnd currentGame={currentLobby} />;
-  if (gameEnds)
-    return (
-      <main className="game">
-        {gameStage === "winner" ? (
-          <>
-            {currentLobby && (
-              <>
-                <Scoreboard
-                  currentLobby={currentLobby}
-                  isOpen={isOpen}
-                  setIsOpen={setIsOpen}
-                />
-              </>
-            )}
+  if (gameEnds) return <GameEnd currentGame={currentLobby} />;
+  return (
+    <main className="game">
+      {gameStage === "winner" ? (
+        <>
+          {currentLobby && (
+            <>
+              <Scoreboard
+                currentLobby={currentLobby}
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+              />
+            </>
+          )}
 
-            <Winner
-              currentTurn={currentTurn}
-              checkoutRound={checkoutRound}
-              isCzar={isCzar}
-              currentLobby={currentLobby}>
-              {isInactive && (
-                <div className="errMessage">
-                  {"You are inactive, you are able to turn back in each stage"}
-                </div>
-              )}
-              {(timerTrigger && isCzar) ||
-              (!isCzar && gameStage !== "black") ? (
-                <div className="timerContainer">
-                  <Countdown
-                    gameStage={gameStage}
-                    timer={timer}
-                    setTimer={setTimer}
-                    socket={socket}
-                    lobbyId={lobbyId}
-                    isCzar={isCzar}
-                    confirmed={confirmed}
-                  />
-                </div>
-              ) : null}
-              {currentLobby && (
-                <section className="scoreboard-container">
-                  <Scoreboard
-                    currentLobby={currentLobby}
-                    isOpen={isOpen}
-                    setIsOpen={setIsOpen}
-                  />
-                </section>
-              )}
-            </Winner>
-          </>
-        ) : (
-          <>
+          <Winner
+            currentTurn={currentTurn}
+            checkoutRound={checkoutRound}
+            isCzar={isCzar}
+            currentLobby={currentLobby}>
+            {isInactive && (
+              <div className="errMessage">
+                {"You are inactive, you are able to turn back in each stage"}
+              </div>
+            )}
+            {(timerTrigger && isCzar) || (!isCzar && gameStage !== "black") ? (
+              <div className="timerContainer">
+                <Countdown
+                  gameStage={gameStage}
+                  timer={timer}
+                  setTimer={setTimer}
+                  socket={socket}
+                  lobbyId={lobbyId}
+                  isCzar={isCzar}
+                  confirmed={confirmed}
+                />
+              </div>
+            ) : null}
             {currentLobby && (
               <section className="scoreboard-container">
                 <Scoreboard
@@ -491,92 +480,104 @@ const Game = ({ socket }) => {
                 />
               </section>
             )}
-
-            {isInactive && (
-              <div className="errMessage">
-                {"You are inactive, you are able to turn back in each stage"}
-              </div>
-            )}
-            {isCzar && blackCards && gameStage === "black" && (
-              <Czar
-                blackCards={blackCards}
-                chooseBlackCard={chooseBlackCard}
-                setBlackCards={setBlackCards}
-                gameStage={gameStage}
+          </Winner>
+        </>
+      ) : (
+        <>
+          {currentLobby && (
+            <section className="scoreboard-container">
+              <Scoreboard
+                currentLobby={currentLobby}
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
               />
-            )}
-            {(isCzar && gameStage !== "black") || !isCzar ? (
-              <DragAndDropContainer
-                data={cardsOnTable}
-                setData={setCardsOnTable}
-                element={CardTemplate}
-                isCzar={isCzar}
-                whiteCardChoosed={whiteCardChoosed}
-                getNewWhiteCard={getNewWhiteCard}
-                setCardsOnTable={setCardsOnTable}
-                loading={loading}
+            </section>
+          )}
+
+          {isInactive && (
+            <div className="errMessage">
+              {"You are inactive, you are able to turn back in each stage"}
+            </div>
+          )}
+          {isCzar && blackCards && gameStage === "black" && (
+            <Czar
+              blackCards={blackCards}
+              chooseBlackCard={chooseBlackCard}
+              setBlackCards={setBlackCards}
+              gameStage={gameStage}
+            />
+          )}
+
+          {(isCzar && gameStage !== "black") || !isCzar ? (
+            <DragAndDropContainer
+              data={cardsOnTable}
+              setData={setCardsOnTable}
+              element={CardTemplate}
+              isCzar={isCzar}
+              whiteCardChoosed={whiteCardChoosed}
+              getNewWhiteCard={getNewWhiteCard}
+              setCardsOnTable={setCardsOnTable}
+              loading={loading}
+              confirmed={confirmed}
+              setConfirmed={setConfirmed}
+              stage={gameStage}
+              maxHandSize={maxHandSize}>
+              {playedWhite && isCzar && (
+                <ul className={"cardDisplay playedWhite"}>
+                  {playedWhite.map(
+                    (cards, index) =>
+                      cards.length > 0 && (
+                        <li
+                          onMouseEnter={() => handleMouseOver(cards)}
+                          onMouseLeave={() => handleMouseLeave(cards)}
+                          key={cards[0].text + cards[0].pack + index}>
+                          {cards.map((card) => (
+                            <PlayedWhite card={card} key={card.text} />
+                          ))}
+                          <button
+                            onClick={() => submitWinner(cards)}
+                            className="choose-button"
+                            disabled={gameStage === "deciding" ? false : true}>
+                            {gameStage === "deciding" ? (
+                              <BsFillTrophyFill className="choose-icon" />
+                            ) : (
+                              <p className="waiting-text">
+                                Waiting for all players
+                              </p>
+                            )}
+                          </button>
+                        </li>
+                      )
+                  )}
+                </ul>
+              )}
+            </DragAndDropContainer>
+          ) : null}
+          {(timerTrigger && isCzar) ||
+          (!isCzar && gameStage !== "black" && !confirmed) ? (
+            <div className="timerContainer">
+              <Countdown
                 confirmed={confirmed}
-                setConfirmed={setConfirmed}
-                stage={gameStage}
-                maxHandSize={maxHandSize}>
-                {playedWhite && isCzar && (
-                  <ul className={"cardDisplay playedWhite"}>
-                    {playedWhite.map(
-                      (cards, index) =>
-                        cards.length > 0 && (
-                          <li
-                            onMouseEnter={() => handleMouseOver(cards)}
-                            onMouseLeave={() => handleMouseLeave(cards)}
-                            key={cards[0].text + cards[0].pack + index}>
-                            {cards.map((card) => (
-                              <PlayedWhite card={card} key={card.text} />
-                            ))}
-                            <button
-                              onClick={() => submitWinner(cards)}
-                              className="choose-button"
-                              disabled={
-                                gameStage === "deciding" ? false : true
-                              }>
-                              {gameStage === "deciding" ? (
-                                <BsFillTrophyFill className="choose-icon" />
-                              ) : (
-                                <p className="waiting-text">
-                                  Waiting for all players
-                                </p>
-                              )}
-                            </button>
-                          </li>
-                        )
-                    )}
-                  </ul>
-                )}
-              </DragAndDropContainer>
-            ) : null}
-            {(timerTrigger && isCzar) ||
-            (!isCzar && gameStage !== "black" && !confirmed) ? (
-              <div className="timerContainer">
-                <Countdown
-                  confirmed={confirmed}
-                  gameStage={gameStage}
-                  timer={timer}
-                  setTimer={setTimer}
-                  socket={socket}
-                  lobbyId={lobbyId}
-                  isCzar={isCzar}
-                />
-              </div>
-            ) : null}
-
-            {showErrMessage && (
-              <Error
-                showErrMessage={showErrMessage}
-                setShowErrMessage={setShowErrMessage}
+                gameStage={gameStage}
+                timer={timer}
+                setTimer={setTimer}
+                socket={socket}
+                lobbyId={lobbyId}
+                isCzar={isCzar}
               />
-            )}
-          </>
-        )}
-      </main>
-    );
+            </div>
+          ) : null}
+
+          {showErrMessage && (
+            <Error
+              showErrMessage={showErrMessage}
+              setShowErrMessage={setShowErrMessage}
+            />
+          )}
+        </>
+      )}
+    </main>
+  );
 };
 
 export default Game;

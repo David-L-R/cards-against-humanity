@@ -131,7 +131,6 @@ const Lobby = (props) => {
 
         if (err) return console.warn(err);
 
-        setStoreData((prev) => ({ ...prev, playerName: player.name }));
         setPlayers((pre) => waiting);
       });
 

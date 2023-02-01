@@ -205,8 +205,10 @@ export const changeGame = async (states) => {
     io.to(lobbyId).emit("currentGame", {
       currentGame: updatedGame,
       kicked: updatedGame.kicked,
+      changeAvatar: updatedGame.changeAvatar,
     });
     if (updatedGame.kicked) delete updatedGame.kicked;
+    if (updatedGame.changeAvatar) delete updatedGame.changeAvatar;
 
     //if game is finished, store into lobby/games
     // if (updatedGame.concluded) await updateGameInLobby(updatedGame);
