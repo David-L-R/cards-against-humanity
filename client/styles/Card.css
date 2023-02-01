@@ -43,6 +43,7 @@
   align-items: center;
   justify-content: center;
 }
+
 .cardFace--front h2 {
   position: absolute;
   top: 5%;

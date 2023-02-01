@@ -239,7 +239,6 @@
   transition: 0.3;
   box-shadow: 0px 0px 15px 2px rgb(0, 0, 0);
   padding: 0.75rem 2rem;
-  border: 2px solid white;
 }
 
 .selectButton.active {
