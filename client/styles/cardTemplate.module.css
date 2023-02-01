@@ -63,12 +63,10 @@
 
 @media (max-width: 640px) {
   .cardTemplateContainer {
-    /* width: 140px; */
-    min-width: 110px;
-    max-width: 32vw;
-    padding: 0.3rem;
-    font-size: 16px;
-    max-height: 196px;
+    min-width: 115px;
+    max-width: 36vw;
+    padding: 10px;
+    font-size: 14px;
     overflow: auto;
   }
 }

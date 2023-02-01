@@ -73,7 +73,8 @@
   display: grid;
   grid-template-areas:
     "blackCard white1 white2"
-    ". selectButton selectButton";
+    ". selectButton selectButton"
+    "waitText waitText waitText";
   width: max-content;
   column-gap: 10px;
 }
@@ -119,14 +120,13 @@
 .choose-button {
   position: absolute;
   bottom: 20%;
-  left: 80%;
-  width: max-content;
+  left: 0%;
   border: 2px solid white;
   text-align: center;
   border-radius: 30px;
   padding: 10px;
   font-size: 16px;
-  transform: translateX(-50%) translateY(100%);
+  transform: translateX(40%) translateY(100%);
   z-index: 5;
   transition: all 250ms;
   opacity: 0;
@@ -138,7 +138,7 @@
 }
 
 .cardDisplay.playedWhite li:hover .choose-button {
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(40%) translateY(0);
   opacity: 1;
 }
 
@@ -210,12 +210,7 @@
   left: 50%;
   z-index: 20;
   justify-content: center;
-  width: 200px;
-  height: 50px;
   align-items: center;
-  /*border: 1px dotted white;*/
-  /*border-bottom: 1px solid white;*/
-  /*border-top: 1px solid white;*/
   border-radius: 30px;
   background-color: black;
   letter-spacing: 1px;
@@ -226,6 +221,8 @@
   cursor: pointer;
   transition: 0.3;
   box-shadow: 0px 0px 15px 2px rgb(0, 0, 0);
+  padding: 0.75rem 2rem;
+  border: 2px solid white;
 }
 
 .selectButton.active {
@@ -237,11 +234,11 @@
   transition: 0.5s;
 }
 .waitText {
-  position: fixed;
   top: 38%;
-
+  grid-area: waitText;
   padding: 0;
   margin: 0;
+  text-align: center;
 }
 
 @keyframes slideIn {
@@ -310,15 +307,22 @@
     padding-top: 0;
   }
   .black-on-table > .cardDisplay {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     width: 100vw;
     margin: 0;
     padding: 0 30px;
+    grid-template-areas:
+      "blackCard blackCard"
+      "white1 white2"
+      "confirm confirm";
     justify-content: center;
+    row-gap: 5px;
   }
   .black-on-table > .cardDisplay.confirmed {
-    display: grid;
+    grid-template-areas:
+      "blackCard white1 white2"
+      "confirm confirm confirm"
+      "waitText waitText waitText";
   }
   .whiteCardTable ul {
     display: flex;
@@ -329,7 +333,6 @@
     padding-top: 0;
     margin-top: 0;
     margin-bottom: 0;
-    align-items: flex-end;
   }
   .carusselButton1 {
     position: absolute;
@@ -339,11 +342,11 @@
     height: 100%;
     z-index: 50;
     transform: translateY(-50%);
-    box-shadow: inset 25px -10px 15px rgba(0, 0, 0, 0.8);
+    box-shadow: inset 30px -10px 10px -12px rgba(0, 0, 0, 0.836);
   }
   .carusselButton2 {
     position: absolute;
-    box-shadow: inset -25px -10px 15px rgb(0, 0, 0, 0.8);
+    box-shadow: inset -30px -10px 15px -12px rgb(0, 0, 0, 0.836);
     width: 13%;
     height: 100%;
     top: 50%;
@@ -363,29 +366,36 @@
     position: relative;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 40px;
   }
 
-  .waitText {
-    top: 50%;
-    width: 80%;
-    left: 50%;
-    transform: translateX(-50%);
-  }
   .game {
     height: 100%;
     padding-bottom: 25px;
   }
   #__next {
     height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
   .selectButton {
     position: relative;
     left: auto;
     bottom: auto;
     transform: none;
-    margin-top: auto;
+    margin-top: 10px;
     flex-basis: 100%;
     max-width: 220px;
+    grid-area: confirm;
+    margin: auto;
+    padding: 0.45rem 1.45rem;
+    font-size: 14px;
+  }
+  .cardDisplay li[role="button"]:nth-child(1) {
+    display: flex;
+    justify-content: center;
+  }
+  .choose-button {
+    font-size: 10px;
+    padding: 5px;
   }
 }

@@ -148,9 +148,11 @@
 
 @media (max-width: 640px) {
   .whiteCardContainer {
-    width: 140px;
+    min-width: 115px;
+    max-width: 36vw;
   }
   .whiteCardFace {
-    width: 140px;
+    min-width: 115px;
+    max-width: 36vw;
   }
 }
