@@ -31,8 +31,6 @@
 }
 
 .navContainer {
-  position: fixed;
-  height: 80px;
   width: 100%;
   padding-right: 20px;
   top: 0;
@@ -203,7 +201,6 @@
     z-index: 20;
     right: 0;
     top: -400px;
-
     border: 2px solid white;
     background-color: black;
   }
@@ -211,6 +208,9 @@
   .burgerMenue {
     display: block;
     opacity: 1;
+    top: 105%;
+    left: 99%;
+    width: 35px;
   }
   .burgerMenue:hover {
     opacity: 0;

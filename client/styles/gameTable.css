@@ -3,7 +3,6 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  /* padding-top: 10rem;*/
 }
 
 .devbug-h1 {
@@ -306,31 +305,48 @@
     transition: 2s;
     margin: 0;
   }
+
+  .onTable {
+    padding-top: 0;
+  }
+  .black-on-table > .cardDisplay {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100vw;
+    margin: 0;
+    padding: 0 30px;
+    justify-content: center;
+  }
+  .black-on-table > .cardDisplay.confirmed {
+    display: grid;
+  }
   .whiteCardTable ul {
     display: flex;
     width: max-content;
     overflow: none;
     gap: 10px;
-    padding-top: 50px;
     transform: translateX(300px);
+    padding-top: 0;
+    margin-top: 0;
+    margin-bottom: 0;
     align-items: flex-end;
   }
   .carusselButton1 {
     position: absolute;
-    top: 69%;
+    top: 50%;
     left: 0;
     width: 13%;
-    height: 80%;
+    height: 100%;
     z-index: 50;
     transform: translateY(-50%);
-    box-shadow: inset 25px -20px 15px rgb(0, 0, 0);
+    box-shadow: inset 25px -10px 15px rgba(0, 0, 0, 0.8);
   }
   .carusselButton2 {
     position: absolute;
-    box-shadow: inset -25px -20px 15px rgb(0, 0, 0);
+    box-shadow: inset -25px -10px 15px rgb(0, 0, 0, 0.8);
     width: 13%;
-    height: 80%;
-    top: 69%;
+    height: 100%;
+    top: 50%;
     right: 0;
     z-index: 50;
     transform: translateY(-50%);
@@ -341,22 +357,35 @@
     margin: auto;
   }
   .droppable-container {
-    flex-basis: 50%;
-    /* display: flex; */
+    flex-basis: 100%;
+    display: flex;
     flex-direction: column;
     position: relative;
     justify-content: space-between;
     align-items: center;
-    margin: auto;
-    padding: 0;
+    padding-bottom: 40px;
   }
-  .cardDisplay {
-    padding-bottom: 20px;
-  }
+
   .waitText {
     top: 50%;
     width: 80%;
     left: 50%;
     transform: translateX(-50%);
+  }
+  .game {
+    height: 100%;
+    padding-bottom: 25px;
+  }
+  #__next {
+    height: 100vh;
+  }
+  .selectButton {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    margin-top: auto;
+    flex-basis: 100%;
+    max-width: 220px;
   }
 }
