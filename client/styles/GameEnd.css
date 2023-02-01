@@ -29,6 +29,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: auto;
 }
 .linearGradient {
   width: 100%;
@@ -185,5 +186,12 @@
 @media (max-width: 640px) {
   .pedestal {
     width: 90%;
+  }
+  .endAva {
+    font-size: 12px;
+  }
+  .crowd {
+    scale: 2.5;
+    bottom: 41%;
   }
 }
