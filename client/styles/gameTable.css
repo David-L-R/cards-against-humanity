@@ -32,8 +32,9 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  gap: 10px;
-  padding-top: 50px;
+  gap: 8px;
+  padding-top: 30px;
+  padding-bottom: 10px;
 }
 .whiteCardTable ul li:hover {
   cursor: grab;
@@ -85,7 +86,7 @@
   margin: auto;
   gap: 2rem;
   background-color: transparent;
-  justify-content: space-between;
+  justify-content: center;
   padding: 1rem 1rem;
 }
 
@@ -119,22 +120,38 @@
 
 .choose-button {
   position: absolute;
-  bottom: 20%;
-  left: 0%;
-  border: 2px solid white;
+  top: 0;
+  left: 70%;
   text-align: center;
-  border-radius: 30px;
-  padding: 10px;
-  font-size: 16px;
-  transform: translateX(40%) translateY(100%);
+  border-radius: 15px;
+  font-size: 18px;
+  transform: translateX(-50%) translateY(-50%);
   z-index: 5;
   transition: all 250ms;
   opacity: 0;
   color: white;
-  background-color: black;
   letter-spacing: 1px;
   cursor: pointer;
-  transition: all 200ms;
+}
+.choose-icon {
+  overflow: visible;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  border: 2px solid gold;
+  background-color: black;
+  padding: 10px;
+  font-size: 20px;
+  color: gold;
+  justify-content: center;
+  display: flex;
+  margin: auto;
+}
+.waiting-text {
+  display: flex;
+  margin: auto;
+  width: 80px;
+  height: max-content;
 }
 
 .cardDisplay.playedWhite li:hover .choose-button {
@@ -397,5 +414,29 @@
   .choose-button {
     font-size: 10px;
     padding: 5px;
+  }
+  .cardDisplay.playedWhite {
+    display: flex;
+    width: 100vw;
+    overflow-x: scroll;
+    margin: auto;
+    gap: 0rem;
+    justify-content: flex-start;
+    padding: 1rem 1rem;
+  }
+  .cardDisplay.playedWhite li div:nth-child(1) {
+    transform: rotate(0deg) translateX(15px);
+    z-index: 0;
+    scale: 0.85;
+  }
+
+  .cardDisplay.playedWhite li div:nth-child(2) {
+    transform: rotate(0deg) translateX(-15px);
+    z-index: 0;
+    scale: 0.85;
+  }
+  .choose-button {
+    top: 50%;
+    left: 30%;
   }
 }
