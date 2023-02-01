@@ -35,7 +35,7 @@ const KickButton = ({ playerId, playerName, showKick }) => {
       {showKick === playerId && (
         <div
           className="kick-container kick-hover"
-          onMouseLeave={() => setShowButton(false)}
+          //
         >
           <img
             className="kick-icon"
@@ -47,7 +47,11 @@ const KickButton = ({ playerId, playerName, showKick }) => {
       )}
       {showButton && (
         <div className="kickButtonBackground">
-          <button onClick={handleKick} className="kickButton">
+          <button
+            onClick={handleKick}
+            className="kickButton"
+            onMouseLeave={() => setShowButton(false)}
+          >
             <p>Kick {playerName}? </p>
           </button>
         </div>
