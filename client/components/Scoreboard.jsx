@@ -19,7 +19,7 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
   const { stage, white_cards, czar } = currentTurn
     ? currentTurn
     : { stage: null, white_cards: null };
-  const { storeData } = useAppContext();
+  const { storeData, setStoreData } = useAppContext();
   const submittedWhiteCards = (playerId) => {
     if (white_cards && currentLobby) {
       const player = white_cards.find((player) => player.player === playerId);
@@ -115,7 +115,6 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
                     userName={player.name}
                     playerId={player.id}
                     playerAvatar={player.avatar}
-                    index={index}
                   />
 
                   <span
@@ -130,6 +129,19 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
               </li>
             ))}
         </ul>
+
+        <div className="avatar-popup-container">
+          {players.map((player) => {
+            return (
+              <Avatar
+                userName={player.name}
+                playerId={player.id}
+                playerAvatar={player.avatar}
+                isPopup={true}
+              />
+            );
+          })}
+        </div>
 
         {turns?.length > 0 && (
           <div className="scoreStats">

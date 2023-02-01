@@ -109,8 +109,13 @@ body {
   left: 50%;
 }
 
-.showAvatar {
+.avatar-popup-container {
   position: fixed;
-  top: 50%;
-  left: 50%;
+  width: 100vw;
+  top: 0;
+  left: 0;
+  border: 10px solid red;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }
