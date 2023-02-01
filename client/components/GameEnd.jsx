@@ -52,6 +52,9 @@ function GameEnd({ currentGame }) {
         <div className="gameEndTextField">
           <h2 className="winnerh1Text">And the Winner is...</h2>
           <h1>{`${winningPlayers[0].name}!`}</h1>
+        </div>
+
+        <div className="pedestal">
           <div className="avatarsContainer">
             {winningPlayers &&
               winningPlayers.map((player, index) => {
@@ -59,39 +62,36 @@ function GameEnd({ currentGame }) {
                   return (
                     <div
                       key={player.name + index}
-                      className="winnerAvatarContainer">
+                      className="winnerAvatarContainer endAva">
                       <Avatar playerAvatar={player?.avatar} />
                     </div>
                   );
                 if (index === 1)
                   return (
-                    <div key={player.name + index} className="avatar2nd">
+                    <div key={player.name + index} className="avatar2nd endAva">
                       <Avatar playerAvatar={player?.avatar} />
                       <h3>{`${player.name}`}</h3>
                     </div>
                   );
                 if (index === 2)
                   return (
-                    <div key={player.name + index} className="avatar3rd">
+                    <div key={player.name + index} className="avatar3rd endAva">
                       <Avatar playerAvatar={player?.avatar} />
                       <h3>{`${player.name}`}</h3>
                     </div>
                   );
               })}
           </div>
-        </div>
-
-        <div className="pedestal">
           <div className="linearGradient">
-            <button
-              onClick={backToLobby}
-              style={{ zIndex: "1" }}
-              className="backToLobby">
-              Back to Lobby
-            </button>
             <div className="crowd"></div>
           </div>
         </div>
+        <button
+          onClick={backToLobby}
+          style={{ zIndex: "1" }}
+          className="backToLobby">
+          Back to Lobby
+        </button>
       </div>
 
       <div className="shit11">

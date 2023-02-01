@@ -435,21 +435,6 @@ const Game = ({ socket }) => {
     <main className="game">
       {gameStage === "winner" ? (
         <>
-          {/*<div className="debuggerMonitor" style={{ paddingRight: "4rem" }}>
-            Game player : {playerName} <br />
-            <br />
-            gamestage : {gameStage}
-            <br />
-            Czar: {isCzar ? "yes" : "no"}
-            <br />
-            is Host: {isHost ? "yes" : "no"}
-            <br />
-            timerTrigger: {timerTrigger ? "true" : "false"}
-            <br />
-            timer:{timer}
-            <br />
-            Loadin:{loading ? "true" : "false"}
-      </div>*/}
           {currentLobby && (
             <>
               <Scoreboard
@@ -497,21 +482,6 @@ const Game = ({ socket }) => {
         </>
       ) : (
         <>
-          {/*<div className="debuggerMonitor" style={{ paddingRight: "4rem" }}>
-            Game player : {playerName} <br />
-            <br />
-            gamestage : {gameStage}
-            <br />
-            Czar: {isCzar ? "yes" : "no"}
-            <br />
-            is Host: {isHost ? "yes" : "no"}
-            <br />
-            timerTrigger: {timerTrigger ? "true" : "false"}
-            <br />
-            timer:{timer}
-            <br />
-            Loadin:{loading ? "true" : "false"}
-      </div>*/}
           {currentLobby && (
             <section className="scoreboard-container">
               <Scoreboard
@@ -606,11 +576,6 @@ const Game = ({ socket }) => {
           )}
         </>
       )}
-      {/*<button
-        style={{ color: "red", textDecoration: "underline" }}
-        onClick={() => handleClosingGame()}>
-        <h1>CLOSE GAME TO CHECK "GAME END" PAGE</h1>
-          </button>*/}
     </main>
   );
 };
