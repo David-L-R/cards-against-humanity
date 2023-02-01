@@ -111,9 +111,7 @@ function Countdown({
   }, [gameStage, isCzar, timer]);
 
   if (!timer) return null;
-  const styles = {
-    width: `${(100 * currentTimer) / currentTimer}vw`,
-  };
+
   return (
     <div className="timer-wrapper">
       <div style={windowWidth < 700 ? { display: "none" } : null}>
