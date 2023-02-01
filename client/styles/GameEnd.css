@@ -168,3 +168,52 @@
   color: white;
   transition: 0.3s;
 }
+@media (max-width: 640px) {
+  .gameEndTextField h1 {
+    font-size: 35px;
+  }
+  .WinnnerName {
+    font-size: 40px;
+  }
+  .winnerAvatarContainer {
+    position: absolute;
+    left: 50%;
+    top: 80%;
+
+    transform: translate(-10%, -50%);
+
+    scale: 3;
+  }
+  .avatar2nd {
+    left: 15%;
+    bottom: -30%;
+    scale: 2;
+  }
+  .avatar2nd h3,
+  .avatar3rd h3 {
+    display: flex;
+    margin: auto;
+  }
+  .avatar3rd {
+    right: 15%;
+    bottom: -30%;
+    scale: 2;
+  }
+  .avatarsContainer {
+    width: 30rem;
+    min-height: 20%;
+  }
+  .pedestal {
+    width: 100%;
+    background-position: bottom;
+    min-height: 500px;
+  }
+  .linearGradient {
+    width: 100%;
+    height: 100%;
+  }
+  .backToLobby {
+    position: fixed;
+    top: 80%;
+  }
+}
