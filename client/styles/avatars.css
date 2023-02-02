@@ -52,6 +52,7 @@
 
 .settings-wrapper {
   position: absolute;
+
   z-index: 2;
   animation: fadeIn 250ms forwards;
   left: 0;
