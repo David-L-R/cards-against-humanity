@@ -56,6 +56,7 @@ const randomName = () => {
     "Emperor",
     "King",
     "Queen",
+    "Zezima",
   ];
   const randomIndex = Math.floor(Math.random() * (names.length - 1));
   return names[randomIndex];

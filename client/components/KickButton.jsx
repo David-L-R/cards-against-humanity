@@ -35,11 +35,10 @@ const KickButton = ({ playerId, playerName, showKick }) => {
       {showKick === playerId && (
         <div
           className="kick-container kick-hover"
-          //
+          onClick={() => setShowButton(true)}
         >
           <img
             className="kick-icon"
-            onClick={() => setShowButton(true)}
             src="/combat-kick.png"
             alt="shoe kicking air"
           />
