@@ -1,16 +1,12 @@
-### Man Makes Monsters
+# **Man Makes Monsters**
 
 <p align="center"><img src=./client/public//MMM-logo.svg width=200px></p>
 
 A fun and exciting online card game similar to Cards Against Humanity that you can play with up to 10 friends. As the host, you can set the amount of white cards each player can hold, the number of rounds, and choose between English and German as the language.
 
-![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/navendu-pottekkat/awesome-readme?include_prereleases)
-![GitHub last commit](https://img.shields.io/github/last-commit/navendu-pottekkat/awesome-readme)
-![GitHub](https://img.shields.io/github/license/navendu-pottekkat/awesome-readme)
+![example workflow](https://github.com/David-L-R/cards-against-humanity/actions/workflows/main.yml/badge.svg)
 
-@D-Nayte
-
-## Table of contents
+## **Table of contents**
 
 ---
 
@@ -20,16 +16,13 @@ A fun and exciting online card game similar to Cards Against Humanity that you c
 - [Tech Stack](#tech-stack)
 - [Contact](#contact)
 
-## Demo Video
+## **Demo Video**
 
 #### [(Back to top)](#man-makes-monsters)
 
 ---
 
-<video src="./demoVideo.webm" controls="controls" style="max-width: 730px;">
-</video>
-
-## Installation
+## **Installation**
 
 #### [(Back to top)](#man-makes-monsters)
 
@@ -37,7 +30,7 @@ A fun and exciting online card game similar to Cards Against Humanity that you c
 
 This repository uses MongoDB and Next.Auth, so to work with it you will need a `.env` file and a separate database. To install, run `npm install` in your terminal, and start the server with `npm start`.
 
-## How to play it
+## **How to play it**
 
 #### [(Back to top)](#man-makes-monsters)
 
@@ -50,7 +43,7 @@ Follow these steps to play the game:
 3. Set the number of white cards each player can hold, the number of rounds, and the language (English or German).
 4. Have fun!
 
-## Tech Stack
+## **Tech Stack**
 
 #### [(Back to top)](#man-makes-monsters)
 
@@ -58,6 +51,7 @@ Follow these steps to play the game:
 
 The project uses the following technologies:
 
+```
 - Next.js
 - Node.js
 - MongoDB
@@ -65,8 +59,18 @@ The project uses the following technologies:
 - Socket.io
 - Framermotion
 - Dnd-kit
+```
 
-## Contact
+## **Contributers**
+
+---
+
+[@Andy Schunke](https://github.com/D-Nayte) <br>
+[@Danni Malka](https://github.com/Dannimalka)<br>
+[@Chris Klingsporn](https://github.com/ChrisKling)<br>
+[@Liz](https://github.com/D-Nayte)
+
+## **Contact**
 
 #### [(Back to top)](#man-makes-monsters)
 
