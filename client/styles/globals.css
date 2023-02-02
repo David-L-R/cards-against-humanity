@@ -108,14 +108,3 @@ body {
   top: 50%;
   left: 50%;
 }
-
-.avatar-popup-container {
-  position: fixed;
-  width: 50vw;
-  bottom: 0;
-  right: 5%;
-  display: flex;
-  justify-content: flex-end;
-  gap: 1.5rem;
-  transition: 0.3s;
-}

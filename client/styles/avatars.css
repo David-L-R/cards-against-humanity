@@ -30,6 +30,7 @@
   padding-bottom: 30px;
   color: white;
   font-weight: bold;
+  mix-blend-mode: difference;
 }
 
 .scoreBoardAvatars .avatar-image svg {
@@ -248,6 +249,7 @@ input[type="radio"]:checked + * {
   gap: 0.5rem;
   flex-basis: 40%;
   flex-grow: 1;
+  padding: 10px;
 }
 
 .avatar-preview ul > li {
@@ -299,7 +301,7 @@ input[type="radio"]:checked + * {
     inset: 0;
     margin: auto;
     padding: 1rem 0;
-    max-height: 70vh;
+    max-height: max-content;
     top: 15%;
     max-width: 95vw;
     overflow: hidden;
@@ -349,5 +351,6 @@ input[type="radio"]:checked + * {
     grid-template-columns: repeat(2, 1fr);
     overflow: auto;
     padding: 0 !important;
+    overflow-x: hidden;
   }
 }

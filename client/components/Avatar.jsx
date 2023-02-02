@@ -128,6 +128,7 @@ const Avatar = ({ userName, playerId, playerAvatar, isPopup }) => {
             <AvatarCustomizer
               handleSetAvatarOptions={handleSetAvatarOptions}
               setShowSettings={setShowSettings}
+              currGameId={currGameId}
             >
               <div className="avatar-preview">
                 <AvatarSVG avatarOptions={avatarOptions} />
