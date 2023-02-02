@@ -24,7 +24,7 @@ const CardTemplate = (props) => {
   return (
     <>
       <div
-        key={id + index + card?.text + isOverlay + table}
+        key={id + index + card?.text + isOverlay + table + isSkell}
         className={cardClass}>
         {!isBlackCard ? id : blackText}
       </div>

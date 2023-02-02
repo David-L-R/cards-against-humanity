@@ -363,6 +363,9 @@ const Game = ({ socket }) => {
     }
     socket.io.on("reconnect", () => {
       setReconnect(true);
+      setTimeout(() => {
+        setReconnect(false);
+      }, 500);
     });
   }, [router.isReady]);
 

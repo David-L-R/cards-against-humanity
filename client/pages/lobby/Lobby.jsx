@@ -112,7 +112,7 @@ const Lobby = (props) => {
             setShowErrMessage("You got kicked! Redirecting you back"),
             setTimeout(() => {
               router.push("/");
-            }, 3500)
+            }, 5500)
           );
 
         setIsloading(false);
@@ -153,7 +153,6 @@ const Lobby = (props) => {
         }
       });
       setListenersReady(true);
-      setReconnect(false);
     }
     return () => {
       socket.removeAllListeners();
@@ -176,6 +175,9 @@ const Lobby = (props) => {
     }
     socket.io.on("reconnect", () => {
       setReconnect(true);
+      setTimeout(() => {
+        setReconnect(false);
+      }, 500);
     });
   }, [router.isReady]);
 

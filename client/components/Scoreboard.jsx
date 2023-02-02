@@ -86,14 +86,16 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
                 onMouseLeave={showKick ? () => setShowKick(false) : null}
                 data-id={player.id}>
                 <div>
-                  {storeData.isHost && player.id !== cookies.socketId ? (
+                  {storeData.isHost && player.id !== cookies.socketId && (
                     <KickButton
                       showKick={showKick}
                       playerId={player.id}
                       socket={socket}
                       playerName={player.name}
                     />
-                  ) : !player.inactive ? (
+                  )}
+
+                  {!player.inactive ? (
                     <AiOutlineCheckCircle
                       className={
                         !submittedWhiteCards(player.id)

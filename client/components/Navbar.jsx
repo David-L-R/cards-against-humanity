@@ -83,7 +83,7 @@ function Navbar(props) {
         setReconnect("Successfully reconnected with Server");
         setTimeout(() => {
           setReconnect(false);
-        }, 500);
+        }, 3000);
       });
     }
 
@@ -294,17 +294,6 @@ function Navbar(props) {
         setShowErrMessage={setShowErrMessage}
         success={reconnect}
       />
-      {/* {storeData.avatarSettings && showAva && (
-        <aside className="avaPopup">
-          <Avatar
-            userName={storeData.avatarSettings.userName}
-            playerId={storeData.avatarSettings.playerId}
-            playerAvatar={storeData.avatarSettings.playerAvatar}
-            raw={true}
-          />
-          <p>{storeData.avatarSettings.userName}</p>
-        </aside>
-      )} */}
     </>
   );
 }

@@ -39,7 +39,7 @@ export function DragItem(props) {
 
   return (
     <li
-      key={card.text + index}
+      key={card.text + index + id + table}
       ref={setNodeRef}
       style={isBlackCard || isSkelettonCard ? null : style}
       {...listeners}
@@ -53,8 +53,7 @@ export function DragItem(props) {
               setClassName("");
             }
           : null
-      }
-    >
+      }>
       {element ? (
         <CustomComponent
           {...props}
