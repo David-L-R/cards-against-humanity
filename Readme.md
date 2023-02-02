@@ -1,4 +1,4 @@
-# Man Makes Monsters
+### Man Makes Monsters
 
 <p align="center"><img src=./client/public//MMM-logo.svg width=200px></p>
 
@@ -22,7 +22,7 @@ A fun and exciting online card game similar to Cards Against Humanity that you c
 
 ## Demo Video
 
-#### [(Back to top)](#man-makes-monster)
+#### [(Back to top)](#man-makes-monsters)
 
 ---
 
@@ -31,7 +31,7 @@ A fun and exciting online card game similar to Cards Against Humanity that you c
 
 ## Installation
 
-#### [(Back to top)](#man-makes-monster)
+#### [(Back to top)](#man-makes-monsters)
 
 ---
 
@@ -39,7 +39,7 @@ This repository uses MongoDB and Next.Auth, so to work with it you will need a `
 
 ## How to play it
 
-#### [(Back to top)](#man-makes-monster)
+#### [(Back to top)](#man-makes-monsters)
 
 ---
 
@@ -52,7 +52,7 @@ Follow these steps to play the game:
 
 ## Tech Stack
 
-#### [(Back to top)](#man-makes-monster)
+#### [(Back to top)](#man-makes-monsters)
 
 ---
 
@@ -68,7 +68,7 @@ The project uses the following technologies:
 
 ## Contact
 
-#### [(Back to top)](#man-makes-monster)
+#### [(Back to top)](#man-makes-monsters)
 
 ---
 
