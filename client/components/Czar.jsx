@@ -48,7 +48,7 @@ const Czar = ({ blackCards, chooseBlackCard, setBlackCards, gameStage }) => {
     const amountCardsToSelect = 3;
     const cardsToDisplay = [];
     for (let i = 0; i < amountCardsToSelect; i++) {
-      const randomIndex = Math.floor(Math.random() * blackCards.length - 1);
+      const randomIndex = Math.ceil(Math.random() * blackCards.length - 1);
       cardsToDisplay.push({
         card: blackCards[randomIndex],
         index: randomIndex,

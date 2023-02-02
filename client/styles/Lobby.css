@@ -301,11 +301,16 @@
   }
   .dragContainer {
     margin-top: auto;
-    padding: 0 1.25rem;
+    padding: 0.5rem 1.25rem;
+    width: 100vw;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
   }
   .dragContainer li {
-    width: 55px;
-    height: 80px;
+    width: 80px !important;
+    height: 115px;
+    flex-shrink: 0;
   }
   .framerContainer {
     margin: 0;
@@ -316,6 +321,7 @@
   }
   .dragContainer h2 {
     font-size: 12px !important;
+    padding: 0.5rem !important;
   }
   .waitingLobbyContainer {
     padding-bottom: 1.5rem;
