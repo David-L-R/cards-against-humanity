@@ -74,8 +74,7 @@ const Avatar = ({ userName, playerId, playerAvatar, isPopup }) => {
         onClick={() => playerId === cookies.socketId && setShowSettings(true)}
         className={"avatar-image"}
         style={playerId === cookies.socketId ? { cursor: "pointer" } : null}
-        dangerouslySetInnerHTML={{ __html: svg }}
-      ></div>
+        dangerouslySetInnerHTML={{ __html: svg }}></div>
     );
   };
 
@@ -97,6 +96,7 @@ const Avatar = ({ userName, playerId, playerAvatar, isPopup }) => {
       setShowAvatar(true);
       setTimeout(() => {
         setShowAvatar(false);
+        setStoreData((prev) => ({ ...prev, changeAvatar: null }));
       }, 5000);
     }
   }, [storeData.changeAvatar]);
@@ -109,8 +109,7 @@ const Avatar = ({ userName, playerId, playerAvatar, isPopup }) => {
         animate={{
           y: -30,
           transition: { duration: 0.5, ease: "linear" },
-        }}
-      >
+        }}>
         <p>{userName}</p>
         <AvatarSVG avatarOptions={avatarOptions} />
       </m.div>
@@ -128,8 +127,7 @@ const Avatar = ({ userName, playerId, playerAvatar, isPopup }) => {
             <AvatarCustomizer
               handleSetAvatarOptions={handleSetAvatarOptions}
               setShowSettings={setShowSettings}
-              currGameId={currGameId}
-            >
+              currGameId={currGameId}>
               <div className="avatar-preview">
                 <AvatarSVG avatarOptions={avatarOptions} />
                 <div>
@@ -140,8 +138,7 @@ const Avatar = ({ userName, playerId, playerAvatar, isPopup }) => {
                         <li key={emotion.label}>
                           <button
                             style={{ textTransform: "uppercase" }}
-                            onClick={() => handlEemotions(emotion.settings)}
-                          >
+                            onClick={() => handlEemotions(emotion.settings)}>
                             {emotion.label}
                           </button>
                         </li>
