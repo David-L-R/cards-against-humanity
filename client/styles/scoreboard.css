@@ -37,7 +37,6 @@
   display: flex;
   transition: all 0.3s ease-in-out;
   border-right: 2px solid black;
-  /* transform: translateX(-100%); */
 }
 
 .sideMenu.active {
@@ -158,6 +157,8 @@
   right: 0;
   transform: translateX(100%);
   background-color: white;
+  width: -webkit-max-content;
+  width: -moz-max-content;
   width: max-content;
   height: 180px;
   display: flex;
@@ -197,7 +198,10 @@
 }
 
 .scoreButton p {
+  -webkit-text-orientation: upright;
   text-orientation: upright;
+  -webkit-writing-mode: vertical-rl;
+  -ms-writing-mode: tb-rl;
   writing-mode: vertical-rl;
   font-size: 18px;
 }
@@ -241,7 +245,10 @@
   }
 
   .scoreButton p {
+    -webkit-text-orientation: upright;
     text-orientation: upright;
+    -webkit-writing-mode: vertical-rl;
+    -ms-writing-mode: tb-rl;
     writing-mode: vertical-rl;
     font-size: 12px;
   }

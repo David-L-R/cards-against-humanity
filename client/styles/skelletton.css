@@ -6,7 +6,16 @@ div.skeleton {
   pointer-events: none;
   z-index: 0;
   opacity: 0;
+  -webkit-animation: showUp 250ms ease-in 250ms forwards;
   animation: showUp 250ms ease-in 250ms forwards;
+}
+@-webkit-keyframes showUp {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 @keyframes showUp {
   0% {
@@ -60,10 +69,22 @@ div.skeleton {
 }
 
 .hide-skell {
+  -webkit-animation: hideSkell 0ms;
   animation: hideSkell 0ms;
+  -webkit-animation-fill-mode: forwards;
   animation-fill-mode: forwards;
   z-index: -1;
   display: none;
+}
+
+@-webkit-keyframes hideSkell {
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }
 
 @keyframes hideSkell {

@@ -168,6 +168,7 @@
 .backToLobby {
   color: black;
   background-color: rgba(255, 255, 255, 0.627);
+  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
 
   border-radius: 30px;

@@ -55,6 +55,7 @@ const Game = ({ socket }) => {
       gameId,
       lobbyId,
     };
+
     // if czar left == timer runs out
     if (!selected) {
       const leavePlayer = {
@@ -126,7 +127,6 @@ const Game = ({ socket }) => {
 
     if (!cards) {
       playerData.winningCards = playedWhite[0];
-      // socket.emit("changeGame", { ...playerData });
       socket.emit("changeGame", { ...playerData, leavedGame: true });
       return;
     }
@@ -216,9 +216,9 @@ const Game = ({ socket }) => {
       setTimer(false);
     }
 
-    //if less then 2 players, close the game after 3.5s, else abort the closing function
+    //if less then 3 players, close the game after 3.5s, else abort the closing function
     if (
-      currentGame.players.filter((player) => !player.inactive).length < 2 &&
+      currentGame.players.filter((player) => !player.inactive).length < 3 &&
       !currentGame.concluded
     ) {
       setShowErrMessage(

@@ -52,9 +52,9 @@ export const createGame = async ({
         return newPLayer;
       });
 
-    if (allPlayers.length <= 1)
+    if (allPlayers.length <= 2)
       return io.to(socket.id).emit("newgame", {
-        err: "Please wait for at least one more  Player",
+        err: "Please wait for at least 2 waiting Players",
       });
 
     lobby.players = [...allPlayers];

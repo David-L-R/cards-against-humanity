@@ -62,7 +62,7 @@ const Lobby = (props) => {
   };
 
   function calculateFontSize(name) {
-    return 30 - name.length + "px";
+    return 26 - name.length + "px";
   }
 
   const checkIfPlaying = (playerId) => {
@@ -100,7 +100,7 @@ const Lobby = (props) => {
         if (!currentLobby || err) {
           setIsloading(false);
           return setShowErrMessage(
-            "Can not find Lobby, please check our invatation link"
+            err ? err : "Can not find Lobby, please check our invatation link"
           );
         }
         const player = currentLobby.waiting.find(
@@ -311,9 +311,9 @@ const Lobby = (props) => {
           </m.div>
           <ul className="dragContainer">
             {players &&
-              players.map((player) => (
+              players.map((player, index) => (
                 <li
-                  key={player.name}
+                  key={player.name + index}
                   className={
                     player.inactive || checkIfPlaying(player.id)
                       ? "inactive"

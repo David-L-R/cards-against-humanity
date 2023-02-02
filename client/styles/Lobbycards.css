@@ -55,6 +55,7 @@
 
 .lobbyFront {
   background: black;
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
 
@@ -156,8 +157,11 @@
 }
 
 .lobbyContainer-active {
+  -webkit-animation: switchCards;
   animation: switchCards;
+  -webkit-animation-duration: 250ms;
   animation-duration: 250ms;
+  -webkit-animation-fill-mode: forwards;
   animation-fill-mode: forwards;
 }
 
@@ -167,6 +171,7 @@
   color: white;
   background-color: #eb455f;
   height: 50px;
+  -webkit-animation: errAnimation 0.7s;
   animation: errAnimation 0.7s;
   top: 0;
   left: 0;
@@ -178,12 +183,36 @@
   z-index: 20;
   font-size: 18px;
 }
+@-webkit-keyframes errAnimation {
+  0% {
+    top: -50px;
+  }
+  100% {
+    top: 0px;
+  }
+}
 @keyframes errAnimation {
   0% {
     top: -50px;
   }
   100% {
     top: 0px;
+  }
+}
+
+@-webkit-keyframes switchCards {
+  0% {
+    perspective: 1500px;
+    z-index: 0;
+  }
+
+  75% {
+    perspective: 1500px;
+    z-index: 0;
+  }
+  100% {
+    perspective: none;
+    z-index: 1;
   }
 }
 

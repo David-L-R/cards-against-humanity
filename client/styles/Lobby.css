@@ -64,6 +64,7 @@
   background: white;
   border-radius: 50%;
   margin: 0 2px;
+  -webkit-animation: jump 1s linear infinite;
   animation: jump 1s linear infinite;
 }
 .lobbyIdContainer {
@@ -165,48 +166,56 @@
 }
 
 .dragContainer li:nth-child(1) {
+  -webkit-animation: moveCard 0.5s linear;
   animation: moveCard 0.5s linear;
   bottom: 10%;
   left: 5%;
   transform: rotate(-20deg);
 }
 .dragContainer li:nth-child(2) {
+  -webkit-animation: moveCard 0.5s linear;
   animation: moveCard 0.5s linear;
   bottom: 10%;
   left: 15%;
   transform: rotate(20deg);
 }
 .dragContainer li:nth-child(3) {
+  -webkit-animation: moveCard 0.5s linear;
   animation: moveCard 0.5s linear;
   bottom: 10%;
   left: 25%;
   transform: rotate(-10deg);
 }
 .dragContainer li:nth-child(4) {
+  -webkit-animation: moveCard 0.4s linear;
   animation: moveCard 0.4s linear;
   bottom: 8%;
   left: 35%;
   transform: rotate(20deg);
 }
 .dragContainer li:nth-child(5) {
+  -webkit-animation: moveCard 0.35s linear;
   animation: moveCard 0.35s linear;
   bottom: 8%;
   left: 45%;
   transform: rotate(10deg);
 }
 .dragContainer li:nth-child(6) {
+  -webkit-animation: moveCard 0.35s linear;
   animation: moveCard 0.35s linear;
   bottom: 8%;
   left: 56%;
   transform: rotate(-10deg);
 }
 .dragContainer li:nth-child(7) {
+  -webkit-animation: moveCard 0.35s linear;
   animation: moveCard 0.35s linear;
   bottom: 8%;
   left: 64%;
   transform: rotate(10deg);
 }
 .dragContainer li:nth-child(8) {
+  -webkit-animation: moveCard 0.35s linear;
   animation: moveCard 0.35s linear;
   bottom: 8%;
   left: 75%;
@@ -256,11 +265,31 @@
   font-weight: bold;
 }
 
+@-webkit-keyframes hideAnimation {
+  to {
+    visibility: hidden;
+    width: 0;
+    height: 0;
+  }
+}
+
 @keyframes hideAnimation {
   to {
     visibility: hidden;
     width: 0;
     height: 0;
+  }
+}
+
+@-webkit-keyframes jump {
+  0% {
+    transform: translateY(0);
+  }
+  35% {
+    transform: translateY(-7px);
+  }
+  70% {
+    transform: translateY(0);
   }
 }
 
@@ -277,10 +306,21 @@
 }
 
 #b {
+  -webkit-animation-delay: 0.2s;
   animation-delay: 0.2s;
 }
 #c {
+  -webkit-animation-delay: 0.4s;
   animation-delay: 0.4s;
+}
+
+@-webkit-keyframes moveCard {
+  0% {
+    transform: translateX(1500px) rotate(1turn);
+  }
+  100% {
+    transform: translateX(0px);
+  }
 }
 
 @keyframes moveCard {

@@ -6,6 +6,7 @@
   color: black;
   perspective: 1000px;
   font-size: 18px;
+  -webkit-animation: wiggle 3s 2s linear infinite;
   animation: wiggle 3s 2s linear infinite;
   transition: 0.5s;
   z-index: 20;
@@ -15,6 +16,7 @@
   scale: 1.05;
   transition: 0.5s;
   box-shadow: -27px -19px 11px -3px rgba(125, 125, 125, 0.28);
+  -webkit-animation: none;
   animation: none;
 }
 .linkElement {
@@ -65,6 +67,8 @@
 }
 .whiteCardFaceButton {
   position: absolute;
+  width: -webkit-max-content;
+  width: -moz-max-content;
   width: max-content;
   bottom: 5%;
   left: 50%;
@@ -107,11 +111,48 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  -o-object-fit: cover;
   object-fit: cover;
   margin: auto;
   display: flex;
   justify-content: space-between;
   padding: 0;
+}
+
+@-webkit-keyframes wiggle {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+  60% {
+    transform: rotate(0deg);
+  }
+  65% {
+    transform: rotate(0deg);
+  }
+  70% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(3deg);
+  }
+  80% {
+    transform: rotate(-3deg);
+  }
+  85% {
+    transform: rotate(3deg);
+  }
+  95% {
+    transform: rotate(-3deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 @keyframes wiggle {
@@ -147,6 +188,15 @@
   }
   100% {
     transform: rotate(0deg);
+  }
+}
+
+@-webkit-keyframes whiteSlideIn {
+  from {
+    transform: translateY(50%);
+  }
+  to {
+    transform: translateY(0);
   }
 }
 

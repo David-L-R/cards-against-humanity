@@ -76,7 +76,7 @@ export const updateClient = async (data) => {
     if (!currentLobby) throw Error();
 
     const foundPLayer = currentLobby.waiting.find((player) => player.id === id);
-    // delte players from lobby.players ONLY if to avatars requests for update to be available for a game rejoining  lobby
+    // delete players from lobby.players ONLY if to avatars requests for update to be available for a game rejoining  lobby
     if (!avatar)
       currentLobby.players = currentLobby.players.filter(
         (currPlayer) => currPlayer.id !== id
@@ -103,6 +103,11 @@ export const updateClient = async (data) => {
 
     // join new player after using invitation link
     if (!foundPLayer && joinGame) {
+      if (currentLobby.waiting.length + currentLobby.players.length === 10) {
+        return io.to(socket.id).emit("updateRoom", {
+          err: "Maximun amount of 10 players reached",
+        });
+      }
       const newPLayer = {
         id,
         isHost: false,
