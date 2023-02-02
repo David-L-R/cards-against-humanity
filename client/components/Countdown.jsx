@@ -80,30 +80,27 @@ function Countdown({
 
   useEffect(() => {
     if (gameStage === "black" && isCzar) {
-      // const counter = 45;
-      const counter = 6000;
+      const counter = 45;
       setTimer(counter);
       synchronizeTimer({ timer: counter });
     }
 
     if (gameStage === "white" && isCzar) {
-      const counter = 6000;
+      const counter = 40;
 
       setTimer(counter);
       synchronizeTimer({ timer: counter });
     }
 
     if (gameStage === "deciding" && isCzar) {
-      // const counter = 59;
-      const counter = 6000;
+      const counter = 59;
 
       setTimer(counter);
       synchronizeTimer({ timer: counter });
     }
 
     if (gameStage === "winner" && isCzar) {
-      // const counter = 30;
-      const counter = 6000;
+      const counter = 30;
 
       setTimer(counter);
       synchronizeTimer({ timer: counter });
