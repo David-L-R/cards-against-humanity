@@ -92,6 +92,10 @@ function Navbar(props) {
       setLobbyId(router.query.lobbyId);
     }
 
+    if (!router.query.lobbyId) {
+      setLobbyId(null);
+    }
+
     if (Array.isArray(router.query.lobbyId)) {
       setGameIdentifier(null);
       return setLobbyId(router.query.lobbyId[0]);
@@ -128,8 +132,7 @@ function Navbar(props) {
         onMouseLeave={() => {
           setShowProfile(false);
           setShowSettings(false);
-        }}
-      >
+        }}>
         <button className="burgerMenue"></button>
         <ul>
           {session ? (
@@ -137,8 +140,7 @@ function Navbar(props) {
               <li id="sidebar-item">
                 <div
                   id="settingsToggle"
-                  onClick={() => setShowProfile((prev) => !prev)}
-                >
+                  onClick={() => setShowProfile((prev) => !prev)}>
                   <div className="navbarProfilePic">
                     <img
                       className="navIcon"
@@ -154,8 +156,7 @@ function Navbar(props) {
                         showProfile
                           ? "arrowDownIcon "
                           : "arrowDownIcon openArrow"
-                      }
-                    >
+                      }>
                       <IoIosArrowDown />
                     </span>
                   </div>
@@ -165,8 +166,7 @@ function Navbar(props) {
                 <ul className="settingsInputContainer">
                   <li
                     className="profileMenu"
-                    onClick={() => setShowProfileMenu(true)}
-                  >
+                    onClick={() => setShowProfileMenu(true)}>
                     <span className="profileMenuIcon">
                       <ImProfile />
                     </span>
@@ -183,18 +183,13 @@ function Navbar(props) {
             </>
           ) : (
             <li
-              className={!lobbyId && !gameIdentifier ? "" : "diseabled"}
-              onClick={
-                !lobbyId && !gameIdentifier ? () => setShowSignIn(true) : null
-              }
-            >
+              className={!lobbyId ? "" : "diseabled"}
+              onClick={!lobbyId ? () => setShowSignIn(true) : null}>
               <div className="navbarIcons">
                 <CgProfile />
               </div>
               <div className="navBarText">
-                {!lobbyId && !gameIdentifier
-                  ? "Sign In"
-                  : "Can't sign in during a game"}
+                {!lobbyId ? "Sign In" : "Can't sign in during a game"}
               </div>
             </li>
           )}
@@ -204,8 +199,7 @@ function Navbar(props) {
               <li id="sidebar-item">
                 <div
                   id="settingsToggle"
-                  onClick={() => setShowSettings((prev) => !prev)}
-                >
+                  onClick={() => setShowSettings((prev) => !prev)}>
                   <div className="navbarIcons gameSettingsIcon">
                     <FiSettings />
                   </div>
@@ -216,8 +210,7 @@ function Navbar(props) {
                         showSettings
                           ? "arrowDownIcon "
                           : "arrowDownIcon openArrow"
-                      }
-                    >
+                      }>
                       <IoIosArrowDown />
                     </span>
                   </div>
