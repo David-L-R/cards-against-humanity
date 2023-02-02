@@ -4,7 +4,7 @@
 
 A fun and exciting online card game similar to Cards Against Humanity that you can play with up to 10 friends. As the host, you can set the amount of white cards each player can hold, the number of rounds, and choose between English and German as the language.
 
-![example workflow](https://github.com/David-L-R/cards-against-humanity/actions/workflows/main.yml/badge.svg)
+![GitHub](https://img.shields.io/github/commit-activity/m/David-L-R/cards-against-humanity)
 
 ## **Table of contents**
 
