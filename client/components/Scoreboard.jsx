@@ -56,14 +56,16 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
         className={!isOpen ? "sideMenu" : "sideMenu active"}
         style={{
           boxShadow: isOpen ? "20px 2px 31px 4px #8781813e" : "none",
-        }}>
+        }}
+      >
         <div
           className="scoreButton"
           onClick={openMenu}
           style={{
             opacity: isOpen ? "0" : "1",
             cursor: isOpen ? "default" : "pointer",
-          }}>
+          }}
+        >
           <p>SCORES</p>
         </div>
         <button className="closeScorebutton" onClick={openMenu}>
@@ -84,7 +86,8 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
                 className={player.inactive ? "inactive-player" : null}
                 onMouseEnter={(e) => setShowKick(e.target.dataset.id)}
                 onMouseLeave={showKick ? () => setShowKick(false) : null}
-                data-id={player.id}>
+                data-id={player.id}
+              >
                 <div>
                   {storeData.isHost && player.id !== cookies.socketId && (
                     <KickButton
@@ -121,7 +124,8 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
 
                   <span
                     className="player-name"
-                    style={{ fontSize: `${calculateFontSize(player.name)}` }}>
+                    style={{ fontSize: `${calculateFontSize(player.name)}` }}
+                  >
                     {player.name}
                   </span>
                 </div>
