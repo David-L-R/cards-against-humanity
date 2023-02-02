@@ -15,6 +15,7 @@
   display: flex;
   cursor: default;
   width: auto;
+
   flex-basis: 30%;
   height: 100px;
   width: 50px;
@@ -22,15 +23,12 @@
   scale: 3.5;
 }
 .motionAvatarContainer p {
-  display: flex;
-  width: max-content;
-
-  justify-content: center;
-  margin: auto;
-  padding-bottom: 30px;
-  color: white;
+  color: rgb(101, 91, 91);
   font-weight: bold;
-  mix-blend-mode: difference;
+  position: absolute;
+  top: -65%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .scoreBoardAvatars .avatar-image svg {
