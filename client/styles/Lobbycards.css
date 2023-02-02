@@ -260,4 +260,7 @@
   #lobbyHostHidden {
     transform: scale(0.9) translateX(-100px) translateY(250px) rotate(30deg);
   }
+  .errMessage {
+    font-size: 14px;
+  }
 }
