@@ -8,8 +8,8 @@ import useQueue from "./utils/useQueue.js";
 import consoleSuccess from "./utils/consoleSuccess.js";
 import { cachUser, getCachedUser } from "./cache/useCache.js";
 
-dotenv.config();
-connectDB();
+dotenv.config({ path: "../.env" });
+connectDB(process.env.DB_URI);
 
 const app = express();
 app.use(cors());
