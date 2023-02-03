@@ -19,7 +19,7 @@ app.use(
     extended: true,
   })
 );
-export const queue = {}; // {lobby: {lobby: lobbyId, loading:Boolean, data:[{states to process, channelname}]}}
+export const queue = {};
 const PORT = process.env.PORT || 5555;
 const server = http.createServer(app);
 const io = new Server(server, {
