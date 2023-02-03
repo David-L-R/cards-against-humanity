@@ -146,9 +146,10 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
         </ul>
 
         <div className="avatar-popup-container">
-          {players.map((player) => {
+          {players.map((player, index) => {
             return (
               <Avatar
+                key={player.name + index}
                 userName={player.name}
                 playerId={player.id}
                 playerAvatar={player.avatar}
