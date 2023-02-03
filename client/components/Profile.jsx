@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { CgCloseO } from "react-icons/cg";
-import WhiteCard from "./WhiteCard";
+import allCardBackgrounds from "../public/assets/cardpictures";
 
-function Profile({ showProfileMenu, setShowProfileMenu }) {
+function Profile({
+  showProfileMenu,
+  setShowProfileMenu,
+  setSelectedBackground,
+  selectedBackground,
+}) {
   if (!showProfileMenu) return;
   return (
     <div className="gameRulesBackdrop">
@@ -14,12 +19,18 @@ function Profile({ showProfileMenu, setShowProfileMenu }) {
 
         <h2>Choose Your Card background</h2>
         <div className="profileCardsContainer">
-          <div className="whiteCardFaceMock whiteCardFace--frontMock">
-            <img src="/Cardbackground.svg" alt="" className="logoCardMock" />
-          </div>
-          <div className="whiteCardFaceMock">
-            <h2>Man Makes Monster.</h2>
-          </div>
+          {allCardBackgrounds.map((cardObject) => {
+            return (
+              <div
+                className={`whiteCardFaceMock whiteCardFace--frontMock ${
+                  selectedBackground.SVG === cardObject.SVG ? "selected" : ""
+                }`}
+                onClick={() => setSelectedBackground(cardObject)}
+              >
+                <img src={cardObject.SVG} alt="" className="profileCcMock" />
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
