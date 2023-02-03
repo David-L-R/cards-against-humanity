@@ -95,7 +95,9 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
                 onMouseEnter={(e) => setShowKick(e.target.dataset.id)}
                 onMouseLeave={showKick ? () => setShowKick(false) : null}
                 data-id={player.id}
-                style={players.length > 7 && { height: "60px" }}>
+                style={
+                  players && players.length > 7 ? { height: "60px" } : null
+                }>
                 <div>
                   {storeData.isHost && player.id !== cookies.socketId && (
                     <KickButton
