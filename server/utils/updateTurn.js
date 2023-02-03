@@ -19,9 +19,9 @@ const updateTurn = async ({
   changeAvatar,
   avatar,
 }) => {
-  const currentTurnIndex = currentGame?.turns?.length - 1;
-  if (currentTurnIndex < 0) currentTurnIndex = 0;
-  const currentTurn = currentGame?.turns[currentTurnIndex];
+  let currentTurnIndex = currentGame?.turns?.length - 1;
+  if (currentTurnIndex < 0 || !currentTurnIndex) currentTurnIndex = 0;
+  const currentTurn = currentGame ? currentGame?.turns[currentTurnIndex] : null;
 
   //reactivate each player after they really played
   if (!leavedGame && currentGame) {
@@ -35,9 +35,10 @@ const updateTurn = async ({
   if (changeAvatar) {
     currentGame.players = currentGame.players.map((player) => {
       if (player.id === playerId) player.avatar = avatar;
+
       return player;
     });
-    return currentGame;
+    return { ...currentGame, changeAvatar: playerId };
   }
 
   //kick player
@@ -105,23 +106,53 @@ const updateTurn = async ({
     );
     newHost.isHost = true;
 
-    //if czar leaves, asign a new czar
+    //if czar leaves, asign a new czar and restart round
     if (currentCzar.id === currentPlayer.id) {
+      //asign new czar
       const activePlayers = currentGame.players.filter(
         (player) => !player.inactive
       );
       const randomIndex = Math.floor(
         Math.random() * (activePlayers.length - 1)
       );
-
       const newCzar = activePlayers[randomIndex];
-      //asign new czar
       currentTurn.czar = newCzar;
 
-      //remove czar from white_cards
+      //remove new czar from white_cards
       currentTurn.white_cards = currentTurn.white_cards.filter(
         (player) => player.player !== newCzar.id
       );
+
+      // add old czar to white_cards for next turns
+      currentTurn.white_cards.push({
+        player: currentCzar.id,
+        cards: currentCzar.hand,
+        played_card: [],
+        points: currentCzar.points,
+      });
+
+      //give players cards back to hand AND to cards in "white_cards"
+      currentGame.players = currentGame.players.map((player) => {
+        const playedCards = currentTurn.white_cards.find(
+          (currPlayer) => currPlayer.player === player.id
+        )?.played_card;
+        if (playedCards)
+          return { ...player, hand: [...player.hand, ...playedCards] };
+        return player;
+      });
+      currentTurn.white_cards = currentTurn.white_cards.map((player) => {
+        const playedWhite = player.played_card;
+        return {
+          ...player,
+          cards: [...player.cards, ...playedWhite],
+          played_card: [],
+        };
+      });
+
+      //restart round
+      currentTurn.stage = ["start", "dealing", "black"];
+      currentTurn.black_card = null;
+      return { ...currentGame };
     }
   }
 
@@ -139,6 +170,7 @@ const updateTurn = async ({
       return player;
     });
     io.to(socket.id).emit("newWhiteCard", { newWhite });
+    await storeToCache({ lobbyId, currentGame });
     return;
   }
 
@@ -197,7 +229,7 @@ const updateTurn = async ({
 
   //send winner to players
   if (stage === "winner") {
-    currentGame;
+    // currentGame;
     const wonPlayer = currentTurn.white_cards
       .filter((player) => player.played_card.length > 0)
       .find((player) => player.played_card[0].text === winningCards[0].text);
@@ -216,7 +248,6 @@ const updateTurn = async ({
 
   if (stage === "completed") {
     const Game = currentGame;
-
     currentTurn.completed.push(
       Game.players.find((player) => player.id === playerId)
     );
@@ -252,9 +283,15 @@ const updateTurn = async ({
         czar: nextCzar,
         stage: ["start", "dealing", "black"],
         white_cards: Game.players
-          .filter((player) => player.id !== nextCzar.id && !player.inactive)
+          // .filter((player) => player.id !== nextCzar.id && !player.inactive)
+          .filter((player) => player.id !== nextCzar.id)
           .map((player) => {
-            return { player: player.id, cards: player.hand, played_card: [] };
+            return {
+              player: player.id,
+              cards: player.hand,
+              played_card: [],
+              points: player.points,
+            };
           }),
         black_card: {},
         winner: {},

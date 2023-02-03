@@ -28,8 +28,15 @@ function Navbar(props) {
   const [showRules, setShowRules] = useState(false);
   const [showBug, setShowBug] = useState(false);
   const [showContact, setShowContact] = useState(false);
-  const { socket, setHandSize, setAmountOfRounds, handSize, amountOfRounds } =
-    props;
+  const {
+    socket,
+    setHandSize,
+    setAmountOfRounds,
+    handSize,
+    amountOfRounds,
+    language,
+    setLanguage,
+  } = props;
   const { data: session } = useSession();
   const { storeData } = useAppContext();
   const [showErrMessage, setShowErrMessage] = useState(false);
@@ -76,13 +83,17 @@ function Navbar(props) {
         setReconnect("Successfully reconnected with Server");
         setTimeout(() => {
           setReconnect(false);
-        }, 5000);
+        }, 3000);
       });
     }
 
     if (router.query.lobbyId && router.query.gameId) {
       setGameIdentifier(router.query.gameId[0]);
       setLobbyId(router.query.lobbyId);
+    }
+
+    if (!router.query.lobbyId) {
+      setLobbyId(null);
     }
 
     if (Array.isArray(router.query.lobbyId)) {
@@ -101,6 +112,13 @@ function Navbar(props) {
   return (
     <>
       <nav className="navContainer">
+        {lobbyId && !gameIdentifier && (
+          <img
+            src="/MMM-logo.svg"
+            alt="MMM Logo"
+            onClick={() => router.push("/")}
+          />
+        )}
         {lobbyId && gameIdentifier && (
           <h2 className="backButton">
             <button onClick={backToLobby}>
@@ -165,15 +183,13 @@ function Navbar(props) {
             </>
           ) : (
             <li
-              className={!lobbyId && !gameIdentifier ? "" : "diseabled"}
-              onClick={
-                !lobbyId && !gameIdentifier ? () => setShowSignIn(true) : null
-              }>
+              className={!lobbyId ? "" : "diseabled"}
+              onClick={!lobbyId ? () => setShowSignIn(true) : null}>
               <div className="navbarIcons">
                 <CgProfile />
               </div>
               <div className="navBarText">
-                <button>Sign In</button>
+                {!lobbyId ? "Sign In" : "Can't sign in during a game"}
               </div>
             </li>
           )}
@@ -207,6 +223,8 @@ function Navbar(props) {
                   setHandSize={setHandSize}
                   setAmountOfRounds={setAmountOfRounds}
                   handSize={handSize}
+                  language={language}
+                  setLanguage={setLanguage}
                   amountOfRounds={amountOfRounds}
                 />
               </li>

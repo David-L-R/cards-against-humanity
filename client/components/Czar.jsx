@@ -1,26 +1,54 @@
 import React, { useEffect, useRef, useState } from "react";
 import style from "../styles/cardTemplate.module.css";
 import { motion as m } from "framer-motion";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
-const Czar = ({
-  blackCards,
-  chooseBlackCard,
-  setCardsOnTable,
-  setBlackCards,
-  gameStage,
-  timer,
-  setTimer,
-  startStopTimer,
-}) => {
+const Czar = ({ blackCards, chooseBlackCard, setBlackCards, gameStage }) => {
   const [showBlackCards, setshowBlackCards] = useState([]);
   const [activeIndex, setActiveIndex] = useState(false);
+  const [scrollLeftandRight, setScrollLeftandRight] = useState(0);
+  const czarPickingContainerRef = useRef(null);
+
+  const handleScrollLeft = () => {
+    const fullWidth = czarPickingContainerRef.current.offsetWidth;
+    const minWidth = fullWidth - fullWidth / 2;
+    const cardWidth =
+      czarPickingContainerRef.current.childNodes[0].getBoundingClientRect()
+        .width;
+
+    setScrollLeftandRight((prev) => prev + cardWidth);
+    if (0 < scrollLeftandRight) {
+      setScrollLeftandRight(minWidth - cardWidth / 2);
+    }
+  };
+  const handleScrollRight = () => {
+    const fullWidth = czarPickingContainerRef.current.offsetWidth;
+    const cardWidth =
+      czarPickingContainerRef.current.childNodes[0].getBoundingClientRect()
+        .width;
+    const maxWidth = -(fullWidth / 2) + cardWidth * 2;
+    const listLength = czarPickingContainerRef.current.childNodes.length;
+    const listPadding = fullWidth / listLength - cardWidth;
+    const lastCard = (fullWidth / listLength) * (listLength - 1) + listPadding;
+
+    setScrollLeftandRight((prev) => prev - cardWidth - listPadding);
+    if (-(lastCard / 2) + cardWidth >= scrollLeftandRight) {
+      return setScrollLeftandRight(
+        -(lastCard / 2) + cardWidth >=
+          scrollLeftandRight - listPadding - listPadding / 2
+      );
+    }
+  };
+  const styles = {
+    transform: `translateX(${scrollLeftandRight}px)`,
+  };
 
   // get randokm black cards and let czar decide
   const randomBlackCards = () => {
     const amountCardsToSelect = 3;
     const cardsToDisplay = [];
     for (let i = 0; i < amountCardsToSelect; i++) {
-      const randomIndex = Math.floor(Math.random() * blackCards.length - 1);
+      const randomIndex = Math.ceil(Math.random() * blackCards.length - 1);
       cardsToDisplay.push({
         card: blackCards[randomIndex],
         index: randomIndex,
@@ -52,6 +80,9 @@ const Czar = ({
     randomBlackCards();
   }, []);
 
+  {
+  }
+
   if (!showBlackCards || gameStage !== "black") return;
 
   return (
@@ -61,12 +92,16 @@ const Czar = ({
         <h2>Select a Card </h2>
       </div>
       <div>
-        <ul className="czarPickingContainer">
+        <ul
+          className="czarPickingContainer"
+          style={styles}
+          ref={czarPickingContainerRef}
+        >
           {showBlackCards &&
             showBlackCards.map((cardItem, blackIndex) =>
               cardItem.index === activeIndex ? (
                 <m.li
-                  key={cardItem.card.text}
+                  key={cardItem.card.text + blackIndex}
                   data-index={cardItem.index}
                   initial={
                     blackIndex === (showBlackCards.length - 1) / 2
@@ -111,7 +146,7 @@ const Czar = ({
                   </div>
                 </m.li>
               ) : (
-                <li>
+                <li key={cardItem.card.text + blackIndex}>
                   <div
                     className={` ${style.black} czarPicking`}
                     onClick={(e) => {
@@ -119,6 +154,7 @@ const Czar = ({
                         index: cardItem.index,
                         event: e,
                       });
+                      setScrollLeftandRight(0);
                     }}
                   >
                     {cardItem.card.text}
@@ -127,6 +163,12 @@ const Czar = ({
               )
             )}
         </ul>
+        <button className="czarButtonLeft" onClick={handleScrollLeft}>
+          <FaChevronLeft />
+        </button>
+        <button className="czarButtonRight" onClick={handleScrollRight}>
+          <FaChevronRight />
+        </button>
       </div>
     </section>
   );

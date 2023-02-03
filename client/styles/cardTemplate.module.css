@@ -2,7 +2,7 @@
   position: relative;
   display: inline-block;
   padding: 15px;
-  width: 175px;
+  width: 170px;
   aspect-ratio: 1/1.4;
   background-color: white;
   color: black;
@@ -25,7 +25,19 @@
   color: white;
   transition: all 250ms;
   z-index: 0;
+  -webkit-animation: slideIn 250ms ease-in-out;
   animation: slideIn 250ms ease-in-out;
+}
+
+@-webkit-keyframes slideIn {
+  0% {
+    transform: translateX(50vw);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @keyframes slideIn {
@@ -49,7 +61,17 @@
 }
 
 .whites {
+  -webkit-animation: showUp 250ms ease-in 250ms forwards;
   animation: showUp 250ms ease-in 250ms forwards;
+}
+
+@-webkit-keyframes showUp {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes showUp {
@@ -58,5 +80,15 @@
   }
   100% {
     opacity: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .cardTemplateContainer {
+    min-width: 115px;
+    max-width: 36vw;
+    padding: 10px;
+    font-size: 14px;
+    overflow: auto;
   }
 }

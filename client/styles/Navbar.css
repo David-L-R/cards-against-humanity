@@ -12,11 +12,25 @@
   font-size: 23px;
   position: absolute;
   transform: translate(10%, 6%);
+  width: -webkit-max-content;
+  width: -moz-max-content;
   width: max-content;
   transition: all 0.5s ease-in-out;
+  -webkit-animation: slide-in 0.2s ease-in-out forwards;
   animation: slide-in 0.2s ease-in-out forwards;
   z-index: -1;
   opacity: 0;
+}
+@-webkit-keyframes slide-in {
+  0% {
+    opacity: 0;
+    left: -200px;
+  }
+
+  100% {
+    opacity: 1;
+    left: 22px;
+  }
 }
 @keyframes slide-in {
   0% {
@@ -31,8 +45,6 @@
 }
 
 .navContainer {
-  position: fixed;
-  height: 80px;
   width: 100%;
   padding-right: 20px;
   top: 0;
@@ -41,7 +53,17 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding-top: 1rem;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+.navContainer img {
+  width: 50px;
+
+  opacity: 0.3;
+  cursor: pointer;
+}
+.navContainer img:hover {
+  opacity: 1;
 }
 
 .fuckitDannisadvice {
@@ -49,6 +71,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  -moz-column-gap: 0.5rem;
   column-gap: 0.5rem;
   margin-top: auto;
 }
@@ -57,6 +80,8 @@
   position: fixed;
   top: 0;
   right: 0;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
   width: fit-content;
   height: 100vh;
   z-index: 10;
@@ -79,6 +104,10 @@
   width: 50px;
   height: 50px;
 }
+.accountMenu > ul {
+  margin-top: 0;
+}
+
 .accountMenu > ul li {
   position: relative;
 
@@ -170,8 +199,8 @@
 
 .burgerMenue {
   position: absolute;
-  top: -0.5%;
-  left: -2%;
+  top: 110%;
+  left: 95%;
   background-image: url("/burgerMenue.svg");
   transform: rotateZ(180deg) translateX(100%);
   background-size: contain;
@@ -181,6 +210,14 @@
   transition: all 250ms;
   display: none;
 }
+.diseabled {
+  cursor: not-allowed !important;
+  color: grey;
+}
+.diseabled:hover {
+  background-color: black !important;
+  color: grey !important;
+}
 
 @media (max-width: 640px) {
   .navContainer {
@@ -188,17 +225,25 @@
   }
   .accountMenu {
     font-size: 12px;
+    height: -webkit-max-content;
+    height: -moz-max-content;
     height: max-content;
-    gap: 2rem;
-    width: 50vw;
+    gap: 1rem;
+    padding-left: 20px;
+    width: 100vw;
     z-index: 20;
-    right: -160px;
-    border: 2px solid transparent;
+    right: 0;
+    top: -380px;
+    border: 2px solid white;
+    background-color: black;
   }
 
   .burgerMenue {
     display: block;
     opacity: 1;
+    top: 105%;
+    left: 99%;
+    width: 35px;
   }
   .burgerMenue:hover {
     opacity: 0;
@@ -209,8 +254,7 @@
     background-color: rgb(0, 0, 0);
     right: 0;
     color: white;
-    border: 2px solid rgba(255, 255, 255, 0.315);
-    border-right: none;
+    top: 0px;
   }
 
   .navbarIcons {
@@ -224,6 +268,8 @@
   .backButton::after {
     content: "Back to lobby";
     position: absolute;
+    width: -webkit-max-content;
+    width: -moz-max-content;
     width: max-content;
     color: gray;
     font-size: 14px;

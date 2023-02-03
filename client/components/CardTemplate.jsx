@@ -1,9 +1,8 @@
 import style from "../styles/cardTemplate.module.css";
-import { useState, useEffect } from "react";
-import { useDndMonitor } from "@dnd-kit/core";
 
 const CardTemplate = (props) => {
-  const { id, isBlackCard, card, blackText, isSkell, isOverlay } = props;
+  const { id, isBlackCard, card, blackText, isSkell, isOverlay, index, table } =
+    props;
   let cardClass;
 
   (() => {
@@ -24,7 +23,11 @@ const CardTemplate = (props) => {
 
   return (
     <>
-      <div className={cardClass}>{!isBlackCard ? id : blackText}</div>
+      <div
+        key={id + index + card?.text + isOverlay + table + isSkell}
+        className={cardClass}>
+        {!isBlackCard ? id : blackText}
+      </div>
     </>
   );
 };

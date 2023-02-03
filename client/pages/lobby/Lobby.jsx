@@ -15,9 +15,11 @@ import { TfiRocket } from "react-icons/tfi";
 import JoyRide, { ACTIONS, EVENTS, STATUS } from "react-joyride";
 import { Steps } from "../../components/Steps.js";
 import useLocalStorage from "../../components/useLocalStorage";
+import { AiOutlineEnter } from "react-icons/ai";
+import { VscDebugDisconnect } from "react-icons/vsc";
 
 const Lobby = (props) => {
-  const { socket, handSize, amountOfRounds } = props;
+  const { socket, handSize, amountOfRounds, language } = props;
   const router = useRouter();
   const { joinGame } = router.query;
   const cookies = parseCookies();
@@ -28,15 +30,13 @@ const Lobby = (props) => {
   const [linkInvation, setlinkInvation] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsloading] = useState(true);
+  const [reconnect, setReconnect] = useState(false);
   const [currentLobby, setCurrentLobby] = useState(null);
   const [listenersReady, setListenersReady] = useState(false);
   const [useJoyRide, setuseJoyRide] = useState(false);
-
   let [value, setValue] = useLocalStorage("tutorial");
-
   const [stepIndex, setStepIndex] = useState(0);
   const { storeData, setStoreData } = useAppContext();
-
   const lobbyId = storeData.lobbyId;
 
   setTimeout(() => {
@@ -49,6 +49,7 @@ const Lobby = (props) => {
       lobbyId,
       setRounds: amountOfRounds,
       maxHandSize: handSize,
+      language,
     });
   };
 
@@ -60,8 +61,37 @@ const Lobby = (props) => {
     });
   };
 
+  function calculateFontSize(name) {
+    return 26 - name.length + "px";
+  }
+
   const checkIfPlaying = (playerId) => {
     return currentLobby.players.find((player) => player.id === playerId);
+  };
+
+  const handleJoyrideCallback = (data) => {
+    const { action, index, status, type } = data;
+
+    if (
+      stepIndex !== 3 &&
+      [EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)
+    ) {
+      // Update state to advance the tour
+      setStepIndex((prev) => (prev += 1));
+    } else if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
+      setIsOpen(true);
+      setTimeout(() => {
+        setStepIndex((prev) => (prev += 1));
+      }, 300);
+    }
+    if (stepIndex === 6) {
+      setIsOpen(false);
+    }
+    if (index >= Steps.length - 1) {
+      setTimeout(() => {
+        setValue("DONE");
+      }, 10000);
+    }
   };
 
   useEffect(() => {
@@ -70,7 +100,7 @@ const Lobby = (props) => {
         if (!currentLobby || err) {
           setIsloading(false);
           return setShowErrMessage(
-            "Can not find Lobby, please check our invatation link"
+            err ? err : "Can not find Lobby, please check our invatation link"
           );
         }
         const player = currentLobby.waiting.find(
@@ -82,7 +112,7 @@ const Lobby = (props) => {
             setShowErrMessage("You got kicked! Redirecting you back"),
             setTimeout(() => {
               router.push("/");
-            }, 3500)
+            }, 5500)
           );
 
         setIsloading(false);
@@ -101,7 +131,6 @@ const Lobby = (props) => {
 
         if (err) return console.warn(err);
 
-        setStoreData((prev) => ({ ...prev, playerName: player.name }));
         setPlayers((pre) => waiting);
       });
 
@@ -123,25 +152,33 @@ const Lobby = (props) => {
           }
         }
       });
+      setListenersReady(true);
     }
-    setListenersReady(true);
     return () => {
       socket.removeAllListeners();
+      setListenersReady(false);
     };
-  }, [lobbyId]);
+  }, [lobbyId, reconnect]);
 
   useEffect(() => {
     //self update page after got redirected, use key from query as lobby id
     if (lobbyId && listenersReady) {
       socket.emit("updateLobby", { lobbyId, id: cookies.socketId, joinGame });
+      setListenersReady(false);
     }
-  }, [listenersReady, lobbyId]);
+  }, [listenersReady]);
 
   useEffect(() => {
     if (router.query.lobbyId) {
       setlinkInvation(`${window?.location.href}?joinGame=true`);
       setStoreData((prev) => ({ ...prev, lobbyId: router.query.lobbyId[0] }));
     }
+    socket.io.on("reconnect", () => {
+      setReconnect(true);
+      setTimeout(() => {
+        setReconnect(false);
+      }, 500);
+    });
   }, [router.isReady]);
 
   //hello David :) WE good at naming conventions😘😘
@@ -172,33 +209,8 @@ const Lobby = (props) => {
       </main>
     );
 
-  const handleJoyrideCallback = (data) => {
-    const { action, index, status, type } = data;
-
-    if (
-      stepIndex !== 3 &&
-      [EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)
-    ) {
-      // Update state to advance the tour
-      setStepIndex((prev) => (prev += 1));
-    } else if ([EVENTS.STEP_AFTER, EVENTS.TARGET_NOT_FOUND].includes(type)) {
-      setIsOpen(true);
-      setTimeout(() => {
-        setStepIndex((prev) => (prev += 1));
-      }, 300);
-    }
-    if (stepIndex === 6) {
-      setIsOpen(false);
-    }
-    if (index >= Steps.length - 1) {
-      setTimeout(() => {
-        setValue("DONE");
-      }, 10000);
-    }
-  };
   return (
     <>
-      {console.log("stepIndex", stepIndex)}
       {isHost && (
         <JoyRide
           callback={handleJoyrideCallback}
@@ -261,17 +273,29 @@ const Lobby = (props) => {
                 </div>
               </div>
             )}
-            <input
-              maxLength={15}
-              className="changeNameButton"
-              type="text"
-              onChange={(e) => changePLayerName(e.target.value)}
-              placeholder="Change name (Optional)"
-            />
+            <div className="inputEnterIconContainer">
+              <input
+                maxLength={15}
+                className="changeNameButton"
+                type="text"
+                onClick={(e) => changePLayerName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    changePLayerName(e.target.value);
+                  }
+                }}
+                placeholder="Change name"
+              />
+              <AiOutlineEnter className="enterIcon" />
+            </div>
 
             {isHost && (
               <button
-                className={isLoading ? "lobbyButton isLoading" : "lobbyButton"}
+                className={
+                  isLoading
+                    ? "waitingLobbyButton isLoading"
+                    : "waitingLobbyButton"
+                }
                 onClick={handleGameCreation}
                 disabled={isLoading ? true : false}
                 style={
@@ -281,21 +305,21 @@ const Lobby = (props) => {
                       }
                     : null
                 }>
-                <span>{isLoading ? "Loading..." : "Ready"}</span>
+                <span>{isLoading ? "Loading..." : "Start Game"}</span>
               </button>
             )}
           </m.div>
           <ul className="dragContainer">
             {players &&
-              players.map((player) => (
+              players.map((player, index) => (
                 <li
-                  key={player.name}
+                  key={player.name + index}
                   className={
                     player.inactive || checkIfPlaying(player.id)
                       ? "inactive"
                       : null
                   }>
-                  <h2>
+                  <h2 style={{ fontSize: `${calculateFontSize(player.name)}` }}>
                     {player.name.toUpperCase() !== "DAVID" ? (
                       player.name.toUpperCase()
                     ) : (
@@ -305,7 +329,12 @@ const Lobby = (props) => {
                     )}
                   </h2>
                   {player.inactive && (
-                    <p>is disconnected and {randomInsult()}</p>
+                    <>
+                      <VscDebugDisconnect className="disconectIcon" />
+                      <p className="disconnectText">
+                        Lost Connection: {randomInsult()}
+                      </p>
+                    </>
                   )}
                   {checkIfPlaying(player.id) && <p>Currently in a Game...</p>}
                   {player.isHost && (

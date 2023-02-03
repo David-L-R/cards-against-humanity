@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 import consoleSuccess from "../utils/consoleSuccess.js";
 
-const connectDB = async () => {
+const connectDB = async (uri) => {
   try {
-    const conn = await mongoose.connect(process.env.DB_URI);
+    const conn = await mongoose.connect(uri);
     consoleSuccess(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error("Database connection error : ", error);

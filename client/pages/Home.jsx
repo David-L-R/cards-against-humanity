@@ -30,7 +30,7 @@ const Home = ({ socket }) => {
 
   useEffect(() => {
     //If new lobby was createt, redirect to Lobby with room data
-    socket.on("LobbyCreated", ({ lobbyId, hostName }) => {
+    socket.on("LobbyCreated", ({ lobbyId }) => {
       router.push({
         pathname: `/lobby/${lobbyId}`,
       });
@@ -72,15 +72,13 @@ const Home = ({ socket }) => {
             x: -1300,
             rotate: -120,
             transition: { duration: 0.75 },
-          }}
-        >
+          }}>
           <div
             className={
               isHostActive
                 ? "lobbyContainer lobbyContainer-active"
                 : " lobbyContainer "
-            }
-          >
+            }>
             <div
               id={isJoinActive ? "lobbyHidden" : "lobbyVisible"}
               className={
@@ -89,8 +87,7 @@ const Home = ({ socket }) => {
               onClick={() => {
                 setHostOrJoin("host");
                 handleHostClick();
-              }}
-            >
+              }}>
               <div className="lobbyFront">
                 <h2>Host a New Game.</h2>
               </div>
@@ -111,15 +108,13 @@ const Home = ({ socket }) => {
             y: 1000,
             rotate: 120,
             transition: { duration: 0.75 },
-          }}
-        >
+          }}>
           <div
             className={
               isJoinActive
                 ? "lobbyContainer  lobbyContainer-active "
                 : " lobbyContainer"
-            }
-          >
+            }>
             <div
               id={isHostActive ? "lobbyHostHidden" : "lobbyHostVisible"}
               className={
@@ -128,13 +123,11 @@ const Home = ({ socket }) => {
               onClick={(e) => {
                 setHostOrJoin("join");
                 handleJoinClick();
-              }}
-            >
+              }}>
               <div
                 className={
                   isHostActive ? "lobbyFront lobbyjoinhidden" : "lobbyFront"
-                }
-              >
+                }>
                 <h2>Join a Game.</h2>
               </div>
 

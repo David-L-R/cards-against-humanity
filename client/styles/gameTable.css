@@ -3,7 +3,6 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
-  /* padding-top: 10rem;*/
 }
 
 .devbug-h1 {
@@ -33,15 +32,32 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  gap: 10px;
-  padding-top: 50px;
+  gap: 8px;
+  padding-top: 30px;
+  padding-bottom: 10px;
 }
 .whiteCardTable ul li:hover {
+  cursor: -webkit-grab;
   cursor: grab;
 }
 
 .whiteCardTable ul .lastWhiteCard:hover {
+  -webkit-animation: fadeIn 1000ms forwards;
   animation: fadeIn 1000ms forwards;
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    transform: scale(1.05);
+    z-index: 2;
+  }
+  99% {
+    z-index: 2;
+  }
+  100% {
+    transform: scale(1);
+    z-index: 0;
+  }
 }
 
 @keyframes fadeIn {
@@ -74,18 +90,24 @@
   display: grid;
   grid-template-areas:
     "blackCard white1 white2"
-    ". selectButton selectButton";
+    ". selectButton selectButton"
+    "waitText waitText waitText";
+  width: -webkit-max-content;
+  width: -moz-max-content;
   width: max-content;
+  -moz-column-gap: 10px;
   column-gap: 10px;
 }
 
 .cardDisplay.playedWhite {
   display: flex;
+  width: -webkit-max-content;
+  width: -moz-max-content;
   width: max-content;
   margin: auto;
   gap: 2rem;
   background-color: transparent;
-  justify-content: space-between;
+  justify-content: center;
   padding: 1rem 1rem;
 }
 
@@ -119,27 +141,44 @@
 
 .choose-button {
   position: absolute;
-  bottom: 20%;
-  left: 80%;
-  width: max-content;
-  border: 2px solid white;
+  top: 0;
+  left: 70%;
   text-align: center;
-  border-radius: 30px;
-  padding: 10px;
-  font-size: 16px;
-  transform: translateX(-50%) translateY(100%);
+  border-radius: 15px;
+  font-size: 18px;
+  transform: translateX(-50%) translateY(-50%);
   z-index: 5;
   transition: all 250ms;
   opacity: 0;
   color: white;
-  background-color: black;
   letter-spacing: 1px;
   cursor: pointer;
-  transition: all 200ms;
+}
+.choose-icon {
+  overflow: visible;
+  border-radius: 50%;
+  width: 55px;
+  height: 55px;
+  border: 2px solid gold;
+  background-color: black;
+  padding: 10px;
+  font-size: 20px;
+  color: gold;
+  justify-content: center;
+  display: flex;
+  margin: auto;
+}
+.waiting-text {
+  display: flex;
+  margin: auto;
+  width: 80px;
+  height: -webkit-max-content;
+  height: -moz-max-content;
+  height: max-content;
 }
 
 .cardDisplay.playedWhite li:hover .choose-button {
-  transform: translateX(-50%) translateY(0);
+  transform: translateX(40%) translateY(0);
   opacity: 1;
 }
 
@@ -211,12 +250,7 @@
   left: 50%;
   z-index: 20;
   justify-content: center;
-  width: 200px;
-  height: 50px;
   align-items: center;
-  /*border: 1px dotted white;*/
-  /*border-bottom: 1px solid white;*/
-  /*border-top: 1px solid white;*/
   border-radius: 30px;
   background-color: black;
   letter-spacing: 1px;
@@ -227,9 +261,11 @@
   cursor: pointer;
   transition: 0.3;
   box-shadow: 0px 0px 15px 2px rgb(0, 0, 0);
+  padding: 0.75rem 2rem;
 }
 
 .selectButton.active {
+  -webkit-animation: slideIn 2000ms forwards;
   animation: slideIn 2000ms forwards;
 }
 .selectButton:hover {
@@ -238,11 +274,20 @@
   transition: 0.5s;
 }
 .waitText {
-  position: fixed;
   top: 38%;
-
+  grid-area: waitText;
   padding: 0;
   margin: 0;
+  text-align: center;
+}
+
+@-webkit-keyframes slideIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes slideIn {
@@ -267,6 +312,7 @@
 }
 
 .whiteHand {
+  -webkit-animation: outOfView 0.75s forwards;
   animation: outOfView 0.75s forwards;
   display: grid;
 
@@ -280,6 +326,18 @@
   transform: translateX(-50%) translateY(25%);
 }
 
+@-webkit-keyframes outOfView {
+  0% {
+    transform: translateY(1000px);
+  }
+  50% {
+    transform: translateY(-80px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
 @keyframes outOfView {
   0% {
     transform: translateY(1000px);
@@ -289,5 +347,143 @@
   }
   100% {
     transform: translateY(0px);
+  }
+}
+.czarButtonLeft {
+  display: none;
+}
+.czarButtonRight {
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .whiteCardTable {
+    width: 100vw;
+    overflow: hidden;
+    gap: 0 !important;
+    transition: 2s;
+    margin: 0;
+  }
+
+  .onTable {
+    padding-top: 0;
+  }
+  .black-on-table > .cardDisplay {
+    display: grid;
+    width: 100vw;
+    margin: 0;
+    padding: 0 30px;
+    grid-template-areas:
+      "blackCard blackCard"
+      "white1 white2"
+      "confirm confirm";
+    justify-content: center;
+    row-gap: 5px;
+  }
+  .black-on-table > .cardDisplay.confirmed {
+    grid-template-areas:
+      "blackCard white1 white2"
+      "confirm confirm confirm"
+      "waitText waitText waitText";
+  }
+  .whiteCardTable ul {
+    display: flex;
+    width: -webkit-max-content;
+    width: -moz-max-content;
+    width: max-content;
+    overflow: none;
+    gap: 10px;
+    transform: translateX(300px);
+    padding-top: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .carusselButton1 {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 13%;
+    height: 100%;
+    z-index: 50;
+    transform: translateY(-50%);
+    box-shadow: inset 30px -10px 10px -12px rgba(0, 0, 0, 0.836);
+  }
+  .carusselButton2 {
+    position: absolute;
+    box-shadow: inset -30px -10px 15px -12px rgb(0, 0, 0, 0.836);
+    width: 13%;
+    height: 100%;
+    top: 50%;
+    right: 0;
+    z-index: 50;
+    transform: translateY(-50%);
+  }
+  .arrowIcon {
+    display: flex;
+    font-size: 38px;
+    margin: auto;
+  }
+  .droppable-container {
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .game {
+    height: 100%;
+    padding-bottom: 25px;
+  }
+  #__next {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .selectButton {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    transform: none;
+    margin-top: 10px;
+    flex-basis: 100%;
+    max-width: 220px;
+    grid-area: confirm;
+    margin: auto;
+    padding: 0.45rem 1.45rem;
+    font-size: 14px;
+  }
+  .cardDisplay li[role="button"]:nth-child(1) {
+    display: flex;
+    justify-content: center;
+  }
+  .choose-button {
+    font-size: 10px;
+    padding: 5px;
+  }
+  .cardDisplay.playedWhite {
+    display: flex;
+    width: 100vw;
+    overflow-x: scroll;
+    margin: auto;
+    gap: 0rem;
+    justify-content: flex-start;
+    padding: 1rem 1rem;
+  }
+  .cardDisplay.playedWhite li div:nth-child(1) {
+    transform: rotate(0deg) translateX(15px);
+    z-index: 0;
+    scale: 0.85;
+  }
+
+  .cardDisplay.playedWhite li div:nth-child(2) {
+    transform: rotate(0deg) translateX(-15px);
+    z-index: 0;
+    scale: 0.85;
+  }
+  .choose-button {
+    top: 50%;
+    left: 30%;
   }
 }

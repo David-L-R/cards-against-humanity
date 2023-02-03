@@ -4,7 +4,11 @@
   left: 50%;
   border: 2px solid red;
   transform: translate(-50%, -50%);
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
   width: fit-content;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
   height: fit-content;
   padding: 0.5rem 1.25rem;
   background-color: black;
@@ -35,5 +39,7 @@
   margin: 0;
   gap: 1rem;
   font-size: 18px;
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
   height: fit-content;
 }

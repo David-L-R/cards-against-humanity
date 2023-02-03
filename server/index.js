@@ -1,4 +1,3 @@
-import router from "./router/routes.js";
 import dotenv from "dotenv";
 import connectDB from "./database/db.js";
 import { Server } from "socket.io";
@@ -7,20 +6,20 @@ import cors from "cors";
 import http from "http";
 import useQueue from "./utils/useQueue.js";
 import consoleSuccess from "./utils/consoleSuccess.js";
+import { cachUser, getCachedUser } from "./cache/useCache.js";
 
-dotenv.config();
-connectDB();
+dotenv.config({ path: "../.env" });
+connectDB(process.env.DB_URI);
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use("/", router);
 app.use(
   express.urlencoded({
     extended: true,
   })
 );
-export const queue = {}; // {lobby: {lobby: lobbyId, loading:Boolean, data:[{states to process, channelname}]}}
+export const queue = {};
 const PORT = process.env.PORT || 5555;
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -38,23 +37,29 @@ server.listen(PORT, async (req, res) => {
 io.on("connection", (socket) => {
   console.log(`user connected: ${socket.id}`);
 
+  socket.on("cachUser", ({ cookieId }) => {
+    cachUser({ id: cookieId, socketId: socket.id });
+  });
+
   socket.on("createNewLobby", (data) => {
     socket.join(data.lobbyId);
     useQueue({ data, socket, io, channelName: "createNewLobby" });
   });
 
   socket.on("updateLobby", (data) => {
-    socket.join(data.lobbyId),
-      useQueue({ data, socket, io, channelName: "updateLobby" });
+    socket.join(data.lobbyId), (socket.userId = data.playerId);
+    useQueue({ data, socket, io, channelName: "updateLobby" });
   });
 
   socket.on("findRoom", (data) => {
-    socket.join(data.lobbyId),
-      useQueue({ data, socket, io, channelName: "findRoom" });
+    socket.join(data.lobbyId), (socket.userId = data.playerId);
+    useQueue({ data, socket, io, channelName: "findRoom" });
   });
 
   socket.on("disconnect", async (reason) => {
-    const userId = socket.userId;
+    const userId = getCachedUser({ socketId: socket.id });
+    if (!userId) return;
+
     useQueue({
       userId,
       io,
@@ -77,16 +82,12 @@ io.on("connection", (socket) => {
     socket.join(data.lobbyId),
       useQueue({ data, socket, io, channelName: "changeGame" });
   });
+
+  socket.on("sendTimer", ({ lobbyId, requestSync, timer }) => {
+    socket.join(lobbyId);
+    io.to(lobbyId).emit("getTimer", {
+      timer,
+      requestSync,
+    });
+  });
 });
-
-/*
-
-lobbyId:{
-lobby: lobbyId
-loading:Boolean
-data:[{data to precess}]
-channel: function
-}
-
-
-*/

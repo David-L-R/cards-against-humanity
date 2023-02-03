@@ -12,14 +12,15 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
   const [showKick, setShowKick] = useState(false);
   const cookies = parseCookies();
   const { turns } = currentLobby;
-  const players = currentLobby.waiting
+  let players = currentLobby.waiting
     ? currentLobby.waiting
     : currentLobby.players;
+
   const currentTurn = turns && turns[turns.length - 1];
   const { stage, white_cards, czar } = currentTurn
     ? currentTurn
     : { stage: null, white_cards: null };
-  const { storeData } = useAppContext();
+  const { storeData, setStoreData } = useAppContext();
   const submittedWhiteCards = (playerId) => {
     if (white_cards && currentLobby) {
       const player = white_cards.find((player) => player.player === playerId);
@@ -42,28 +43,37 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
     return false;
   };
 
+  const sortPlayers = (players) => {
+    const allPlayers = [...players];
+    const currentPlayer = players.find(
+      (player) => player.id === cookies.socketId
+    );
+    const currentPlayerIndex = players.indexOf(currentPlayer);
+    return [...allPlayers.splice(currentPlayerIndex, 1), ...allPlayers];
+  };
+
   const openMenu = () => {
     setIsOpen(!isOpen);
   };
+
+  function calculateFontSize(name) {
+    return 26 - (name.length + 1) + "px";
+  }
 
   return (
     <>
       <div
         className={!isOpen ? "sideMenu" : "sideMenu active"}
         style={{
-          boxShadow: isOpen
-            ? "20px 2px 31px 4px rgba(135,129,129,0.52)"
-            : "none",
-        }}
-      >
+          boxShadow: isOpen ? "20px 2px 31px 4px #8781813e" : "none",
+        }}>
         <div
           className="scoreButton"
           onClick={openMenu}
           style={{
             opacity: isOpen ? "0" : "1",
             cursor: isOpen ? "default" : "pointer",
-          }}
-        >
+          }}>
           <p>SCORES</p>
         </div>
         <button className="closeScorebutton" onClick={openMenu}>
@@ -78,24 +88,27 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
             <div>Score</div>
           </li>
           {players &&
-            players.map((player) => (
+            sortPlayers(players).map((player, index) => (
               <li
-                key={player.id}
+                key={player.id + index}
                 className={player.inactive ? "inactive-player" : null}
                 onMouseEnter={(e) => setShowKick(e.target.dataset.id)}
                 onMouseLeave={showKick ? () => setShowKick(false) : null}
                 data-id={player.id}
-              >
+                style={
+                  players && players.length > 7 ? { height: "60px" } : null
+                }>
                 <div>
-                  {storeData.isHost &&
-                  showKick === player.id &&
-                  player.id !== cookies.socketId ? (
+                  {storeData.isHost && player.id !== cookies.socketId && (
                     <KickButton
+                      showKick={showKick}
                       playerId={player.id}
                       socket={socket}
                       playerName={player.name}
                     />
-                  ) : !player.inactive ? (
+                  )}
+
+                  {!player.inactive ? (
                     <AiOutlineCheckCircle
                       className={
                         !submittedWhiteCards(player.id)
@@ -119,7 +132,11 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
                     playerAvatar={player.avatar}
                   />
 
-                  <span className="player-name">{player.name}</span>
+                  <span
+                    className="player-name"
+                    style={{ fontSize: `${calculateFontSize(player.name)}` }}>
+                    {player.name}
+                  </span>
                 </div>
                 <div>
                   <span className="player-points">{player.points}</span>
@@ -127,6 +144,20 @@ const Scoreboard = ({ currentLobby, socket, isOpen, setIsOpen }) => {
               </li>
             ))}
         </ul>
+
+        <div className="avatar-popup-container">
+          {players.map((player, index) => {
+            return (
+              <Avatar
+                key={player.name + index}
+                userName={player.name}
+                playerId={player.id}
+                playerAvatar={player.avatar}
+                isPopup={true}
+              />
+            );
+          })}
+        </div>
 
         {turns?.length > 0 && (
           <div className="scoreStats">

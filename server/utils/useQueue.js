@@ -22,9 +22,8 @@ const callbacks = {
 };
 
 const useQueue = async (allData) => {
-  const { data, channelName } = allData;
+  const { data, channelName, socket, playerId } = allData;
   const { lobbyId } = data;
-
   // add request from client to queue map
   if (!queue[lobbyId]) {
     queue[lobbyId] = {

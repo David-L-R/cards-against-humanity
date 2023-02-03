@@ -11,6 +11,7 @@
   position: absolute;
   width: 40px;
   height: 40px;
+
   cursor: pointer;
   top: 60%;
   left: 12%;
@@ -45,4 +46,12 @@
   height: 100%;
   top: 0;
   left: 0;
+}
+
+.mobileKickButton {
+  position: absolute;
+  top: 25%;
+  left: 5%;
+  color: #aa3446;
+  transform: translate(-50%, -50%);
 }

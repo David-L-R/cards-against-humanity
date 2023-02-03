@@ -20,7 +20,6 @@ function ReportBug({ showBug, setShowBug }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     // Send formData to the server or handle it as needed
-    console.log(formData);
   };
 
   return (

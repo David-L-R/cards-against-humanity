@@ -1,10 +1,11 @@
 const randomInsult = () => {
   const reason = [
     "with your Mom ",
-    "just goes pooping",
+    "just went pooping",
     "is dancing in the rain",
     "just cries",
-    "search for some cotton",
+    "Really sucks",
+    "Nobody likes him",
   ];
   const randomIndex = Math.floor(Math.random() * (reason.length - 1));
 

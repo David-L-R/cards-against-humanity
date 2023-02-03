@@ -55,6 +55,7 @@
 
 .lobbyFront {
   background: black;
+  -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
 }
 
@@ -81,8 +82,7 @@
   flex-direction: column;
   justify-content: center;
   height: 100%;
-  padding: 1rem;
-
+  padding: 0.5rem 2rem 1rem 2rem;
   z-index: -1;
 }
 
@@ -119,66 +119,49 @@
   flex-basis: 50%;
   display: flex;
   flex-direction: column;
+  gap: 20px;
   align-items: center;
   justify-content: space-evenly;
 }
 
 .isLoading {
   background-color: black !important;
+  box-shadow: none !important;
 }
 .isLoading:hover {
   background-color: black !important;
   color: white !important;
+  box-shadow: none !important;
 }
 .isLoading:after {
   background-color: black !important;
   color: white !important;
 }
-.lobbyButton {
-  display: block;
-  width: 120px;
-  height: 30px;
-  font-size: 18px;
-  font-weight: 600;
-  color: white;
-  cursor: pointer;
-  background: transparent;
-  letter-spacing: 2px;
-  text-align: center;
-  transition: all 0.35s;
-  margin-top: auto;
-  position: relative;
-  z-index: 1;
+
+.waitingLobbyButton {
+  width: 150px;
+  height: 50px;
+  border-radius: 30px;
+  border: 2px solid white;
+  font-weight: bold;
+  transition: 0.3s;
 }
-.lobbyButton span {
-  position: relative;
-  z-index: 2;
-}
-.lobbyButton:after {
-  position: absolute;
-  border-radius: 1rem;
-  content: "";
-  top: 50%;
-  left: 0;
-  transform: translateY(-50%) translateX(-1rem);
-  width: 0;
-  height: 100%;
-  background: white;
-  transition: all 0.25s, padding 0s;
-  z-index: -1;
-  padding: 0;
-}
-.lobbyButton:hover {
+.waitingLobbyButton:hover {
+  background-color: white;
   color: black;
-}
-.lobbyButton:hover:after {
-  width: 100%;
-  padding: 0.25rem 1rem;
+  transition: 0.3s;
+  border: 2px solid black;
+  box-shadow: 1px 1px 23px -1px rgba(255, 255, 255, 0.52);
+  -webkit-box-shadow: 1px 1px 23px -1px rgba(255, 255, 255, 0.52);
+  -moz-box-shadow: 1px 1px 23px -1px rgba(255, 255, 255, 0.52);
 }
 
 .lobbyContainer-active {
+  -webkit-animation: switchCards;
   animation: switchCards;
+  -webkit-animation-duration: 250ms;
   animation-duration: 250ms;
+  -webkit-animation-fill-mode: forwards;
   animation-fill-mode: forwards;
 }
 
@@ -188,6 +171,7 @@
   color: white;
   background-color: #eb455f;
   height: 50px;
+  -webkit-animation: errAnimation 0.7s;
   animation: errAnimation 0.7s;
   top: 0;
   left: 0;
@@ -199,12 +183,36 @@
   z-index: 20;
   font-size: 18px;
 }
+@-webkit-keyframes errAnimation {
+  0% {
+    top: -50px;
+  }
+  100% {
+    top: 0px;
+  }
+}
 @keyframes errAnimation {
   0% {
     top: -50px;
   }
   100% {
     top: 0px;
+  }
+}
+
+@-webkit-keyframes switchCards {
+  0% {
+    perspective: 1500px;
+    z-index: 0;
+  }
+
+  75% {
+    perspective: 1500px;
+    z-index: 0;
+  }
+  100% {
+    perspective: none;
+    z-index: 1;
   }
 }
 
@@ -235,7 +243,7 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -70%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -280,5 +288,8 @@
   }
   #lobbyHostHidden {
     transform: scale(0.9) translateX(-100px) translateY(250px) rotate(30deg);
+  }
+  .errMessage {
+    font-size: 14px;
   }
 }

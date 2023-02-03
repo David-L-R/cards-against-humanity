@@ -14,7 +14,6 @@ export const createNewLobby = async (data) => {
     waiting: [{ name: hostName, id, isHost: true, inactive: false, points: 0 }],
     players: [],
   };
-
   try {
     const newLobby = await LobbyCollection.create({
       ...lobby,
@@ -43,7 +42,7 @@ export const findRoomToJoin = async ({
     const { currentLobby } = await getCache({ lobbyId });
 
     // update player list in DB
-    currentLobby.players.push(player);
+    currentLobby.waiting.push(player);
 
     //join player into room and send lobbyId back
     socket.join(lobbyId);
@@ -66,23 +65,22 @@ export const findRoomToJoin = async ({
 
 export const updateClient = async (data) => {
   const { lobbyId, socket, joinGame, id, io, newPLayerName, avatar } = data;
-  socket.userId = id;
+
   if (!lobbyId || !id)
     return socket.emit("updateRoom", {
       err: "Cant find game to join. Wrong lobby id or player id",
     });
-  // socket.join(lobbyId);
 
   try {
     const { currentLobby } = await getCache({ lobbyId });
-
     if (!currentLobby) throw Error();
 
     const foundPLayer = currentLobby.waiting.find((player) => player.id === id);
-    // delte players from lobby.players to be available for a game rejoining  lobby
-    currentLobby.players = currentLobby.players.filter(
-      (currPlayer) => currPlayer.id !== id
-    );
+    // delete players from lobby.players ONLY if to avatars requests for update to be available for a game rejoining  lobby
+    if (!avatar)
+      currentLobby.players = currentLobby.players.filter(
+        (currPlayer) => currPlayer.id !== id
+      );
 
     if (newPLayerName) foundPLayer.name = newPLayerName;
 
@@ -105,6 +103,11 @@ export const updateClient = async (data) => {
 
     // join new player after using invitation link
     if (!foundPLayer && joinGame) {
+      if (currentLobby.waiting.length + currentLobby.players.length === 10) {
+        return io.to(socket.id).emit("updateRoom", {
+          err: "Maximun amount of 10 players reached",
+        });
+      }
       const newPLayer = {
         id,
         isHost: false,
@@ -119,11 +122,9 @@ export const updateClient = async (data) => {
       currentLobby,
     });
 
-    const currentLobbyData = await storeToCache({ lobbyId, currentLobby });
-    LobbyCollection.findByIdAndUpdate(
-      lobbyId,
-      currentLobbyData.currentLobby
-    ).exec();
+    await storeToCache({ lobbyId, currentLobby });
+
+    LobbyCollection.findByIdAndUpdate(lobbyId, currentLobby).exec();
   } catch (err) {
     console.error(err);
     socket.emit("updateRoom", {

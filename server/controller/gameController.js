@@ -1,10 +1,10 @@
 import GameCollection from "../database/models/game.js";
 import LobbyCollection from "../database/models/lobby.js";
-import allCards from "../data/allCards.json" assert { type: "json" };
 import { updateGameInLobby } from "../utils/addGameToLobby.js";
 import updateTurn from "../utils/updateTurn.js";
 import dealCards from "../utils/dealCardsToPlayers.js";
 import { getCache, storeToCache } from "../cache/useCache.js";
+import allCards from "../data/index.js";
 
 export const createGame = async ({
   setRounds,
@@ -12,9 +12,11 @@ export const createGame = async ({
   lobbyId,
   io,
   socket,
+  language,
 }) => {
   let amountOfRounds = parseInt(setRounds);
   let handSize = parseInt(maxHandSize);
+  let languageDeck = allCards[language];
 
   if (!lobbyId)
     io.to(lobbyId).emit("newgame", {
@@ -50,17 +52,17 @@ export const createGame = async ({
         return newPLayer;
       });
 
-    if (allPlayers.length <= 1)
+    if (allPlayers.length <= 2)
       return io.to(socket.id).emit("newgame", {
-        err: "Please wait for at least one more  Player",
+        err: "Please wait for at least 2 waiting Players",
       });
 
     lobby.players = [...allPlayers];
     await storeToCache({ lobbyId, currentLobby: lobby });
     LobbyCollection.findByIdAndUpdate(lobbyId, lobby).exec();
 
-    const [black] = allCards.map((set) => set.black);
-    const [white] = allCards.map((set) => set.white);
+    const [black] = languageDeck.map((set) => set.black);
+    const [white] = languageDeck.map((set) => set.white);
 
     const gamedata = {
       id: lobbyId,
@@ -107,8 +109,7 @@ export const sendCurrentGame = async (data) => {
   socket.join(lobbyId);
   try {
     const currentLobbyData = await getCache({ lobbyId });
-    const { currentGame } = currentLobbyData;
-
+    const { currentGame, currentLobby } = currentLobbyData;
     const currentTurnIndex = currentGame.turns.length - 1;
     if (currentTurnIndex < 0) currentTurnIndex = 0;
     const czar = currentGame.turns[currentTurnIndex]?.czar;
@@ -168,7 +169,6 @@ export const sendCurrentGame = async (data) => {
 
 export const changeGame = async (states) => {
   const { playerId, stage, gameId, lobbyId, io } = states;
-
   if (stage === "dealing") {
     try {
       const currentLobbyData = await getCache({ lobbyId });
@@ -198,18 +198,21 @@ export const changeGame = async (states) => {
   try {
     const currentLobbyData = await getCache({ lobbyId });
     const { currentGame } = currentLobbyData;
-    const gameIdentifier = currentGame.gameIdentifier;
+    const gameIdentifier = currentGame?.gameIdentifier;
     const updatedGame = await updateTurn({ ...states, currentGame });
-    console.log("updatedgame", updatedGame);
     if (!updatedGame) return "Server error, no game found";
 
     io.to(lobbyId).emit("currentGame", {
       currentGame: updatedGame,
       kicked: updatedGame.kicked,
+      changeAvatar: updatedGame.changeAvatar,
     });
+    if (updatedGame.kicked) delete updatedGame.kicked;
+    if (updatedGame.changeAvatar) delete updatedGame.changeAvatar;
 
     //if game is finished, store into lobby/games
-    if (updatedGame.concluded) await updateGameInLobby(updatedGame);
+    // if (updatedGame.concluded) await updateGameInLobby(updatedGame);
+    await updateGameInLobby(updatedGame);
     await storeToCache({ lobbyId, currentGame: updatedGame });
     GameCollection.findOneAndUpdate(
       {

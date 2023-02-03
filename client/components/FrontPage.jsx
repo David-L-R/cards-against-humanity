@@ -1,10 +1,7 @@
 import React from "react";
 import { useSpring, animated } from "react-spring";
-import Navbar from "./Navbar";
 import Link from "next/link";
 import { motion as m } from "framer-motion";
-import { setCookie, parseCookies } from "nookies";
-import Loading from "./Loading";
 
 const calc = (x, y) => [
   -(y - window.innerHeight / 2) / 20,
@@ -40,7 +37,7 @@ function FrontPage() {
             style={{ transform: props.xys.to(trans) }}>
             <div className="card">
               <div className="cardFace cardFace--front">
-                <h2>Cards Against Humanity.</h2>
+                <h2>Man Makes Monster.</h2>
                 <div className="playPulseContainer">
                   <h3>Press to Play</h3>
                 </div>
