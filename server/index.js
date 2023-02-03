@@ -8,7 +8,7 @@ import useQueue from "./utils/useQueue.js";
 import consoleSuccess from "./utils/consoleSuccess.js";
 import { cachUser, getCachedUser } from "./cache/useCache.js";
 
-dotenv.config({ path: "../.env" });
+dotenv.config();
 connectDB(process.env.DB_URI);
 
 const app = express();
@@ -19,6 +19,11 @@ app.use(
     extended: true,
   })
 );
+
+app.get("/", (req, res) => {
+  res.send("Server is running!");
+});
+
 export const queue = {};
 const PORT = process.env.PORT || 5555;
 const server = http.createServer(app);
