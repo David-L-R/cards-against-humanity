@@ -11,7 +11,7 @@ A fun and exciting online card game similar to Cards Against Humanity that you c
 
 ## **Table of contents**
 
----
+
 
 - [Demo](#demo-video)
 - [Installation](#installation)
@@ -26,7 +26,7 @@ A fun and exciting online card game similar to Cards Against Humanity that you c
 
 ### [(Back to top)](#man-makes-monsters)
 
----
+
 
 ## Watch demo video here
 
@@ -38,7 +38,7 @@ A fun and exciting online card game similar to Cards Against Humanity that you c
 
 #### [(Back to top)](#man-makes-monsters)
 
----
+
 
 This repository uses MongoDB and Next.Auth, so to work with it you will need a `.env` file and a separate database. To install, run `npm install` in your terminal, and start the server with `npm start`.
 
@@ -49,7 +49,7 @@ This repository uses MongoDB and Next.Auth, so to work with it you will need a `
 
 #### [(Back to top)](#man-makes-monsters)
 
----
+
 
 Follow these steps to play the game:
 
@@ -65,7 +65,7 @@ Follow these steps to play the game:
 
 #### [(Back to top)](#man-makes-monsters)
 
----
+
 
 The project uses the following technologies:
 
@@ -84,7 +84,7 @@ The project uses the following technologies:
 
 ## **Contributers**
 
----
+
 
 | <p align="center"> <img src="https://media.licdn.com/dms/image/D4E35AQF3paw8Yz4Pxg/profile-framedphoto-shrink_200_200/0/1668760804912?e=1675951200&v=beta&t=Lh0rvHaJETAkUFMfbOVM_654Am6kIKnylaqcJSR0k8Y" style="border-radius:50%" width=90px> </p> | <p align="center"> <img src="https://media.licdn.com/dms/image/D4E35AQGMvvJjG6LnoQ/profile-framedphoto-shrink_100_100/0/1674832163329?e=1675954800&v=beta&t=5vwsRDVBj6dXHC5qRas5r-p0SusiVX35vkKibd4tB-o" style="border-radius:50%" width=90px> </p> | <p align="center"> <img src="https://media.licdn.com/dms/image/D4E35AQEn9tiQkXRRUw/profile-framedphoto-shrink_100_100/0/1656609378766?e=1675954800&v=beta&t=Jq8n24e3f49On2YeEWxXn4CY5Imh7wt9fXVxeoeoAxA" style="border-radius:50%" width=90px> </p> | <p align="center"> <img src="https://media.licdn.com/dms/image/D4E03AQHFPlByQ1cXFw/profile-displayphoto-shrink_100_100/0/1669306505638?e=1680739200&v=beta&t=o33fBENdTpcL65OclRIyzgHRAQzNdL9XhpnWt_hgZXQ" style="border-radius:50%" width=90px> </p> |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -97,6 +97,6 @@ The project uses the following technologies:
 
 #### [(Back to top)](#man-makes-monsters)
 
----
+
 
 For any questions or concerns, please don't hesitate to contact us. We'll be happy to help!
