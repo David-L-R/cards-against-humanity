@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { parseCookies, setCookie } from "nookies";
 import { ContextWrapper } from "../context";
 
-export const socket = io("http://localhost:5000", {
+export const socket = io("http://localhost:5555", {
   //"https://man-makes-monsters-servr.onrender.com"
   reconnection: true, // enable reconnection
   reconnectionAttempts: 5, // try to reconnect 5 times
