@@ -18,7 +18,8 @@
 }
 .whiteCardFaceMock:hover {
   scale: 1.1;
-  border: 3px solid white;
+  rotate: 3deg;
+  transition: 0.3s;
 }
 .selected {
   scale: 1.1;
